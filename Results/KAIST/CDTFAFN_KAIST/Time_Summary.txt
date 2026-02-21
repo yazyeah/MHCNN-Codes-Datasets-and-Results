@@ -1,0 +1,3 @@
+Stage2_FullExp_s: 69648.087477
+Stage3_NoiseStudy_s: 727.468104
+TOTAL_s: 70375.556128

@@ -1,0 +1,4 @@
+Stage1_Optuna_s: 191.176602
+Stage2_FullExp_s: 8640.151561
+Stage3_NoiseStudy_s: 80.889421
+TOTAL_s: 8912.219246

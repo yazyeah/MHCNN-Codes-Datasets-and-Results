@@ -1,0 +1,751 @@
+========== MRCFN (Paper-Structure) | KAIST Load-Shift | Vib(.mat)+Current(.tdms) ==========
+VIB_MAT_DIR_0NM: D:\渥太华数据\vibration\vibration
+VIB_MAT_DIR_2NM: D:\渥太华数据\vibration\vibration
+VIB_MAT_DIR_4NM: D:\渥太华数据\vibration\vibration
+CUR_TDMS_DIR   : D:\渥太华数据\current
+OUTPUT_DIR     : D:\机械故障诊断实验\KAIST\MRCFN_Comparison_KAIST
+Base noise: 0dB | Robust envs=['NoNoise', 0, -2, -4, -6, -8, -10]
+[FIX] post-zscore(after noise)=False (must be False)
+[TTA] ENABLE_TTA=False | TTA_K=3
+[EVAL] repeats per SNR=5
+[Train] epochs=200 batch=32 Adam lr=0.001 clipnorm=1.0
+[LOG] Writing terminal output to: D:\机械故障诊断实验\KAIST\MRCFN_Comparison_KAIST\log.txt
+[INFO] Saved: D:\机械故障诊断实验\KAIST\MRCFN_Comparison_KAIST\best_parameters.txt
+
+>>> Stage 2: Full experiment (Train 0Nm@base | Test 2Nm&4Nm@base) ...
+
+>>> MRCFN Model Architecture Summary:
+============================================================
+Model: "MRCFN"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ Input_Vib (InputLayer)         [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ Input_Cur (InputLayer)         [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ conv1d (Conv1D)                (None, 1024, 32)     96          ['Input_Vib[0][0]']              
+                                                                                                  
+ conv1d_1 (Conv1D)              (None, 1024, 32)     96          ['Input_Cur[0][0]']              
+                                                                                                  
+ activation (Activation)        (None, 1024, 32)     0           ['conv1d[0][0]']                 
+                                                                                                  
+ activation_1 (Activation)      (None, 1024, 32)     0           ['conv1d_1[0][0]']               
+                                                                                                  
+ max_pooling1d (MaxPooling1D)   (None, 512, 32)      0           ['activation[0][0]']             
+                                                                                                  
+ max_pooling1d_1 (MaxPooling1D)  (None, 512, 32)     0           ['activation_1[0][0]']           
+                                                                                                  
+ Vib_DRRM1_ds1 (SeparableConv1D  (None, 256, 64)     2144        ['max_pooling1d[0][0]']          
+ )                                                                                                
+                                                                                                  
+ Cur_DRRM1_ds1 (SeparableConv1D  (None, 256, 64)     2144        ['max_pooling1d_1[0][0]']        
+ )                                                                                                
+                                                                                                  
+ Vib_DRRM1_prelu1 (PReLU)       (None, 256, 64)      64          ['Vib_DRRM1_ds1[0][0]']          
+                                                                                                  
+ Cur_DRRM1_prelu1 (PReLU)       (None, 256, 64)      64          ['Cur_DRRM1_ds1[0][0]']          
+                                                                                                  
+ Vib_DRRM1_ds2 (SeparableConv1D  (None, 256, 64)     4288        ['Vib_DRRM1_prelu1[0][0]']       
+ )                                                                                                
+                                                                                                  
+ Vib_DRRM1_mp (MaxPooling1D)    (None, 256, 32)      0           ['max_pooling1d[0][0]']          
+                                                                                                  
+ Cur_DRRM1_ds2 (SeparableConv1D  (None, 256, 64)     4288        ['Cur_DRRM1_prelu1[0][0]']       
+ )                                                                                                
+                                                                                                  
+ Cur_DRRM1_mp (MaxPooling1D)    (None, 256, 32)      0           ['max_pooling1d_1[0][0]']        
+                                                                                                  
+ Vib_DRRM1_prelu2 (PReLU)       (None, 256, 64)      64          ['Vib_DRRM1_ds2[0][0]']          
+                                                                                                  
+ Vib_DRRM1_proj (Conv1D)        (None, 256, 64)      2048        ['Vib_DRRM1_mp[0][0]']           
+                                                                                                  
+ Cur_DRRM1_prelu2 (PReLU)       (None, 256, 64)      64          ['Cur_DRRM1_ds2[0][0]']          
+                                                                                                  
+ Cur_DRRM1_proj (Conv1D)        (None, 256, 64)      2048        ['Cur_DRRM1_mp[0][0]']           
+                                                                                                  
+ Vib_DRRM1_add1 (Add)           (None, 256, 64)      0           ['Vib_DRRM1_prelu2[0][0]',       
+                                                                  'Vib_DRRM1_proj[0][0]']         
+                                                                                                  
+ Cur_DRRM1_add1 (Add)           (None, 256, 64)      0           ['Cur_DRRM1_prelu2[0][0]',       
+                                                                  'Cur_DRRM1_proj[0][0]']         
+                                                                                                  
+ Vib_DRRM1_prelu_res1 (PReLU)   (None, 256, 64)      64          ['Vib_DRRM1_add1[0][0]']         
+                                                                                                  
+ Cur_DRRM1_prelu_res1 (PReLU)   (None, 256, 64)      64          ['Cur_DRRM1_add1[0][0]']         
+                                                                                                  
+ Vib_DRRM1_conv_x1 (Conv1D)     (None, 128, 64)      12288       ['Vib_DRRM1_prelu1[0][0]']       
+                                                                                                  
+ Vib_DRRM1_conv_res1 (Conv1D)   (None, 128, 64)      12288       ['Vib_DRRM1_prelu_res1[0][0]']   
+                                                                                                  
+ Cur_DRRM1_conv_x1 (Conv1D)     (None, 128, 64)      12288       ['Cur_DRRM1_prelu1[0][0]']       
+                                                                                                  
+ Cur_DRRM1_conv_res1 (Conv1D)   (None, 128, 64)      12288       ['Cur_DRRM1_prelu_res1[0][0]']   
+                                                                                                  
+ Vib_DRRM1_prelu3 (PReLU)       (None, 128, 64)      64          ['Vib_DRRM1_conv_x1[0][0]']      
+                                                                                                  
+ Vib_DRRM1_prelu4 (PReLU)       (None, 128, 64)      64          ['Vib_DRRM1_conv_res1[0][0]']    
+                                                                                                  
+ Cur_DRRM1_prelu3 (PReLU)       (None, 128, 64)      64          ['Cur_DRRM1_conv_x1[0][0]']      
+                                                                                                  
+ Cur_DRRM1_prelu4 (PReLU)       (None, 128, 64)      64          ['Cur_DRRM1_conv_res1[0][0]']    
+                                                                                                  
+ Vib_DRRM1_add2 (Add)           (None, 128, 64)      0           ['Vib_DRRM1_prelu3[0][0]',       
+                                                                  'Vib_DRRM1_prelu4[0][0]']       
+                                                                                                  
+ Cur_DRRM1_add2 (Add)           (None, 128, 64)      0           ['Cur_DRRM1_prelu3[0][0]',       
+                                                                  'Cur_DRRM1_prelu4[0][0]']       
+                                                                                                  
+ Vib_DRRM1_prelu_res2 (PReLU)   (None, 128, 64)      64          ['Vib_DRRM1_add2[0][0]']         
+                                                                                                  
+ Cur_DRRM1_prelu_res2 (PReLU)   (None, 128, 64)      64          ['Cur_DRRM1_add2[0][0]']         
+                                                                                                  
+ Vib_DRRM2_ds1 (SeparableConv1D  (None, 64, 128)     8384        ['Vib_DRRM1_prelu_res2[0][0]']   
+ )                                                                                                
+                                                                                                  
+ Cur_DRRM2_ds1 (SeparableConv1D  (None, 64, 128)     8384        ['Cur_DRRM1_prelu_res2[0][0]']   
+ )                                                                                                
+                                                                                                  
+ Vib_DRRM2_prelu1 (PReLU)       (None, 64, 128)      128         ['Vib_DRRM2_ds1[0][0]']          
+                                                                                                  
+ Cur_DRRM2_prelu1 (PReLU)       (None, 64, 128)      128         ['Cur_DRRM2_ds1[0][0]']          
+                                                                                                  
+ Vib_DRRM2_ds2 (SeparableConv1D  (None, 64, 128)     16768       ['Vib_DRRM2_prelu1[0][0]']       
+ )                                                                                                
+                                                                                                  
+ Vib_DRRM2_mp (MaxPooling1D)    (None, 64, 64)       0           ['Vib_DRRM1_prelu_res2[0][0]']   
+                                                                                                  
+ Cur_DRRM2_ds2 (SeparableConv1D  (None, 64, 128)     16768       ['Cur_DRRM2_prelu1[0][0]']       
+ )                                                                                                
+                                                                                                  
+ Cur_DRRM2_mp (MaxPooling1D)    (None, 64, 64)       0           ['Cur_DRRM1_prelu_res2[0][0]']   
+                                                                                                  
+ Vib_DRRM2_prelu2 (PReLU)       (None, 64, 128)      128         ['Vib_DRRM2_ds2[0][0]']          
+                                                                                                  
+ Vib_DRRM2_proj (Conv1D)        (None, 64, 128)      8192        ['Vib_DRRM2_mp[0][0]']           
+                                                                                                  
+ Cur_DRRM2_prelu2 (PReLU)       (None, 64, 128)      128         ['Cur_DRRM2_ds2[0][0]']          
+                                                                                                  
+ Cur_DRRM2_proj (Conv1D)        (None, 64, 128)      8192        ['Cur_DRRM2_mp[0][0]']           
+                                                                                                  
+ Vib_DRRM2_add1 (Add)           (None, 64, 128)      0           ['Vib_DRRM2_prelu2[0][0]',       
+                                                                  'Vib_DRRM2_proj[0][0]']         
+                                                                                                  
+ Cur_DRRM2_add1 (Add)           (None, 64, 128)      0           ['Cur_DRRM2_prelu2[0][0]',       
+                                                                  'Cur_DRRM2_proj[0][0]']         
+                                                                                                  
+ Vib_DRRM2_prelu_res1 (PReLU)   (None, 64, 128)      128         ['Vib_DRRM2_add1[0][0]']         
+                                                                                                  
+ Cur_DRRM2_prelu_res1 (PReLU)   (None, 64, 128)      128         ['Cur_DRRM2_add1[0][0]']         
+                                                                                                  
+ Vib_DRRM2_conv_x1 (Conv1D)     (None, 32, 128)      49152       ['Vib_DRRM2_prelu1[0][0]']       
+                                                                                                  
+ Vib_DRRM2_conv_res1 (Conv1D)   (None, 32, 128)      49152       ['Vib_DRRM2_prelu_res1[0][0]']   
+                                                                                                  
+ Cur_DRRM2_conv_x1 (Conv1D)     (None, 32, 128)      49152       ['Cur_DRRM2_prelu1[0][0]']       
+                                                                                                  
+ Cur_DRRM2_conv_res1 (Conv1D)   (None, 32, 128)      49152       ['Cur_DRRM2_prelu_res1[0][0]']   
+                                                                                                  
+ Vib_DRRM2_prelu3 (PReLU)       (None, 32, 128)      128         ['Vib_DRRM2_conv_x1[0][0]']      
+                                                                                                  
+ Vib_DRRM2_prelu4 (PReLU)       (None, 32, 128)      128         ['Vib_DRRM2_conv_res1[0][0]']    
+                                                                                                  
+ Cur_DRRM2_prelu3 (PReLU)       (None, 32, 128)      128         ['Cur_DRRM2_conv_x1[0][0]']      
+                                                                                                  
+ Cur_DRRM2_prelu4 (PReLU)       (None, 32, 128)      128         ['Cur_DRRM2_conv_res1[0][0]']    
+                                                                                                  
+ Vib_DRRM2_add2 (Add)           (None, 32, 128)      0           ['Vib_DRRM2_prelu3[0][0]',       
+                                                                  'Vib_DRRM2_prelu4[0][0]']       
+                                                                                                  
+ Cur_DRRM2_add2 (Add)           (None, 32, 128)      0           ['Cur_DRRM2_prelu3[0][0]',       
+                                                                  'Cur_DRRM2_prelu4[0][0]']       
+                                                                                                  
+ Vib_DRRM2_prelu_res2 (PReLU)   (None, 32, 128)      128         ['Vib_DRRM2_add2[0][0]']         
+                                                                                                  
+ Cur_DRRM2_prelu_res2 (PReLU)   (None, 32, 128)      128         ['Cur_DRRM2_add2[0][0]']         
+                                                                                                  
+ Vib_SCRM_split_sru (Lambda)    [(None, 32, 64),     0           ['Vib_DRRM2_prelu_res2[0][0]']   
+                                 (None, 32, 64)]                                                  
+                                                                                                  
+ Cur_SCRM_split_sru (Lambda)    [(None, 32, 64),     0           ['Cur_DRRM2_prelu_res2[0][0]']   
+                                 (None, 32, 64)]                                                  
+                                                                                                  
+ Vib_SCRM_gn (GroupNorm1D)      (None, 32, 64)       128         ['Vib_SCRM_split_sru[0][0]']     
+                                                                                                  
+ Cur_SCRM_gn (GroupNorm1D)      (None, 32, 64)       128         ['Cur_SCRM_split_sru[0][0]']     
+                                                                                                  
+ Vib_SCRM_sigmoid_gate (Activat  (None, 32, 64)      0           ['Vib_SCRM_gn[0][0]']            
+ ion)                                                                                             
+                                                                                                  
+ Cur_SCRM_sigmoid_gate (Activat  (None, 32, 64)      0           ['Cur_SCRM_gn[0][0]']            
+ ion)                                                                                             
+                                                                                                  
+ Vib_SCRM_th_mask (Lambda)      (None, 32, 64)       0           ['Vib_SCRM_sigmoid_gate[0][0]']  
+                                                                                                  
+ Cur_SCRM_th_mask (Lambda)      (None, 32, 64)       0           ['Cur_SCRM_sigmoid_gate[0][0]']  
+                                                                                                  
+ Vib_SCRM_inv_mask (Lambda)     (None, 32, 64)       0           ['Vib_SCRM_th_mask[0][0]']       
+                                                                                                  
+ Cur_SCRM_inv_mask (Lambda)     (None, 32, 64)       0           ['Cur_SCRM_th_mask[0][0]']       
+                                                                                                  
+ tf.math.multiply (TFOpLambda)  (None, 32, 64)       0           ['Vib_SCRM_split_sru[0][0]',     
+                                                                  'Vib_SCRM_th_mask[0][0]']       
+                                                                                                  
+ tf.math.multiply_1 (TFOpLambda  (None, 32, 64)      0           ['Vib_SCRM_split_sru[0][1]',     
+ )                                                                'Vib_SCRM_inv_mask[0][0]']      
+                                                                                                  
+ tf.math.multiply_2 (TFOpLambda  (None, 32, 64)      0           ['Vib_SCRM_split_sru[0][1]',     
+ )                                                                'Vib_SCRM_th_mask[0][0]']       
+                                                                                                  
+ tf.math.multiply_3 (TFOpLambda  (None, 32, 64)      0           ['Vib_SCRM_split_sru[0][0]',     
+ )                                                                'Vib_SCRM_inv_mask[0][0]']      
+                                                                                                  
+ tf.math.multiply_6 (TFOpLambda  (None, 32, 64)      0           ['Cur_SCRM_split_sru[0][0]',     
+ )                                                                'Cur_SCRM_th_mask[0][0]']       
+                                                                                                  
+ tf.math.multiply_7 (TFOpLambda  (None, 32, 64)      0           ['Cur_SCRM_split_sru[0][1]',     
+ )                                                                'Cur_SCRM_inv_mask[0][0]']      
+                                                                                                  
+ tf.math.multiply_8 (TFOpLambda  (None, 32, 64)      0           ['Cur_SCRM_split_sru[0][1]',     
+ )                                                                'Cur_SCRM_th_mask[0][0]']       
+                                                                                                  
+ tf.math.multiply_9 (TFOpLambda  (None, 32, 64)      0           ['Cur_SCRM_split_sru[0][0]',     
+ )                                                                'Cur_SCRM_inv_mask[0][0]']      
+                                                                                                  
+ Vib_SCRM_sru_y1 (Add)          (None, 32, 64)       0           ['tf.math.multiply[0][0]',       
+                                                                  'tf.math.multiply_1[0][0]']     
+                                                                                                  
+ Vib_SCRM_sru_y2 (Add)          (None, 32, 64)       0           ['tf.math.multiply_2[0][0]',     
+                                                                  'tf.math.multiply_3[0][0]']     
+                                                                                                  
+ Cur_SCRM_sru_y1 (Add)          (None, 32, 64)       0           ['tf.math.multiply_6[0][0]',     
+                                                                  'tf.math.multiply_7[0][0]']     
+                                                                                                  
+ Cur_SCRM_sru_y2 (Add)          (None, 32, 64)       0           ['tf.math.multiply_8[0][0]',     
+                                                                  'tf.math.multiply_9[0][0]']     
+                                                                                                  
+ Vib_SCRM_concat_sru (Concatena  (None, 32, 128)     0           ['Vib_SCRM_sru_y1[0][0]',        
+ te)                                                              'Vib_SCRM_sru_y2[0][0]']        
+                                                                                                  
+ Cur_SCRM_concat_sru (Concatena  (None, 32, 128)     0           ['Cur_SCRM_sru_y1[0][0]',        
+ te)                                                              'Cur_SCRM_sru_y2[0][0]']        
+                                                                                                  
+ Vib_SCRM_split_cru (Lambda)    [(None, 32, 64),     0           ['Vib_SCRM_concat_sru[0][0]']    
+                                 (None, 32, 64)]                                                  
+                                                                                                  
+ Cur_SCRM_split_cru (Lambda)    [(None, 32, 64),     0           ['Cur_SCRM_concat_sru[0][0]']    
+                                 (None, 32, 64)]                                                  
+                                                                                                  
+ Vib_SCRM_y1_1x1 (Conv1D)       (None, 32, 128)      8192        ['Vib_SCRM_split_cru[0][0]']     
+                                                                                                  
+ Cur_SCRM_y1_1x1 (Conv1D)       (None, 32, 128)      8192        ['Cur_SCRM_split_cru[0][0]']     
+                                                                                                  
+ Vib_SCRM_y1_relu (Activation)  (None, 32, 128)      0           ['Vib_SCRM_y1_1x1[0][0]']        
+                                                                                                  
+ Cur_SCRM_y1_relu (Activation)  (None, 32, 128)      0           ['Cur_SCRM_y1_1x1[0][0]']        
+                                                                                                  
+ Vib_SCRM_gconv (Conv1D)        (None, 32, 128)      768         ['Vib_SCRM_y1_relu[0][0]']       
+                                                                                                  
+ Cur_SCRM_gconv (Conv1D)        (None, 32, 128)      768         ['Cur_SCRM_y1_relu[0][0]']       
+                                                                                                  
+ Vib_SCRM_gconv_relu (Activatio  (None, 32, 128)     0           ['Vib_SCRM_gconv[0][0]']         
+ n)                                                                                               
+                                                                                                  
+ Vib_SCRM_y2_1x1 (Conv1D)       (None, 32, 128)      8192        ['Vib_SCRM_split_cru[0][1]']     
+                                                                                                  
+ Cur_SCRM_gconv_relu (Activatio  (None, 32, 128)     0           ['Cur_SCRM_gconv[0][0]']         
+ n)                                                                                               
+                                                                                                  
+ Cur_SCRM_y2_1x1 (Conv1D)       (None, 32, 128)      8192        ['Cur_SCRM_split_cru[0][1]']     
+                                                                                                  
+ Vib_SCRM_y1_pconv (Conv1D)     (None, 32, 128)      16384       ['Vib_SCRM_gconv_relu[0][0]']    
+                                                                                                  
+ Vib_SCRM_y2_relu (Activation)  (None, 32, 128)      0           ['Vib_SCRM_y2_1x1[0][0]']        
+                                                                                                  
+ Cur_SCRM_y1_pconv (Conv1D)     (None, 32, 128)      16384       ['Cur_SCRM_gconv_relu[0][0]']    
+                                                                                                  
+ Cur_SCRM_y2_relu (Activation)  (None, 32, 128)      0           ['Cur_SCRM_y2_1x1[0][0]']        
+                                                                                                  
+ Vib_SCRM_gap1 (GlobalAveragePo  (None, 128)         0           ['Vib_SCRM_y1_pconv[0][0]']      
+ oling1D)                                                                                         
+                                                                                                  
+ Vib_SCRM_gap2 (GlobalAveragePo  (None, 128)         0           ['Vib_SCRM_y2_relu[0][0]']       
+ oling1D)                                                                                         
+                                                                                                  
+ Cur_SCRM_gap1 (GlobalAveragePo  (None, 128)         0           ['Cur_SCRM_y1_pconv[0][0]']      
+ oling1D)                                                                                         
+                                                                                                  
+ Cur_SCRM_gap2 (GlobalAveragePo  (None, 128)         0           ['Cur_SCRM_y2_relu[0][0]']       
+ oling1D)                                                                                         
+                                                                                                  
+ Vib_SCRM_g_concat (Concatenate  (None, 256)         0           ['Vib_SCRM_gap1[0][0]',          
+ )                                                                'Vib_SCRM_gap2[0][0]']          
+                                                                                                  
+ Cur_SCRM_g_concat (Concatenate  (None, 256)         0           ['Cur_SCRM_gap1[0][0]',          
+ )                                                                'Cur_SCRM_gap2[0][0]']          
+                                                                                                  
+ Vib_SCRM_softmax_g (Activation  (None, 256)         0           ['Vib_SCRM_g_concat[0][0]']      
+ )                                                                                                
+                                                                                                  
+ Cur_SCRM_softmax_g (Activation  (None, 256)         0           ['Cur_SCRM_g_concat[0][0]']      
+ )                                                                                                
+                                                                                                  
+ Vib_SCRM_g1 (Lambda)           (None, 128)          0           ['Vib_SCRM_softmax_g[0][0]']     
+                                                                                                  
+ Vib_SCRM_g2 (Lambda)           (None, 128)          0           ['Vib_SCRM_softmax_g[0][0]']     
+                                                                                                  
+ Cur_SCRM_g1 (Lambda)           (None, 128)          0           ['Cur_SCRM_softmax_g[0][0]']     
+                                                                                                  
+ Cur_SCRM_g2 (Lambda)           (None, 128)          0           ['Cur_SCRM_softmax_g[0][0]']     
+                                                                                                  
+ Vib_SCRM_g1e (Lambda)          (None, 1, 128)       0           ['Vib_SCRM_g1[0][0]']            
+                                                                                                  
+ Vib_SCRM_g2e (Lambda)          (None, 1, 128)       0           ['Vib_SCRM_g2[0][0]']            
+                                                                                                  
+ Cur_SCRM_g1e (Lambda)          (None, 1, 128)       0           ['Cur_SCRM_g1[0][0]']            
+                                                                                                  
+ Cur_SCRM_g2e (Lambda)          (None, 1, 128)       0           ['Cur_SCRM_g2[0][0]']            
+                                                                                                  
+ tf.math.multiply_4 (TFOpLambda  (None, 32, 128)     0           ['Vib_SCRM_y1_pconv[0][0]',      
+ )                                                                'Vib_SCRM_g1e[0][0]']           
+                                                                                                  
+ tf.math.multiply_5 (TFOpLambda  (None, 32, 128)     0           ['Vib_SCRM_y2_relu[0][0]',       
+ )                                                                'Vib_SCRM_g2e[0][0]']           
+                                                                                                  
+ tf.math.multiply_10 (TFOpLambd  (None, 32, 128)     0           ['Cur_SCRM_y1_pconv[0][0]',      
+ a)                                                               'Cur_SCRM_g1e[0][0]']           
+                                                                                                  
+ tf.math.multiply_11 (TFOpLambd  (None, 32, 128)     0           ['Cur_SCRM_y2_relu[0][0]',       
+ a)                                                               'Cur_SCRM_g2e[0][0]']           
+                                                                                                  
+ Vib_SCRM_out (Add)             (None, 32, 128)      0           ['tf.math.multiply_4[0][0]',     
+                                                                  'tf.math.multiply_5[0][0]']     
+                                                                                                  
+ Cur_SCRM_out (Add)             (None, 32, 128)      0           ['tf.math.multiply_10[0][0]',    
+                                                                  'tf.math.multiply_11[0][0]']    
+                                                                                                  
+ GIPFM_v1_gap (GlobalAveragePoo  (None, 128)         0           ['Vib_SCRM_out[0][0]']           
+ ling1D)                                                                                          
+                                                                                                  
+ GIPFM_v2_gap (GlobalAveragePoo  (None, 128)         0           ['Cur_SCRM_out[0][0]']           
+ ling1D)                                                                                          
+                                                                                                  
+ GIPFM_v1_fc1 (Dense)           (None, 32)           4128        ['GIPFM_v1_gap[0][0]']           
+                                                                                                  
+ GIPFM_v2_fc1 (Dense)           (None, 32)           4128        ['GIPFM_v2_gap[0][0]']           
+                                                                                                  
+ GIPFM_v1_fc2 (Dense)           (None, 128)          4224        ['GIPFM_v1_fc1[0][0]']           
+                                                                                                  
+ GIPFM_v2_fc2 (Dense)           (None, 128)          4224        ['GIPFM_v2_fc1[0][0]']           
+                                                                                                  
+ GIPFM_vsum (Add)               (None, 128)          0           ['GIPFM_v1_fc2[0][0]',           
+                                                                  'GIPFM_v2_fc2[0][0]']           
+                                                                                                  
+ GIPFM_vr_fc1 (Dense)           (None, 32)           4128        ['GIPFM_vsum[0][0]']             
+                                                                                                  
+ GIPFM_vr_fc2 (Dense)           (None, 128)          4224        ['GIPFM_vr_fc1[0][0]']           
+                                                                                                  
+ add (Add)                      (None, 128)          0           ['GIPFM_vr_fc2[0][0]',           
+                                                                  'GIPFM_v1_fc2[0][0]']           
+                                                                                                  
+ add_1 (Add)                    (None, 128)          0           ['GIPFM_vr_fc2[0][0]',           
+                                                                  'GIPFM_v2_fc2[0][0]']           
+                                                                                                  
+ GIPFM_w1_sigmoid (Activation)  (None, 128)          0           ['add[0][0]']                    
+                                                                                                  
+ GIPFM_w2_sigmoid (Activation)  (None, 128)          0           ['add_1[0][0]']                  
+                                                                                                  
+ GIPFM_w1e (Lambda)             (None, 1, 128)       0           ['GIPFM_w1_sigmoid[0][0]']       
+                                                                                                  
+ GIPFM_w2e (Lambda)             (None, 1, 128)       0           ['GIPFM_w2_sigmoid[0][0]']       
+                                                                                                  
+ GIPFM_s1w (Multiply)           (None, 32, 128)      0           ['Vib_SCRM_out[0][0]',           
+                                                                  'GIPFM_w1e[0][0]']              
+                                                                                                  
+ GIPFM_s2w (Multiply)           (None, 32, 128)      0           ['Cur_SCRM_out[0][0]',           
+                                                                  'GIPFM_w2e[0][0]']              
+                                                                                                  
+ GIPFM_sum (Add)                (None, 32, 128)      0           ['GIPFM_s1w[0][0]',              
+                                                                  'GIPFM_s2w[0][0]']              
+                                                                                                  
+ GIPFM_pconv (Conv1D)           (None, 32, 128)      16384       ['GIPFM_sum[0][0]']              
+                                                                                                  
+ GIPFM_pconv_relu (Activation)  (None, 32, 128)      0           ['GIPFM_pconv[0][0]']            
+                                                                                                  
+ CB_GAP (GlobalAveragePooling1D  (None, 128)         0           ['GIPFM_pconv_relu[0][0]']       
+ )                                                                                                
+                                                                                                  
+ CB_FC (Dense)                  (None, 5)            645         ['CB_GAP[0][0]']                 
+                                                                                                  
+==================================================================================================
+Total params: 441,317
+Trainable params: 441,061
+Non-trainable params: 256
+__________________________________________________________________________________________________
+============================================================
+
+
+======== Train(0Nm) N=5 (Run 1-10) ========
+  [N5-R1] Train=1m13.46s | 2Nm Acc=0.7455 F1=0.7390 | 4Nm Acc=0.6240 F1=0.6266
+  [N5-R2] Train=29.24s | 2Nm Acc=0.6890 F1=0.6991 | 4Nm Acc=0.5905 F1=0.6059
+  [N5-R3] Train=30.44s | 2Nm Acc=0.6765 F1=0.6463 | 4Nm Acc=0.6585 F1=0.6294
+  [N5-R4] Train=30.52s | 2Nm Acc=0.5670 F1=0.5446 | 4Nm Acc=0.5120 F1=0.4700
+  [N5-R5] Train=33.58s | 2Nm Acc=0.6890 F1=0.6994 | 4Nm Acc=0.6245 F1=0.6311
+  [N5-R6] Train=32.33s | 2Nm Acc=0.4540 F1=0.4492 | 4Nm Acc=0.4420 F1=0.4219
+  [N5-R7] Train=31.91s | 2Nm Acc=0.7880 F1=0.7855 | 4Nm Acc=0.6570 F1=0.6272
+  [N5-R8] Train=32.93s | 2Nm Acc=0.7160 F1=0.7100 | 4Nm Acc=0.6275 F1=0.6040
+  [N5-R9] Train=31.89s | 2Nm Acc=0.6255 F1=0.6349 | 4Nm Acc=0.5225 F1=0.5250
+  [N5-R10] Train=31.58s | 2Nm Acc=0.7700 F1=0.7746 | 4Nm Acc=0.6365 F1=0.6263
+  >>> Trimmed N=5: 2Nm Acc=0.6848±0.0606 F1=0.6810±0.0667 | 4Nm Acc=0.5993±0.0504 F1=0.5893±0.0555
+
+======== Train(0Nm) N=6 (Run 1-10) ========
+  [N6-R1] Train=33.86s | 2Nm Acc=0.5920 F1=0.5794 | 4Nm Acc=0.5530 F1=0.5458
+  [N6-R2] Train=33.56s | 2Nm Acc=0.6930 F1=0.6873 | 4Nm Acc=0.6250 F1=0.6176
+  [N6-R3] Train=33.25s | 2Nm Acc=0.5735 F1=0.5710 | 4Nm Acc=0.5190 F1=0.4935
+  [N6-R4] Train=33.77s | 2Nm Acc=0.7695 F1=0.7667 | 4Nm Acc=0.6640 F1=0.6319
+  [N6-R5] Train=32.92s | 2Nm Acc=0.8090 F1=0.8092 | 4Nm Acc=0.7075 F1=0.6976
+  [N6-R6] Train=34.11s | 2Nm Acc=0.6840 F1=0.6812 | 4Nm Acc=0.6045 F1=0.6074
+  [N6-R7] Train=34.07s | 2Nm Acc=0.3730 F1=0.2856 | 4Nm Acc=0.3845 F1=0.2981
+  [N6-R8] Train=34.66s | 2Nm Acc=0.5370 F1=0.5267 | 4Nm Acc=0.4690 F1=0.4532
+  [N6-R9] Train=33.01s | 2Nm Acc=0.7365 F1=0.7316 | 4Nm Acc=0.6600 F1=0.6564
+  [N6-R10] Train=35.47s | 2Nm Acc=0.5605 F1=0.5328 | 4Nm Acc=0.5170 F1=0.4794
+  >>> Trimmed N=6: 2Nm Acc=0.6432±0.0825 F1=0.6346±0.0872 | 4Nm Acc=0.5764±0.0677 F1=0.5606±0.0729
+
+======== Train(0Nm) N=7 (Run 1-10) ========
+  [N7-R1] Train=45.83s | 2Nm Acc=0.7145 F1=0.7051 | 4Nm Acc=0.6045 F1=0.5785
+  [N7-R2] Train=44.17s | 2Nm Acc=0.5245 F1=0.4683 | 4Nm Acc=0.5235 F1=0.4591
+  [N7-R3] Train=43.20s | 2Nm Acc=0.5655 F1=0.5191 | 4Nm Acc=0.5570 F1=0.5119
+  [N7-R4] Train=41.47s | 2Nm Acc=0.4415 F1=0.3678 | 4Nm Acc=0.4370 F1=0.3601
+  [N7-R5] Train=42.08s | 2Nm Acc=0.7720 F1=0.7714 | 4Nm Acc=0.6415 F1=0.6333
+  [N7-R6] Train=43.61s | 2Nm Acc=0.5850 F1=0.5822 | 4Nm Acc=0.5285 F1=0.5402
+  [N7-R7] Train=43.03s | 2Nm Acc=0.8210 F1=0.8242 | 4Nm Acc=0.7060 F1=0.6852
+  [N7-R8] Train=42.55s | 2Nm Acc=0.8420 F1=0.8397 | 4Nm Acc=0.7085 F1=0.6942
+  [N7-R9] Train=42.50s | 2Nm Acc=0.5280 F1=0.4928 | 4Nm Acc=0.4970 F1=0.4443
+  [N7-R10] Train=42.18s | 2Nm Acc=0.8135 F1=0.8176 | 4Nm Acc=0.6985 F1=0.6767
+  >>> Trimmed N=7: 2Nm Acc=0.6655±0.1199 F1=0.6476±0.1395 | 4Nm Acc=0.5946±0.0757 F1=0.5662±0.0873
+
+======== Train(0Nm) N=8 (Run 1-10) ========
+  [N8-R1] Train=43.14s | 2Nm Acc=0.8690 F1=0.8724 | 4Nm Acc=0.7130 F1=0.7028
+  [N8-R2] Train=43.26s | 2Nm Acc=0.7235 F1=0.7162 | 4Nm Acc=0.6790 F1=0.6651
+  [N8-R3] Train=42.69s | 2Nm Acc=0.6420 F1=0.6305 | 4Nm Acc=0.5735 F1=0.5817
+  [N8-R4] Train=42.32s | 2Nm Acc=0.6145 F1=0.6000 | 4Nm Acc=0.5425 F1=0.5406
+  [N8-R5] Train=44.42s | 2Nm Acc=0.6055 F1=0.5981 | 4Nm Acc=0.5255 F1=0.5203
+  [N8-R6] Train=44.18s | 2Nm Acc=0.7140 F1=0.7242 | 4Nm Acc=0.5755 F1=0.6027
+  [N8-R7] Train=44.45s | 2Nm Acc=0.6605 F1=0.6032 | 4Nm Acc=0.6030 F1=0.5558
+  [N8-R8] Train=45.06s | 2Nm Acc=0.6005 F1=0.5871 | 4Nm Acc=0.5105 F1=0.4766
+  [N8-R9] Train=44.92s | 2Nm Acc=0.8470 F1=0.8480 | 4Nm Acc=0.7655 F1=0.7571
+  [N8-R10] Train=44.17s | 2Nm Acc=0.8080 F1=0.8041 | 4Nm Acc=0.6730 F1=0.6618
+  >>> Trimmed N=8: 2Nm Acc=0.7019±0.0830 F1=0.6905±0.0918 | 4Nm Acc=0.6106±0.0648 F1=0.6038±0.0619
+
+======== Train(0Nm) N=9 (Run 1-10) ========
+  [N9-R1] Train=46.08s | 2Nm Acc=0.9075 F1=0.9082 | 4Nm Acc=0.7800 F1=0.7830
+  [N9-R2] Train=47.34s | 2Nm Acc=0.8470 F1=0.8451 | 4Nm Acc=0.7450 F1=0.7211
+  [N9-R3] Train=44.61s | 2Nm Acc=0.5985 F1=0.5500 | 4Nm Acc=0.5105 F1=0.4577
+  [N9-R4] Train=47.76s | 2Nm Acc=0.7885 F1=0.7905 | 4Nm Acc=0.6845 F1=0.6876
+  [N9-R5] Train=43.10s | 2Nm Acc=0.6260 F1=0.6054 | 4Nm Acc=0.5180 F1=0.4886
+  [N9-R6] Train=46.50s | 2Nm Acc=0.7870 F1=0.7804 | 4Nm Acc=0.7275 F1=0.7228
+  [N9-R7] Train=45.24s | 2Nm Acc=0.5445 F1=0.4384 | 4Nm Acc=0.5540 F1=0.4539
+  [N9-R8] Train=45.64s | 2Nm Acc=0.5860 F1=0.5675 | 4Nm Acc=0.5245 F1=0.4765
+  [N9-R9] Train=47.95s | 2Nm Acc=0.8110 F1=0.8066 | 4Nm Acc=0.7250 F1=0.6816
+  [N9-R10] Train=47.24s | 2Nm Acc=0.6070 F1=0.5795 | 4Nm Acc=0.5220 F1=0.4796
+  >>> Trimmed N=9: 2Nm Acc=0.7064±0.1039 F1=0.6906±0.1172 | 4Nm Acc=0.6251±0.0972 F1=0.5894±0.1149
+
+======== Train(0Nm) N=10 (Run 1-10) ========
+  [N10-R1] Train=46.15s | 2Nm Acc=0.8930 F1=0.8926 | 4Nm Acc=0.8170 F1=0.8069
+  [N10-R2] Train=46.08s | 2Nm Acc=0.6910 F1=0.6891 | 4Nm Acc=0.6815 F1=0.6893
+  [N10-R3] Train=46.25s | 2Nm Acc=0.7275 F1=0.7132 | 4Nm Acc=0.5870 F1=0.5307
+  [N10-R4] Train=46.45s | 2Nm Acc=0.9075 F1=0.9039 | 4Nm Acc=0.8160 F1=0.8081
+  [N10-R5] Train=47.24s | 2Nm Acc=0.8555 F1=0.8553 | 4Nm Acc=0.7520 F1=0.7618
+  [N10-R6] Train=45.28s | 2Nm Acc=0.8585 F1=0.8597 | 4Nm Acc=0.7005 F1=0.6778
+  [N10-R7] Train=44.85s | 2Nm Acc=0.6355 F1=0.6367 | 4Nm Acc=0.5725 F1=0.5562
+  [N10-R8] Train=43.58s | 2Nm Acc=0.7035 F1=0.6913 | 4Nm Acc=0.6565 F1=0.6480
+  [N10-R9] Train=42.78s | 2Nm Acc=0.7795 F1=0.7692 | 4Nm Acc=0.6785 F1=0.6296
+  [N10-R10] Train=43.13s | 2Nm Acc=0.8450 F1=0.8425 | 4Nm Acc=0.7300 F1=0.7156
+  >>> Trimmed N=10: 2Nm Acc=0.7942±0.0740 F1=0.7891±0.0780 | 4Nm Acc=0.7003±0.0638 F1=0.6857±0.0732
+
+======== Train(0Nm) N=11 (Run 1-10) ========
+  [N11-R1] Train=47.75s | 2Nm Acc=0.7510 F1=0.7366 | 4Nm Acc=0.6835 F1=0.6592
+  [N11-R2] Train=45.12s | 2Nm Acc=0.7080 F1=0.6856 | 4Nm Acc=0.6180 F1=0.5840
+  [N11-R3] Train=45.76s | 2Nm Acc=0.8355 F1=0.8394 | 4Nm Acc=0.6785 F1=0.6735
+  [N11-R4] Train=43.96s | 2Nm Acc=0.5810 F1=0.5280 | 4Nm Acc=0.6185 F1=0.5570
+  [N11-R5] Train=45.13s | 2Nm Acc=0.6240 F1=0.5709 | 4Nm Acc=0.5720 F1=0.5114
+  [N11-R6] Train=45.55s | 2Nm Acc=0.9295 F1=0.9290 | 4Nm Acc=0.7950 F1=0.7707
+  [N11-R7] Train=47.98s | 2Nm Acc=0.8860 F1=0.8854 | 4Nm Acc=0.7375 F1=0.7368
+  [N11-R8] Train=46.82s | 2Nm Acc=0.8310 F1=0.8273 | 4Nm Acc=0.7005 F1=0.6673
+  [N11-R9] Train=46.09s | 2Nm Acc=0.9510 F1=0.9508 | 4Nm Acc=0.8135 F1=0.7961
+  [N11-R10] Train=46.45s | 2Nm Acc=0.7550 F1=0.7540 | 4Nm Acc=0.7065 F1=0.7029
+  >>> Trimmed N=11: 2Nm Acc=0.7900±0.0932 F1=0.7785±0.1085 | 4Nm Acc=0.6923±0.0549 F1=0.6689±0.0671
+
+======== Train(0Nm) N=12 (Run 1-10) ========
+  [N12-R1] Train=46.95s | 2Nm Acc=0.7690 F1=0.7654 | 4Nm Acc=0.6835 F1=0.6458
+  [N12-R2] Train=46.62s | 2Nm Acc=0.9470 F1=0.9470 | 4Nm Acc=0.7850 F1=0.7852
+  [N12-R3] Train=49.97s | 2Nm Acc=0.6035 F1=0.5834 | 4Nm Acc=0.5200 F1=0.4803
+  [N12-R4] Train=47.79s | 2Nm Acc=0.8275 F1=0.8297 | 4Nm Acc=0.6865 F1=0.6792
+  [N12-R5] Train=46.50s | 2Nm Acc=0.9510 F1=0.9508 | 4Nm Acc=0.8360 F1=0.8278
+  [N12-R6] Train=45.61s | 2Nm Acc=0.7015 F1=0.7065 | 4Nm Acc=0.6675 F1=0.6733
+  [N12-R7] Train=47.79s | 2Nm Acc=0.6345 F1=0.5881 | 4Nm Acc=0.6090 F1=0.5615
+  [N12-R8] Train=48.44s | 2Nm Acc=0.8835 F1=0.8855 | 4Nm Acc=0.7820 F1=0.7784
+  [N12-R9] Train=49.43s | 2Nm Acc=0.9550 F1=0.9548 | 4Nm Acc=0.8335 F1=0.8282
+  [N12-R10] Train=47.42s | 2Nm Acc=0.8785 F1=0.8781 | 4Nm Acc=0.7555 F1=0.7405
+  >>> Trimmed N=12: 2Nm Acc=0.8241±0.1071 F1=0.8189±0.1176 | 4Nm Acc=0.7253±0.0703 F1=0.7115±0.0818
+
+======== Train(0Nm) N=13 (Run 1-10) ========
+  [N13-R1] Train=1m00.32s | 2Nm Acc=0.7190 F1=0.7090 | 4Nm Acc=0.6050 F1=0.5878
+  [N13-R2] Train=58.75s | 2Nm Acc=0.8835 F1=0.8837 | 4Nm Acc=0.6850 F1=0.6504
+  [N13-R3] Train=57.34s | 2Nm Acc=0.6945 F1=0.6916 | 4Nm Acc=0.6815 F1=0.6807
+  [N13-R4] Train=55.09s | 2Nm Acc=0.6915 F1=0.6956 | 4Nm Acc=0.6255 F1=0.6312
+  [N13-R5] Train=57.78s | 2Nm Acc=0.7765 F1=0.7745 | 4Nm Acc=0.6510 F1=0.6411
+  [N13-R6] Train=57.95s | 2Nm Acc=0.8800 F1=0.8812 | 4Nm Acc=0.6655 F1=0.6459
+  [N13-R7] Train=56.78s | 2Nm Acc=0.7785 F1=0.7655 | 4Nm Acc=0.6940 F1=0.6937
+  [N13-R8] Train=1m00.20s | 2Nm Acc=0.6205 F1=0.5552 | 4Nm Acc=0.5250 F1=0.4783
+  [N13-R9] Train=58.35s | 2Nm Acc=0.6825 F1=0.6689 | 4Nm Acc=0.6370 F1=0.6317
+  [N13-R10] Train=55.46s | 2Nm Acc=0.6660 F1=0.6079 | 4Nm Acc=0.5820 F1=0.5363
+  >>> Trimmed N=13: 2Nm Acc=0.7361±0.0670 F1=0.7243±0.0771 | 4Nm Acc=0.6416±0.0341 F1=0.6256±0.0415
+
+======== Train(0Nm) N=14 (Run 1-10) ========
+  [N14-R1] Train=56.64s | 2Nm Acc=0.8395 F1=0.8406 | 4Nm Acc=0.7320 F1=0.6909
+  [N14-R2] Train=55.05s | 2Nm Acc=0.9040 F1=0.9048 | 4Nm Acc=0.7065 F1=0.6951
+  [N14-R3] Train=56.66s | 2Nm Acc=0.7360 F1=0.7421 | 4Nm Acc=0.6240 F1=0.6429
+  [N14-R4] Train=59.04s | 2Nm Acc=0.7745 F1=0.7765 | 4Nm Acc=0.6930 F1=0.6988
+  [N14-R5] Train=56.48s | 2Nm Acc=0.6535 F1=0.6305 | 4Nm Acc=0.6120 F1=0.5731
+  [N14-R6] Train=57.27s | 2Nm Acc=0.6515 F1=0.6338 | 4Nm Acc=0.5820 F1=0.5658
+  [N14-R7] Train=55.98s | 2Nm Acc=0.6425 F1=0.6149 | 4Nm Acc=0.5455 F1=0.4973
+  [N14-R8] Train=55.95s | 2Nm Acc=0.6740 F1=0.6814 | 4Nm Acc=0.5375 F1=0.5030
+  [N14-R9] Train=55.79s | 2Nm Acc=0.5945 F1=0.5782 | 4Nm Acc=0.5990 F1=0.5835
+  [N14-R10] Train=57.69s | 2Nm Acc=0.6285 F1=0.6168 | 4Nm Acc=0.5190 F1=0.4723
+  >>> Trimmed N=14: 2Nm Acc=0.7000±0.0706 F1=0.6921±0.0795 | 4Nm Acc=0.6124±0.0577 F1=0.5940±0.0716
+
+======== Train(0Nm) N=15 (Run 1-10) ========
+  [N15-R1] Train=58.69s | 2Nm Acc=0.6260 F1=0.6137 | 4Nm Acc=0.5540 F1=0.5161
+  [N15-R2] Train=58.48s | 2Nm Acc=0.9290 F1=0.9280 | 4Nm Acc=0.7835 F1=0.7670
+  [N15-R3] Train=59.41s | 2Nm Acc=0.8285 F1=0.8274 | 4Nm Acc=0.6970 F1=0.6803
+  [N15-R4] Train=58.16s | 2Nm Acc=0.9205 F1=0.9195 | 4Nm Acc=0.7405 F1=0.7350
+  [N15-R5] Train=58.67s | 2Nm Acc=0.9640 F1=0.9639 | 4Nm Acc=0.8585 F1=0.8492
+  [N15-R6] Train=58.09s | 2Nm Acc=0.8570 F1=0.8568 | 4Nm Acc=0.7305 F1=0.6844
+  [N15-R7] Train=1m01.63s | 2Nm Acc=0.8090 F1=0.8068 | 4Nm Acc=0.6640 F1=0.6392
+  [N15-R8] Train=1m03.33s | 2Nm Acc=0.5750 F1=0.5680 | 4Nm Acc=0.5485 F1=0.5225
+  [N15-R9] Train=1m03.36s | 2Nm Acc=0.9040 F1=0.9047 | 4Nm Acc=0.6565 F1=0.6315
+  [N15-R10] Train=1m05.47s | 2Nm Acc=0.9350 F1=0.9356 | 4Nm Acc=0.7545 F1=0.7408
+  >>> Trimmed N=15: 2Nm Acc=0.8511±0.0960 F1=0.8491±0.0997 | 4Nm Acc=0.6976±0.0680 F1=0.6751±0.0733
+
+======== Train(0Nm) N=16 (Run 1-10) ========
+  [N16-R1] Train=1m19.06s | 2Nm Acc=0.9520 F1=0.9522 | 4Nm Acc=0.8160 F1=0.8013
+  [N16-R2] Train=1m13.76s | 2Nm Acc=0.6325 F1=0.5829 | 4Nm Acc=0.5600 F1=0.5285
+  [N16-R3] Train=1m09.33s | 2Nm Acc=0.7145 F1=0.7109 | 4Nm Acc=0.6055 F1=0.5867
+  [N16-R4] Train=1m18.12s | 2Nm Acc=0.8890 F1=0.8907 | 4Nm Acc=0.7090 F1=0.6839
+  [N16-R5] Train=1m34.87s | 2Nm Acc=0.9385 F1=0.9393 | 4Nm Acc=0.7720 F1=0.7579
+  [N16-R6] Train=1m11.86s | 2Nm Acc=0.4725 F1=0.4236 | 4Nm Acc=0.4595 F1=0.4067
+  [N16-R7] Train=1m16.85s | 2Nm Acc=0.9275 F1=0.9273 | 4Nm Acc=0.8405 F1=0.8384
+  [N16-R8] Train=1m06.75s | 2Nm Acc=0.6775 F1=0.6691 | 4Nm Acc=0.6280 F1=0.6291
+  [N16-R9] Train=1m06.82s | 2Nm Acc=0.4835 F1=0.4096 | 4Nm Acc=0.4955 F1=0.4266
+  [N16-R10] Train=1m03.89s | 2Nm Acc=0.8145 F1=0.8132 | 4Nm Acc=0.7040 F1=0.7068
+  >>> Trimmed N=16: 2Nm Acc=0.7597±0.1505 F1=0.7446±0.1708 | 4Nm Acc=0.6613±0.1014 F1=0.6401±0.1158
+
+======== Train(0Nm) N=17 (Run 1-10) ========
+  [N17-R1] Train=1m01.66s | 2Nm Acc=0.9330 F1=0.9332 | 4Nm Acc=0.7360 F1=0.7173
+  [N17-R2] Train=58.83s | 2Nm Acc=0.7985 F1=0.7953 | 4Nm Acc=0.6940 F1=0.6703
+  [N17-R3] Train=1m00.05s | 2Nm Acc=0.9365 F1=0.9357 | 4Nm Acc=0.8300 F1=0.8119
+  [N17-R4] Train=1m01.31s | 2Nm Acc=0.5450 F1=0.5067 | 4Nm Acc=0.5150 F1=0.4695
+  [N17-R5] Train=1m00.86s | 2Nm Acc=0.7115 F1=0.7077 | 4Nm Acc=0.6965 F1=0.6891
+  [N17-R6] Train=1m03.14s | 2Nm Acc=0.9465 F1=0.9457 | 4Nm Acc=0.8425 F1=0.8322
+  [N17-R7] Train=1m06.89s | 2Nm Acc=0.8430 F1=0.8406 | 4Nm Acc=0.8145 F1=0.8151
+  [N17-R8] Train=1m11.22s | 2Nm Acc=0.7620 F1=0.7347 | 4Nm Acc=0.6890 F1=0.6570
+  [N17-R9] Train=1m09.78s | 2Nm Acc=0.9560 F1=0.9557 | 4Nm Acc=0.8180 F1=0.7996
+  [N17-R10] Train=1m12.49s | 2Nm Acc=0.8370 F1=0.8405 | 4Nm Acc=0.6785 F1=0.6633
+  >>> Trimmed N=17: 2Nm Acc=0.8460±0.0817 F1=0.8417±0.0863 | 4Nm Acc=0.7446±0.0612 F1=0.7279±0.0651
+
+======== Train(0Nm) N=18 (Run 1-10) ========
+  [N18-R1] Train=1m14.83s | 2Nm Acc=0.8795 F1=0.8778 | 4Nm Acc=0.7635 F1=0.7491
+  [N18-R2] Train=1m12.53s | 2Nm Acc=0.9445 F1=0.9444 | 4Nm Acc=0.8595 F1=0.8577
+  [N18-R3] Train=1m13.07s | 2Nm Acc=0.8995 F1=0.8972 | 4Nm Acc=0.8355 F1=0.8335
+  [N18-R4] Train=1m09.40s | 2Nm Acc=0.9445 F1=0.9443 | 4Nm Acc=0.8055 F1=0.7930
+  [N18-R5] Train=1m00.34s | 2Nm Acc=0.9665 F1=0.9660 | 4Nm Acc=0.8920 F1=0.8929
+  [N18-R6] Train=1m05.25s | 2Nm Acc=0.9445 F1=0.9444 | 4Nm Acc=0.8040 F1=0.7955
+  [N18-R7] Train=1m18.50s | 2Nm Acc=0.9750 F1=0.9751 | 4Nm Acc=0.9095 F1=0.9063
+  [N18-R8] Train=1m12.09s | 2Nm Acc=0.8130 F1=0.8122 | 4Nm Acc=0.7410 F1=0.7189
+  [N18-R9] Train=1m37.51s | 2Nm Acc=0.7005 F1=0.6881 | 4Nm Acc=0.6875 F1=0.6835
+  [N18-R10] Train=1m12.38s | 2Nm Acc=0.9600 F1=0.9606 | 4Nm Acc=0.7790 F1=0.7763
+  >>> Trimmed N=18: 2Nm Acc=0.9190±0.0488 F1=0.9184±0.0493 | 4Nm Acc=0.8100±0.0471 F1=0.8021±0.0535
+
+======== Train(0Nm) N=19 (Run 1-10) ========
+  [N19-R1] Train=1m20.16s | 2Nm Acc=0.9435 F1=0.9437 | 4Nm Acc=0.7955 F1=0.7959
+  [N19-R2] Train=1m16.51s | 2Nm Acc=0.8835 F1=0.8841 | 4Nm Acc=0.7485 F1=0.7381
+  [N19-R3] Train=1m16.08s | 2Nm Acc=0.6230 F1=0.6068 | 4Nm Acc=0.5350 F1=0.5172
+  [N19-R4] Train=1m11.03s | 2Nm Acc=0.7205 F1=0.7215 | 4Nm Acc=0.6945 F1=0.6966
+  [N19-R5] Train=1m26.64s | 2Nm Acc=0.8230 F1=0.8239 | 4Nm Acc=0.7015 F1=0.6921
+  [N19-R6] Train=1m15.48s | 2Nm Acc=0.8885 F1=0.8885 | 4Nm Acc=0.7525 F1=0.7211
+  [N19-R7] Train=1m09.15s | 2Nm Acc=0.8245 F1=0.8225 | 4Nm Acc=0.7415 F1=0.7390
+  [N19-R8] Train=1m07.30s | 2Nm Acc=0.9345 F1=0.9344 | 4Nm Acc=0.7775 F1=0.7620
+  [N19-R9] Train=1m05.30s | 2Nm Acc=0.9390 F1=0.9385 | 4Nm Acc=0.8250 F1=0.8044
+  [N19-R10] Train=1m04.49s | 2Nm Acc=0.6580 F1=0.6242 | 4Nm Acc=0.5650 F1=0.5319
+  >>> Trimmed N=19: 2Nm Acc=0.8339±0.0940 F1=0.8297±0.1020 | 4Nm Acc=0.7221±0.0674 F1=0.7096±0.0742
+
+======== Train(0Nm) N=20 (Run 1-10) ========
+  [N20-R1] Train=1m15.82s | 2Nm Acc=0.9000 F1=0.9017 | 4Nm Acc=0.7525 F1=0.7503
+  [N20-R2] Train=1m24.11s | 2Nm Acc=0.8180 F1=0.8188 | 4Nm Acc=0.7735 F1=0.7836
+  [N20-R3] Train=1m23.06s | 2Nm Acc=0.7500 F1=0.7387 | 4Nm Acc=0.6715 F1=0.6474
+  [N20-R4] Train=1m25.88s | 2Nm Acc=0.8395 F1=0.8254 | 4Nm Acc=0.7065 F1=0.6866
+  [N20-R5] Train=1m21.97s | 2Nm Acc=0.6150 F1=0.5510 | 4Nm Acc=0.6325 F1=0.5691
+  [N20-R6] Train=3m25.98s | 2Nm Acc=0.8775 F1=0.8774 | 4Nm Acc=0.6920 F1=0.6788
+  [N20-R7] Train=1m24.84s | 2Nm Acc=0.6280 F1=0.5914 | 4Nm Acc=0.5530 F1=0.5143
+  [N20-R8] Train=1m25.78s | 2Nm Acc=0.8820 F1=0.8730 | 4Nm Acc=0.7925 F1=0.7882
+  [N20-R9] Train=1m19.55s | 2Nm Acc=0.9440 F1=0.9436 | 4Nm Acc=0.8270 F1=0.8158
+  [N20-R10] Train=1m19.76s | 2Nm Acc=0.9650 F1=0.9648 | 4Nm Acc=0.8370 F1=0.8262
+  >>> Trimmed N=20: 2Nm Acc=0.8299±0.0937 F1=0.8212±0.1043 | 4Nm Acc=0.7310±0.0619 F1=0.7150±0.0786
+
+======== Train(0Nm) N=21 (Run 1-10) ========
+  [N21-R1] Train=1m18.85s | 2Nm Acc=0.9210 F1=0.9212 | 4Nm Acc=0.7710 F1=0.7656
+  [N21-R2] Train=1m24.07s | 2Nm Acc=0.8830 F1=0.8816 | 4Nm Acc=0.7190 F1=0.7161
+  [N21-R3] Train=1m26.58s | 2Nm Acc=0.9510 F1=0.9505 | 4Nm Acc=0.8355 F1=0.8184
+  [N21-R4] Train=1m26.63s | 2Nm Acc=0.8825 F1=0.8806 | 4Nm Acc=0.8760 F1=0.8764
+  [N21-R5] Train=1m26.01s | 2Nm Acc=0.2000 F1=0.0667 | 4Nm Acc=0.2000 F1=0.0667
+  [N21-R6] Train=1m34.56s | 2Nm Acc=0.5785 F1=0.5129 | 4Nm Acc=0.5745 F1=0.5078
+  [N21-R7] Train=1m22.76s | 2Nm Acc=0.7645 F1=0.7657 | 4Nm Acc=0.7075 F1=0.6994
+  [N21-R8] Train=1m18.33s | 2Nm Acc=0.6725 F1=0.6744 | 4Nm Acc=0.6465 F1=0.6576
+  [N21-R9] Train=1m19.43s | 2Nm Acc=0.9300 F1=0.9289 | 4Nm Acc=0.8630 F1=0.8586
+  [N21-R10] Train=1m20.43s | 2Nm Acc=0.8860 F1=0.8840 | 4Nm Acc=0.7675 F1=0.7579
+  >>> Trimmed N=21: 2Nm Acc=0.8147±0.1212 F1=0.8062±0.1372 | 4Nm Acc=0.7356±0.0890 F1=0.7227±0.1011
+
+======== Train(0Nm) N=22 (Run 1-10) ========
+  [N22-R1] Train=1m23.14s | 2Nm Acc=0.4860 F1=0.4535 | 4Nm Acc=0.5420 F1=0.5038
+  [N22-R2] Train=1m19.95s | 2Nm Acc=0.9540 F1=0.9533 | 4Nm Acc=0.8335 F1=0.8259
+  [N22-R3] Train=1m25.33s | 2Nm Acc=0.8320 F1=0.8327 | 4Nm Acc=0.6880 F1=0.6553
+  [N22-R4] Train=1m31.02s | 2Nm Acc=0.7375 F1=0.7205 | 4Nm Acc=0.6380 F1=0.6380
+  [N22-R5] Train=1m27.14s | 2Nm Acc=0.6845 F1=0.6544 | 4Nm Acc=0.6825 F1=0.6523
+  [N22-R6] Train=1m25.67s | 2Nm Acc=0.8920 F1=0.8917 | 4Nm Acc=0.7410 F1=0.7354
+  [N22-R7] Train=1m24.33s | 2Nm Acc=0.9080 F1=0.9079 | 4Nm Acc=0.7635 F1=0.7626
+  [N22-R8] Train=1m28.94s | 2Nm Acc=0.7730 F1=0.7702 | 4Nm Acc=0.6605 F1=0.6420
+  [N22-R9] Train=1m31.17s | 2Nm Acc=0.6830 F1=0.6721 | 4Nm Acc=0.6345 F1=0.6047
+  [N22-R10] Train=1m30.26s | 2Nm Acc=0.7840 F1=0.7710 | 4Nm Acc=0.7520 F1=0.7371
+  >>> Trimmed N=22: 2Nm Acc=0.7868±0.0804 F1=0.7776±0.0885 | 4Nm Acc=0.6950±0.0479 F1=0.6784±0.0541
+
+======== Train(0Nm) N=23 (Run 1-10) ========
+  [N23-R1] Train=1m21.40s | 2Nm Acc=0.7790 F1=0.7249 | 4Nm Acc=0.7240 F1=0.6741
+  [N23-R2] Train=1m21.06s | 2Nm Acc=0.8285 F1=0.8292 | 4Nm Acc=0.6600 F1=0.6338
+  [N23-R3] Train=1m20.19s | 2Nm Acc=0.9585 F1=0.9583 | 4Nm Acc=0.8255 F1=0.8070
+  [N23-R4] Train=1m17.66s | 2Nm Acc=0.7465 F1=0.7383 | 4Nm Acc=0.7190 F1=0.6937
+  [N23-R5] Train=1m16.97s | 2Nm Acc=0.9425 F1=0.9419 | 4Nm Acc=0.7915 F1=0.7793
+  [N23-R6] Train=1m15.74s | 2Nm Acc=0.9770 F1=0.9769 | 4Nm Acc=0.9000 F1=0.8969
+  [N23-R7] Train=1m16.88s | 2Nm Acc=0.8605 F1=0.8629 | 4Nm Acc=0.7920 F1=0.7901
+  [N23-R8] Train=1m25.44s | 2Nm Acc=0.9340 F1=0.9338 | 4Nm Acc=0.7810 F1=0.7657
+  [N23-R9] Train=1m22.26s | 2Nm Acc=0.9495 F1=0.9492 | 4Nm Acc=0.8440 F1=0.8326
+  [N23-R10] Train=1m16.30s | 2Nm Acc=0.6960 F1=0.6696 | 4Nm Acc=0.7045 F1=0.6765
+  >>> Trimmed N=23: 2Nm Acc=0.8749±0.0780 F1=0.8673±0.0890 | 4Nm Acc=0.7727±0.0482 F1=0.7524±0.0582
+
+======== Train(0Nm) N=24 (Run 1-10) ========
+  [N24-R1] Train=1m16.64s | 2Nm Acc=0.9705 F1=0.9704 | 4Nm Acc=0.8645 F1=0.8586
+  [N24-R2] Train=1m20.57s | 2Nm Acc=0.8830 F1=0.8837 | 4Nm Acc=0.7290 F1=0.7226
+  [N24-R3] Train=1m17.93s | 2Nm Acc=0.8815 F1=0.8788 | 4Nm Acc=0.8885 F1=0.8881
+  [N24-R4] Train=1m19.78s | 2Nm Acc=0.9440 F1=0.9431 | 4Nm Acc=0.8025 F1=0.8064
+  [N24-R5] Train=1m18.48s | 2Nm Acc=0.7035 F1=0.6970 | 4Nm Acc=0.7425 F1=0.7401
+  [N24-R6] Train=1m19.77s | 2Nm Acc=0.8020 F1=0.8001 | 4Nm Acc=0.6510 F1=0.6094
+  [N24-R7] Train=1m19.67s | 2Nm Acc=0.6680 F1=0.6617 | 4Nm Acc=0.5315 F1=0.4868
+  [N24-R8] Train=1m21.12s | 2Nm Acc=0.9205 F1=0.9186 | 4Nm Acc=0.7500 F1=0.7413
+  [N24-R9] Train=1m20.23s | 2Nm Acc=0.8750 F1=0.8730 | 4Nm Acc=0.7565 F1=0.7459
+  [N24-R10] Train=1m27.07s | 2Nm Acc=0.6855 F1=0.6795 | 4Nm Acc=0.5915 F1=0.5726
+  >>> Trimmed N=24: 2Nm Acc=0.8369±0.0908 F1=0.8342±0.0928 | 4Nm Acc=0.7359±0.0789 F1=0.7246±0.0880
+
+======== Train(0Nm) N=25 (Run 1-10) ========
+  [N25-R1] Train=1m23.04s | 2Nm Acc=0.9690 F1=0.9684 | 4Nm Acc=0.9160 F1=0.9138
+  [N25-R2] Train=1m20.88s | 2Nm Acc=0.6725 F1=0.6189 | 4Nm Acc=0.6295 F1=0.5925
+  [N25-R3] Train=1m20.46s | 2Nm Acc=0.8235 F1=0.8219 | 4Nm Acc=0.7420 F1=0.7241
+  [N25-R4] Train=1m25.66s | 2Nm Acc=0.7530 F1=0.7508 | 4Nm Acc=0.7255 F1=0.7333
+  [N25-R5] Train=1m20.42s | 2Nm Acc=0.9190 F1=0.9192 | 4Nm Acc=0.8180 F1=0.8094
+  [N25-R6] Train=1m22.71s | 2Nm Acc=0.9480 F1=0.9478 | 4Nm Acc=0.8165 F1=0.8092
+  [N25-R7] Train=1m27.11s | 2Nm Acc=0.9700 F1=0.9696 | 4Nm Acc=0.8595 F1=0.8436
+  [N25-R8] Train=1m27.05s | 2Nm Acc=0.9300 F1=0.9288 | 4Nm Acc=0.9020 F1=0.9017
+  [N25-R9] Train=1m20.20s | 2Nm Acc=0.8050 F1=0.7902 | 4Nm Acc=0.6610 F1=0.6465
+  [N25-R10] Train=1m20.66s | 2Nm Acc=0.9215 F1=0.9223 | 4Nm Acc=0.7435 F1=0.7330
+  >>> Trimmed N=25: 2Nm Acc=0.8836±0.0734 F1=0.8812±0.0760 | 4Nm Acc=0.7835±0.0740 F1=0.7751±0.0756
+
+======== Train(0Nm) N=26 (Run 1-10) ========
+  [N26-R1] Train=1m33.49s | 2Nm Acc=0.9660 F1=0.9660 | 4Nm Acc=0.7940 F1=0.7766
+  [N26-R2] Train=1m28.91s | 2Nm Acc=0.9335 F1=0.9322 | 4Nm Acc=0.8205 F1=0.8254
+  [N26-R3] Train=1m26.96s | 2Nm Acc=0.9695 F1=0.9694 | 4Nm Acc=0.8775 F1=0.8752
+  [N26-R4] Train=1m31.27s | 2Nm Acc=0.8685 F1=0.8683 | 4Nm Acc=0.7330 F1=0.7111
+  [N26-R5] Train=1m27.75s | 2Nm Acc=0.9520 F1=0.9516 | 4Nm Acc=0.8825 F1=0.8871
+  [N26-R6] Train=1m25.02s | 2Nm Acc=0.9320 F1=0.9325 | 4Nm Acc=0.7970 F1=0.7702
+  [N26-R7] Train=1m27.48s | 2Nm Acc=0.9510 F1=0.9503 | 4Nm Acc=0.8455 F1=0.8329
+  [N26-R8] Train=1m26.68s | 2Nm Acc=0.9600 F1=0.9597 | 4Nm Acc=0.8330 F1=0.8184
+  [N26-R9] Train=1m24.60s | 2Nm Acc=0.4315 F1=0.3867 | 4Nm Acc=0.4445 F1=0.3959
+  [N26-R10] Train=1m25.72s | 2Nm Acc=0.9625 F1=0.9627 | 4Nm Acc=0.8120 F1=0.7992
+  >>> Trimmed N=26: 2Nm Acc=0.9407±0.0297 F1=0.9404±0.0298 | 4Nm Acc=0.8141±0.0398 F1=0.8011±0.0462
+
+======== Train(0Nm) N=27 (Run 1-10) ========
+  [N27-R1] Train=1m25.68s | 2Nm Acc=0.8815 F1=0.8786 | 4Nm Acc=0.8420 F1=0.8382
+  [N27-R2] Train=1m27.51s | 2Nm Acc=0.8690 F1=0.8688 | 4Nm Acc=0.7420 F1=0.7118
+  [N27-R3] Train=1m24.09s | 2Nm Acc=0.6420 F1=0.6024 | 4Nm Acc=0.5855 F1=0.5623
+  [N27-R4] Train=1m25.17s | 2Nm Acc=0.9710 F1=0.9708 | 4Nm Acc=0.9380 F1=0.9383
+  [N27-R5] Train=1m26.12s | 2Nm Acc=0.9725 F1=0.9725 | 4Nm Acc=0.8620 F1=0.8473
+  [N27-R6] Train=1m23.35s | 2Nm Acc=0.9645 F1=0.9646 | 4Nm Acc=0.8700 F1=0.8648
+  [N27-R7] Train=1m23.24s | 2Nm Acc=0.9695 F1=0.9695 | 4Nm Acc=0.8545 F1=0.8416
+  [N27-R8] Train=1m27.42s | 2Nm Acc=0.2000 F1=0.0667 | 4Nm Acc=0.2000 F1=0.0667
+  [N27-R9] Train=1m26.56s | 2Nm Acc=0.7630 F1=0.7677 | 4Nm Acc=0.6950 F1=0.7069
+  [N27-R10] Train=1m24.84s | 2Nm Acc=0.8035 F1=0.8013 | 4Nm Acc=0.7805 F1=0.7814
+  >>> Trimmed N=27: 2Nm Acc=0.8580±0.1095 F1=0.8530±0.1191 | 4Nm Acc=0.7789±0.0940 F1=0.7693±0.0971
+
+======== Train(0Nm) N=28 (Run 1-10) ========
+  [N28-R1] Train=1m24.90s | 2Nm Acc=0.7170 F1=0.6844 | 4Nm Acc=0.5745 F1=0.5295
+  [N28-R2] Train=1m24.35s | 2Nm Acc=0.9680 F1=0.9679 | 4Nm Acc=0.9195 F1=0.9189
+  [N28-R3] Train=1m27.52s | 2Nm Acc=0.9585 F1=0.9585 | 4Nm Acc=0.7965 F1=0.7973
+  [N28-R4] Train=1m28.70s | 2Nm Acc=0.8265 F1=0.8289 | 4Nm Acc=0.6595 F1=0.6424
+  [N28-R5] Train=1m29.81s | 2Nm Acc=0.9190 F1=0.9179 | 4Nm Acc=0.7210 F1=0.6900
+  [N28-R6] Train=1m30.49s | 2Nm Acc=0.8800 F1=0.8795 | 4Nm Acc=0.7800 F1=0.7790
+  [N28-R7] Train=1m29.48s | 2Nm Acc=0.8655 F1=0.8673 | 4Nm Acc=0.7510 F1=0.7408
+  [N28-R8] Train=1m31.70s | 2Nm Acc=0.5550 F1=0.5248 | 4Nm Acc=0.6055 F1=0.5842
+  [N28-R9] Train=1m32.17s | 2Nm Acc=0.7845 F1=0.7667 | 4Nm Acc=0.6955 F1=0.6446
+  [N28-R10] Train=1m31.57s | 2Nm Acc=0.9645 F1=0.9645 | 4Nm Acc=0.8355 F1=0.8150
+  >>> Trimmed N=28: 2Nm Acc=0.8644±0.0803 F1=0.8585±0.0901 | 4Nm Acc=0.7306±0.0709 F1=0.7117±0.0786
+
+======== Train(0Nm) N=29 (Run 1-10) ========
+  [N29-R1] Train=1m29.46s | 2Nm Acc=0.4935 F1=0.4020 | 4Nm Acc=0.4985 F1=0.4131
+  [N29-R2] Train=1m31.53s | 2Nm Acc=0.9845 F1=0.9845 | 4Nm Acc=0.8565 F1=0.8405
+  [N29-R3] Train=1m30.05s | 2Nm Acc=0.7195 F1=0.7038 | 4Nm Acc=0.6340 F1=0.6171
+  [N29-R4] Train=1m31.98s | 2Nm Acc=0.5230 F1=0.4286 | 4Nm Acc=0.5015 F1=0.4094
+  [N29-R5] Train=1m31.81s | 2Nm Acc=0.9750 F1=0.9748 | 4Nm Acc=0.8390 F1=0.8310
+  [N29-R6] Train=1m35.17s | 2Nm Acc=0.8515 F1=0.8516 | 4Nm Acc=0.7000 F1=0.6928
+  [N29-R7] Train=1m46.26s | 2Nm Acc=0.7150 F1=0.6606 | 4Nm Acc=0.5730 F1=0.5239
+  [N29-R8] Train=1m37.49s | 2Nm Acc=0.7830 F1=0.7838 | 4Nm Acc=0.7145 F1=0.7217
+  [N29-R9] Train=1m33.13s | 2Nm Acc=0.7610 F1=0.7463 | 4Nm Acc=0.6760 F1=0.6590
+  [N29-R10] Train=1m31.43s | 2Nm Acc=0.8700 F1=0.8669 | 4Nm Acc=0.8410 F1=0.8380
+  >>> Trimmed N=29: 2Nm Acc=0.7748±0.1252 F1=0.7521±0.1538 | 4Nm Acc=0.6849±0.1107 F1=0.6621±0.1356
+
+======== Train(0Nm) N=30 (Run 1-10) ========
+  [N30-R1] Train=1m31.96s | 2Nm Acc=0.9330 F1=0.9319 | 4Nm Acc=0.8260 F1=0.8259
+  [N30-R2] Train=1m30.21s | 2Nm Acc=0.9670 F1=0.9669 | 4Nm Acc=0.8660 F1=0.8605
+  [N30-R3] Train=1m28.76s | 2Nm Acc=0.6935 F1=0.6785 | 4Nm Acc=0.6915 F1=0.6861
+  [N30-R4] Train=1m27.72s | 2Nm Acc=0.9030 F1=0.9028 | 4Nm Acc=0.7410 F1=0.7307
+  [N30-R5] Train=1m29.32s | 2Nm Acc=0.5530 F1=0.4956 | 4Nm Acc=0.5755 F1=0.5166
+  [N30-R6] Train=1m27.28s | 2Nm Acc=0.8200 F1=0.8223 | 4Nm Acc=0.7245 F1=0.7159
+  [N30-R7] Train=1m29.18s | 2Nm Acc=0.8420 F1=0.8372 | 4Nm Acc=0.8285 F1=0.8223
+  [N30-R8] Train=1m27.87s | 2Nm Acc=0.9560 F1=0.9558 | 4Nm Acc=0.7620 F1=0.7526
+  [N30-R9] Train=1m26.95s | 2Nm Acc=0.9010 F1=0.8983 | 4Nm Acc=0.8230 F1=0.8230
+  [N30-R10] Train=1m25.66s | 2Nm Acc=0.9710 F1=0.9709 | 4Nm Acc=0.8420 F1=0.8250
+  >>> Trimmed N=30: 2Nm Acc=0.8769±0.0843 F1=0.8742±0.0883 | 4Nm Acc=0.7798±0.0535 F1=0.7727±0.0541
+[Stage2] Saved: D:\机械故障诊断实验\KAIST\MRCFN_Comparison_KAIST\Final_Summary_Stats_raw.csv
+[Stage2] Saved: D:\机械故障诊断实验\KAIST\MRCFN_Comparison_KAIST\Final_Summary_Stats_trimmed.csv
+[Stage2] Saved: D:\机械故障诊断实验\KAIST\MRCFN_Comparison_KAIST\performance_trend.png
+[Time] Stage2(FullExp) = 6h08m47.20s
+
+>>> Stage 3: Noise robustness study (FAIR, SameModel, mean±std over noise draws) ...
+[Stage3-FAIR] NoiseStudy_model trained ONCE. time=1m07.89s
+[Stage3-FAIR] SNR=NoNoise | 2Nm Acc=0.5900±0.0000 F1=0.4949±0.0000 | 4Nm Acc=0.5305±0.0000 F1=0.4581±0.0000
+[Stage3-FAIR] SNR=0 | 2Nm Acc=0.9811±0.0045 F1=0.9810±0.0046 | 4Nm Acc=0.9061±0.0033 F1=0.9032±0.0038
+    [Sanity] empirical SNR≈0.02 dB (vib subset, after your pipeline)
+[Stage3-FAIR] SNR=-2 | 2Nm Acc=0.6793±0.0041 F1=0.6219±0.0048 | 4Nm Acc=0.6777±0.0045 F1=0.6245±0.0070
+    [Sanity] empirical SNR≈-1.98 dB (vib subset, after your pipeline)
+[Stage3-FAIR] SNR=-4 | 2Nm Acc=0.4629±0.0026 F1=0.3766±0.0026 | 4Nm Acc=0.4413±0.0032 F1=0.3489±0.0038
+    [Sanity] empirical SNR≈-3.98 dB (vib subset, after your pipeline)
+[Stage3-FAIR] SNR=-6 | 2Nm Acc=0.3874±0.0014 F1=0.2620±0.0020 | 4Nm Acc=0.3859±0.0029 F1=0.2629±0.0020
+    [Sanity] empirical SNR≈-5.98 dB (vib subset, after your pipeline)
+[Stage3-FAIR] SNR=-8 | 2Nm Acc=0.3263±0.0031 F1=0.1957±0.0013 | 4Nm Acc=0.3264±0.0016 F1=0.1977±0.0011
+    [Sanity] empirical SNR≈-7.98 dB (vib subset, after your pipeline)
+[Stage3-FAIR] SNR=-10 | 2Nm Acc=0.2637±0.0042 F1=0.1406±0.0033 | 4Nm Acc=0.2618±0.0035 F1=0.1394±0.0024
+    [Sanity] empirical SNR≈-9.98 dB (vib subset, after your pipeline)
+[Stage3-FAIR] Saved: D:\机械故障诊断实验\KAIST\MRCFN_Comparison_KAIST\NoiseStudy_LoadShift_FAIR_SameModel\Noise_Robustness_LoadShift_SameModel_FAIR.csv
+[Time] Stage3(NoiseStudy) = 2m40.05s
+[Time] TOTAL = 6h11m27.25s
+[Time] Saved: D:\机械故障诊断实验\KAIST\MRCFN_Comparison_KAIST\Time_Summary.txt
+
+ALL DONE. Outputs saved to: D:\机械故障诊断实验\KAIST\MRCFN_Comparison_KAIST
+[LOG] Saved: D:\机械故障诊断实验\KAIST\MRCFN_Comparison_KAIST\log.txt

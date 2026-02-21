@@ -1,0 +1,506 @@
+D:\anaconda3\envs\tensorflow\python.exe D:\机械故障诊断实验\机械故障诊断实验\MHCNN_Oputuna_Experiment.py 
+正在加载数据...
+数据加载完成。
+>>> 阶段 1: Optuna 搜索...
+[I 2026-02-03 11:39:31,267] A new study created in memory with name: no-name-0b7f7870-670c-450d-a7d9-781d2c4ed78a
+[I 2026-02-03 11:39:48,952] Trial 0 finished with value: 0.5959183573722839 and parameters: {'lr': 0.002102875550030317, 'batch_size': 64, 'dropout_vib': 0.20200867199944805, 'dropout_aco': 0.4269905955428933, 'atten_dim': 256, 'n_layers_vib': 5, 'n_layers_aco': 5}. Best is trial 0 with value: 0.5959183573722839.
+[I 2026-02-03 11:39:58,087] Trial 1 finished with value: 0.9662337899208069 and parameters: {'lr': 0.0007175198468744067, 'batch_size': 64, 'dropout_vib': 0.42772839711916333, 'dropout_aco': 0.3872319479787353, 'atten_dim': 256, 'n_layers_vib': 5, 'n_layers_aco': 5}. Best is trial 1 with value: 0.9662337899208069.
+[I 2026-02-03 11:40:04,604] Trial 2 finished with value: 0.9536178112030029 and parameters: {'lr': 0.0005137163833812991, 'batch_size': 64, 'dropout_vib': 0.29657479952106114, 'dropout_aco': 0.4979594380518194, 'atten_dim': 128, 'n_layers_vib': 3, 'n_layers_aco': 3}. Best is trial 1 with value: 0.9662337899208069.
+[I 2026-02-03 11:40:13,273] Trial 3 finished with value: 0.8716140985488892 and parameters: {'lr': 0.0023910004844420987, 'batch_size': 64, 'dropout_vib': 0.22432922641255973, 'dropout_aco': 0.12779837298125224, 'atten_dim': 256, 'n_layers_vib': 5, 'n_layers_aco': 4}. Best is trial 1 with value: 0.9662337899208069.
+[I 2026-02-03 11:40:26,414] Trial 4 finished with value: 0.5736548900604248 and parameters: {'lr': 0.004257355746210893, 'batch_size': 32, 'dropout_vib': 0.39821697582559157, 'dropout_aco': 0.2254381517679557, 'atten_dim': 128, 'n_layers_vib': 5, 'n_layers_aco': 5}. Best is trial 1 with value: 0.9662337899208069.
+[I 2026-02-03 11:40:28,877] Trial 5 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:40:31,248] Trial 6 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:40:33,433] Trial 7 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:40:35,247] Trial 8 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:40:38,128] Trial 9 pruned. Trial was pruned at epoch 2.
+[I 2026-02-03 11:40:39,999] Trial 10 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:40:41,788] Trial 11 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:40:49,781] Trial 12 finished with value: 0.9009276628494263 and parameters: {'lr': 0.00046280361837045133, 'batch_size': 64, 'dropout_vib': 0.24212554961519514, 'dropout_aco': 0.3887625766158565, 'atten_dim': 256, 'n_layers_vib': 4, 'n_layers_aco': 3}. Best is trial 1 with value: 0.9662337899208069.
+[I 2026-02-03 11:40:51,519] Trial 13 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:40:53,669] Trial 14 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:40:55,719] Trial 15 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:41:04,326] Trial 16 finished with value: 0.9810760617256165 and parameters: {'lr': 0.0006420940090019174, 'batch_size': 64, 'dropout_vib': 0.40660764227227536, 'dropout_aco': 0.37567803278217776, 'atten_dim': 128, 'n_layers_vib': 4, 'n_layers_aco': 5}. Best is trial 16 with value: 0.9810760617256165.
+[I 2026-02-03 11:41:06,924] Trial 17 pruned. Trial was pruned at epoch 2.
+[I 2026-02-03 11:41:26,234] Trial 18 finished with value: 0.9717996120452881 and parameters: {'lr': 0.00027790419468369174, 'batch_size': 16, 'dropout_vib': 0.4966951387184463, 'dropout_aco': 0.27117851907382734, 'atten_dim': 256, 'n_layers_vib': 4, 'n_layers_aco': 5}. Best is trial 16 with value: 0.9810760617256165.
+[I 2026-02-03 11:41:28,806] Trial 19 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:41:31,792] Trial 20 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:41:53,399] Trial 21 pruned. Trial was pruned at epoch 21.
+[I 2026-02-03 11:42:16,407] Trial 22 finished with value: 0.994434118270874 and parameters: {'lr': 0.0013865546776879656, 'batch_size': 16, 'dropout_vib': 0.4223065128432895, 'dropout_aco': 0.3497078380248016, 'atten_dim': 256, 'n_layers_vib': 4, 'n_layers_aco': 5}. Best is trial 22 with value: 0.994434118270874.
+[I 2026-02-03 11:42:38,472] Trial 23 finished with value: 0.9933209419250488 and parameters: {'lr': 0.0010364697656179396, 'batch_size': 16, 'dropout_vib': 0.38337179253204395, 'dropout_aco': 0.3509557934982849, 'atten_dim': 256, 'n_layers_vib': 4, 'n_layers_aco': 5}. Best is trial 22 with value: 0.994434118270874.
+[I 2026-02-03 11:42:40,971] Trial 24 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:42:43,921] Trial 25 pruned. Trial was pruned at epoch 0.
+[I 2026-02-03 11:43:05,266] Trial 26 finished with value: 0.9836734533309937 and parameters: {'lr': 0.0015034405579103561, 'batch_size': 16, 'dropout_vib': 0.37598637396685686, 'dropout_aco': 0.4422820001001375, 'atten_dim': 128, 'n_layers_vib': 4, 'n_layers_aco': 5}. Best is trial 22 with value: 0.994434118270874.
+[I 2026-02-03 11:43:10,838] Trial 27 pruned. Trial was pruned at epoch 4.
+[I 2026-02-03 11:43:30,945] Trial 28 finished with value: 0.9729127883911133 and parameters: {'lr': 0.001463192580702173, 'batch_size': 16, 'dropout_vib': 0.37061508369058754, 'dropout_aco': 0.4119290462194822, 'atten_dim': 128, 'n_layers_vib': 4, 'n_layers_aco': 5}. Best is trial 22 with value: 0.994434118270874.
+[I 2026-02-03 11:43:43,899] Trial 29 pruned. Trial was pruned at epoch 15.
+最佳参数: {'lr': 0.0013865546776879656, 'batch_size': 16, 'dropout_vib': 0.4223065128432895, 'dropout_aco': 0.3497078380248016, 'atten_dim': 256, 'n_layers_vib': 4, 'n_layers_aco': 5}
+
+>>> Best MHCNN Model Architecture Summary:
+============================================================
+Model: "model_60"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ input_62 (InputLayer)          [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ conv1d_257 (Conv1D)            (None, 1024, 32)     288         ['input_62[0][0]']               
+                                                                                                  
+ activation_131 (Activation)    (None, 1024, 32)     0           ['conv1d_257[0][0]']             
+                                                                                                  
+ max_pooling1d_131 (MaxPooling1  (None, 512, 32)     0           ['activation_131[0][0]']         
+ D)                                                                                               
+                                                                                                  
+ input_61 (InputLayer)          [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ conv1d_258 (Conv1D)            (None, 256, 64)      16448       ['max_pooling1d_131[0][0]']      
+                                                                                                  
+ conv1d_253 (Conv1D)            (None, 1024, 32)     544         ['input_61[0][0]']               
+                                                                                                  
+ activation_132 (Activation)    (None, 256, 64)      0           ['conv1d_258[0][0]']             
+                                                                                                  
+ leaky_re_lu_152 (LeakyReLU)    (None, 1024, 32)     0           ['conv1d_253[0][0]']             
+                                                                                                  
+ max_pooling1d_132 (MaxPooling1  (None, 128, 64)     0           ['activation_132[0][0]']         
+ D)                                                                                               
+                                                                                                  
+ average_pooling1d_122 (Average  (None, 512, 32)     0           ['leaky_re_lu_152[0][0]']        
+ Pooling1D)                                                                                       
+                                                                                                  
+ conv1d_259 (Conv1D)            (None, 128, 128)     65664       ['max_pooling1d_132[0][0]']      
+                                                                                                  
+ conv1d_254 (Conv1D)            (None, 256, 64)      32832       ['average_pooling1d_122[0][0]']  
+                                                                                                  
+ activation_133 (Activation)    (None, 128, 128)     0           ['conv1d_259[0][0]']             
+                                                                                                  
+ leaky_re_lu_153 (LeakyReLU)    (None, 256, 64)      0           ['conv1d_254[0][0]']             
+                                                                                                  
+ max_pooling1d_133 (MaxPooling1  (None, 64, 128)     0           ['activation_133[0][0]']         
+ D)                                                                                               
+                                                                                                  
+ average_pooling1d_123 (Average  (None, 128, 64)     0           ['leaky_re_lu_153[0][0]']        
+ Pooling1D)                                                                                       
+                                                                                                  
+ conv1d_260 (Conv1D)            (None, 64, 256)      262400      ['max_pooling1d_133[0][0]']      
+                                                                                                  
+ conv1d_255 (Conv1D)            (None, 128, 128)     131200      ['average_pooling1d_123[0][0]']  
+                                                                                                  
+ activation_134 (Activation)    (None, 64, 256)      0           ['conv1d_260[0][0]']             
+                                                                                                  
+ leaky_re_lu_154 (LeakyReLU)    (None, 128, 128)     0           ['conv1d_255[0][0]']             
+                                                                                                  
+ max_pooling1d_134 (MaxPooling1  (None, 32, 256)     0           ['activation_134[0][0]']         
+ D)                                                                                               
+                                                                                                  
+ average_pooling1d_124 (Average  (None, 64, 128)     0           ['leaky_re_lu_154[0][0]']        
+ Pooling1D)                                                                                       
+                                                                                                  
+ conv1d_261 (Conv1D)            (None, 32, 256)      524544      ['max_pooling1d_134[0][0]']      
+                                                                                                  
+ conv1d_256 (Conv1D)            (None, 64, 256)      524544      ['average_pooling1d_124[0][0]']  
+                                                                                                  
+ activation_135 (Activation)    (None, 32, 256)      0           ['conv1d_261[0][0]']             
+                                                                                                  
+ leaky_re_lu_155 (LeakyReLU)    (None, 64, 256)      0           ['conv1d_256[0][0]']             
+                                                                                                  
+ dropout_61 (Dropout)           (None, 32, 256)      0           ['activation_135[0][0]']         
+                                                                                                  
+ dropout_60 (Dropout)           (None, 64, 256)      0           ['leaky_re_lu_155[0][0]']        
+                                                                                                  
+ max_pooling1d_135 (MaxPooling1  (None, 16, 256)     0           ['dropout_61[0][0]']             
+ D)                                                                                               
+                                                                                                  
+ average_pooling1d_125 (Average  (None, 32, 256)     0           ['dropout_60[0][0]']             
+ Pooling1D)                                                                                       
+                                                                                                  
+ cross_attention_61 (CrossAtten  (None, 16, 256)     196608      ['max_pooling1d_135[0][0]',      
+ tion)                                                            'average_pooling1d_125[0][0]']  
+                                                                                                  
+ cross_attention_60 (CrossAtten  (None, 32, 256)     196608      ['average_pooling1d_125[0][0]',  
+ tion)                                                            'max_pooling1d_135[0][0]']      
+                                                                                                  
+ flatten_60 (Flatten)           (None, 4096)         0           ['cross_attention_61[0][0]']     
+                                                                                                  
+ flatten_61 (Flatten)           (None, 8192)         0           ['cross_attention_60[0][0]']     
+                                                                                                  
+ dense_151 (Dense)              (None, 1)            4097        ['flatten_60[0][0]']             
+                                                                                                  
+ dense_152 (Dense)              (None, 1)            8193        ['flatten_61[0][0]']             
+                                                                                                  
+ concatenate_60 (Concatenate)   (None, 2)            0           ['dense_151[0][0]',              
+                                                                  'dense_152[0][0]']              
+                                                                                                  
+ dense_150 (Dense)              (None, 2)            6           ['concatenate_60[0][0]']         
+                                                                                                  
+ tf.__operators__.getitem_60 (S  (None, 1)           0           ['dense_150[0][0]']              
+ licingOpLambda)                                                                                  
+                                                                                                  
+ tf.__operators__.getitem_61 (S  (None, 1)           0           ['dense_150[0][0]']              
+ licingOpLambda)                                                                                  
+                                                                                                  
+ lambda_60 (Lambda)             (None, 4096)         0           ['flatten_60[0][0]',             
+                                                                  'tf.__operators__.getitem_60[0][
+                                                                 0]']                             
+                                                                                                  
+ lambda_61 (Lambda)             (None, 8192)         0           ['flatten_61[0][0]',             
+                                                                  'tf.__operators__.getitem_61[0][
+                                                                 0]']                             
+                                                                                                  
+ concatenate_61 (Concatenate)   (None, 12288)        0           ['lambda_60[0][0]',              
+                                                                  'lambda_61[0][0]']              
+                                                                                                  
+ dense_153 (Dense)              (None, 256)          3145984     ['concatenate_61[0][0]']         
+                                                                                                  
+ leaky_re_lu_156 (LeakyReLU)    (None, 256)          0           ['dense_153[0][0]']              
+                                                                                                  
+ dense_154 (Dense)              (None, 7)            1799        ['leaky_re_lu_156[0][0]']        
+                                                                                                  
+==================================================================================================
+Total params: 5,111,759
+Trainable params: 5,111,759
+Non-trainable params: 0
+__________________________________________________________________________________________________
+============================================================
+
+
+>>> 阶段 2: 全样本范围敏感性测试 (5-30 samples)...
+
+======== 测试样本量: 5 (Run 1-10) ========
+  [S5-R1] Acc: 0.9099, F1: 0.9060
+  [S5-R2] Acc: 0.8759, F1: 0.8715
+  [S5-R3] Acc: 0.9631, F1: 0.9629
+  [S5-R4] Acc: 0.9515, F1: 0.9513
+  [S5-R5] Acc: 0.9479, F1: 0.9473
+  [S5-R6] Acc: 0.9378, F1: 0.9375
+  [S5-R7] Acc: 0.9479, F1: 0.9473
+  [S5-R8] Acc: 0.8933, F1: 0.8935
+  [S5-R9] Acc: 0.9588, F1: 0.9587
+  [S5-R10] Acc: 0.8246, F1: 0.8352
+  >>> S5 完成 (Trimmed): Mean Acc=0.9279 (Std=0.0288)
+
+======== 测试样本量: 6 (Run 1-10) ========
+  [S6-R1] Acc: 0.9065, F1: 0.9048
+  [S6-R2] Acc: 0.9786, F1: 0.9785
+  [S6-R3] Acc: 0.9079, F1: 0.9072
+  [S6-R4] Acc: 0.9808, F1: 0.9806
+  [S6-R5] Acc: 0.9569, F1: 0.9556
+  [S6-R6] Acc: 0.9819, F1: 0.9818
+  [S6-R7] Acc: 0.9405, F1: 0.9405
+  [S6-R8] Acc: 0.8477, F1: 0.8505
+  [S6-R9] Acc: 0.9761, F1: 0.9760
+  [S6-R10] Acc: 0.9188, F1: 0.9175
+  >>> S6 完成 (Trimmed): Mean Acc=0.9457 (Std=0.0297)
+
+======== 测试样本量: 7 (Run 1-10) ========
+  [S7-R1] Acc: 0.9102, F1: 0.9102
+  [S7-R2] Acc: 0.9418, F1: 0.9419
+  [S7-R3] Acc: 0.8026, F1: 0.7942
+  [S7-R4] Acc: 0.9248, F1: 0.9224
+  [S7-R5] Acc: 0.8837, F1: 0.8787
+  [S7-R6] Acc: 0.9724, F1: 0.9724
+  [S7-R7] Acc: 0.8804, F1: 0.8801
+  [S7-R8] Acc: 0.8891, F1: 0.8881
+  [S7-R9] Acc: 0.8393, F1: 0.8301
+  [S7-R10] Acc: 0.9876, F1: 0.9876
+  >>> S7 完成 (Trimmed): Mean Acc=0.9052 (Std=0.0386)
+
+======== 测试样本量: 8 (Run 1-10) ========
+  [S8-R1] Acc: 0.9902, F1: 0.9902
+  [S8-R2] Acc: 0.9639, F1: 0.9639
+  [S8-R3] Acc: 0.8816, F1: 0.8830
+  [S8-R4] Acc: 0.9836, F1: 0.9835
+  [S8-R5] Acc: 0.9909, F1: 0.9909
+  [S8-R6] Acc: 0.9493, F1: 0.9486
+  [S8-R7] Acc: 0.9719, F1: 0.9721
+  [S8-R8] Acc: 0.9956, F1: 0.9956
+  [S8-R9] Acc: 0.9213, F1: 0.9215
+  [S8-R10] Acc: 0.9818, F1: 0.9818
+  >>> S8 完成 (Trimmed): Mean Acc=0.9691 (Std=0.0224)
+
+======== 测试样本量: 9 (Run 1-10) ========
+  [S9-R1] Acc: 0.9890, F1: 0.9890
+  [S9-R2] Acc: 0.9748, F1: 0.9747
+  [S9-R3] Acc: 0.9419, F1: 0.9399
+  [S9-R4] Acc: 0.9945, F1: 0.9945
+  [S9-R5] Acc: 0.9879, F1: 0.9879
+  [S9-R6] Acc: 0.9909, F1: 0.9909
+  [S9-R7] Acc: 0.9945, F1: 0.9945
+  [S9-R8] Acc: 0.9858, F1: 0.9857
+  [S9-R9] Acc: 0.9207, F1: 0.9201
+  [S9-R10] Acc: 0.9901, F1: 0.9901
+  >>> S9 完成 (Trimmed): Mean Acc=0.9819 (Std=0.0160)
+
+======== 测试样本量: 10 (Run 1-10) ========
+  [S10-R1] Acc: 0.9839, F1: 0.9838
+  [S10-R2] Acc: 0.9810, F1: 0.9809
+  [S10-R3] Acc: 0.9890, F1: 0.9890
+  [S10-R4] Acc: 0.9410, F1: 0.9397
+  [S10-R5] Acc: 0.9736, F1: 0.9736
+  [S10-R6] Acc: 0.9498, F1: 0.9498
+  [S10-R7] Acc: 0.9894, F1: 0.9894
+  [S10-R8] Acc: 0.9934, F1: 0.9934
+  [S10-R9] Acc: 0.9059, F1: 0.9053
+  [S10-R10] Acc: 0.9575, F1: 0.9573
+  >>> S10 完成 (Trimmed): Mean Acc=0.9707 (Std=0.0175)
+
+======== 测试样本量: 11 (Run 1-10) ========
+  [S11-R1] Acc: 0.9930, F1: 0.9930
+  [S11-R2] Acc: 0.9871, F1: 0.9871
+  [S11-R3] Acc: 0.9941, F1: 0.9941
+  [S11-R4] Acc: 0.9963, F1: 0.9963
+  [S11-R5] Acc: 0.9971, F1: 0.9971
+  [S11-R6] Acc: 0.9978, F1: 0.9978
+  [S11-R7] Acc: 0.9927, F1: 0.9927
+  [S11-R8] Acc: 0.9956, F1: 0.9956
+  [S11-R9] Acc: 0.9938, F1: 0.9937
+  [S11-R10] Acc: 0.9280, F1: 0.9277
+  >>> S11 完成 (Trimmed): Mean Acc=0.9937 (Std=0.0029)
+
+======== 测试样本量: 12 (Run 1-10) ========
+  [S12-R1] Acc: 0.9908, F1: 0.9908
+  [S12-R2] Acc: 0.9867, F1: 0.9867
+  [S12-R3] Acc: 0.9897, F1: 0.9897
+  [S12-R4] Acc: 0.9838, F1: 0.9837
+  [S12-R5] Acc: 0.9739, F1: 0.9738
+  [S12-R6] Acc: 0.9764, F1: 0.9764
+  [S12-R7] Acc: 0.9963, F1: 0.9963
+  [S12-R8] Acc: 0.9941, F1: 0.9941
+  [S12-R9] Acc: 0.9948, F1: 0.9948
+  [S12-R10] Acc: 0.9963, F1: 0.9963
+  >>> S12 完成 (Trimmed): Mean Acc=0.9891 (Std=0.0062)
+
+======== 测试样本量: 13 (Run 1-10) ========
+  [S13-R1] Acc: 0.9594, F1: 0.9588
+  [S13-R2] Acc: 0.9915, F1: 0.9915
+  [S13-R3] Acc: 0.9808, F1: 0.9807
+  [S13-R4] Acc: 0.9970, F1: 0.9970
+  [S13-R5] Acc: 0.9860, F1: 0.9860
+  [S13-R6] Acc: 0.9908, F1: 0.9908
+  [S13-R7] Acc: 0.9974, F1: 0.9974
+  [S13-R8] Acc: 0.9782, F1: 0.9782
+  [S13-R9] Acc: 0.9841, F1: 0.9841
+  [S13-R10] Acc: 0.9904, F1: 0.9904
+  >>> S13 完成 (Trimmed): Mean Acc=0.9874 (Std=0.0058)
+
+======== 测试样本量: 14 (Run 1-10) ========
+  [S14-R1] Acc: 0.9919, F1: 0.9919
+  [S14-R2] Acc: 0.9741, F1: 0.9741
+  [S14-R3] Acc: 0.9930, F1: 0.9930
+  [S14-R4] Acc: 0.8993, F1: 0.8980
+  [S14-R5] Acc: 0.9808, F1: 0.9807
+  [S14-R6] Acc: 0.9149, F1: 0.9106
+  [S14-R7] Acc: 0.9900, F1: 0.9900
+  [S14-R8] Acc: 0.9889, F1: 0.9889
+  [S14-R9] Acc: 0.9700, F1: 0.9700
+  [S14-R10] Acc: 0.9615, F1: 0.9610
+  >>> S14 完成 (Trimmed): Mean Acc=0.9715 (Std=0.0236)
+
+======== 测试样本量: 15 (Run 1-10) ========
+  [S15-R1] Acc: 0.9922, F1: 0.9922
+  [S15-R2] Acc: 0.9848, F1: 0.9848
+  [S15-R3] Acc: 0.9844, F1: 0.9844
+  [S15-R4] Acc: 0.9826, F1: 0.9825
+  [S15-R5] Acc: 0.9781, F1: 0.9780
+  [S15-R6] Acc: 0.9963, F1: 0.9963
+  [S15-R7] Acc: 0.9774, F1: 0.9774
+  [S15-R8] Acc: 0.9929, F1: 0.9929
+  [S15-R9] Acc: 0.9941, F1: 0.9941
+  [S15-R10] Acc: 0.9922, F1: 0.9922
+  >>> S15 完成 (Trimmed): Mean Acc=0.9877 (Std=0.0055)
+
+======== 测试样本量: 16 (Run 1-10) ========
+  [S16-R1] Acc: 0.9948, F1: 0.9948
+  [S16-R2] Acc: 0.9881, F1: 0.9881
+  [S16-R3] Acc: 0.9896, F1: 0.9896
+  [S16-R4] Acc: 0.9940, F1: 0.9940
+  [S16-R5] Acc: 0.9267, F1: 0.9284
+  [S16-R6] Acc: 0.9903, F1: 0.9903
+  [S16-R7] Acc: 0.9967, F1: 0.9967
+  [S16-R8] Acc: 0.9974, F1: 0.9974
+  [S16-R9] Acc: 0.9911, F1: 0.9911
+  [S16-R10] Acc: 0.9926, F1: 0.9926
+  >>> S16 完成 (Trimmed): Mean Acc=0.9921 (Std=0.0027)
+
+======== 测试样本量: 17 (Run 1-10) ========
+  [S17-R1] Acc: 0.9925, F1: 0.9926
+  [S17-R2] Acc: 0.9851, F1: 0.9851
+  [S17-R3] Acc: 0.9321, F1: 0.9318
+  [S17-R4] Acc: 0.9761, F1: 0.9762
+  [S17-R5] Acc: 0.9787, F1: 0.9787
+  [S17-R6] Acc: 0.9750, F1: 0.9749
+  [S17-R7] Acc: 0.9899, F1: 0.9899
+  [S17-R8] Acc: 0.9974, F1: 0.9974
+  [S17-R9] Acc: 0.9925, F1: 0.9925
+  [S17-R10] Acc: 0.9929, F1: 0.9929
+  >>> S17 完成 (Trimmed): Mean Acc=0.9854 (Std=0.0072)
+
+======== 测试样本量: 18 (Run 1-10) ========
+  [S18-R1] Acc: 0.9764, F1: 0.9762
+  [S18-R2] Acc: 0.9892, F1: 0.9891
+  [S18-R3] Acc: 0.9877, F1: 0.9876
+  [S18-R4] Acc: 0.9921, F1: 0.9921
+  [S18-R5] Acc: 0.9802, F1: 0.9801
+  [S18-R6] Acc: 0.9981, F1: 0.9981
+  [S18-R7] Acc: 0.9660, F1: 0.9658
+  [S18-R8] Acc: 0.9914, F1: 0.9914
+  [S18-R9] Acc: 0.9832, F1: 0.9831
+  [S18-R10] Acc: 0.9989, F1: 0.9989
+  >>> S18 完成 (Trimmed): Mean Acc=0.9873 (Std=0.0066)
+
+======== 测试样本量: 19 (Run 1-10) ========
+  [S19-R1] Acc: 0.9970, F1: 0.9970
+  [S19-R2] Acc: 0.9831, F1: 0.9831
+  [S19-R3] Acc: 0.9974, F1: 0.9974
+  [S19-R4] Acc: 0.9985, F1: 0.9985
+  [S19-R5] Acc: 0.9955, F1: 0.9955
+  [S19-R6] Acc: 0.9880, F1: 0.9880
+  [S19-R7] Acc: 0.9974, F1: 0.9974
+  [S19-R8] Acc: 0.9933, F1: 0.9933
+  [S19-R9] Acc: 0.9959, F1: 0.9959
+  [S19-R10] Acc: 0.9936, F1: 0.9936
+  >>> S19 完成 (Trimmed): Mean Acc=0.9948 (Std=0.0030)
+
+======== 测试样本量: 20 (Run 1-10) ========
+  [S20-R1] Acc: 0.9989, F1: 0.9989
+  [S20-R2] Acc: 0.9914, F1: 0.9914
+  [S20-R3] Acc: 0.9925, F1: 0.9925
+  [S20-R4] Acc: 0.9992, F1: 0.9992
+  [S20-R5] Acc: 0.9259, F1: 0.9252
+  [S20-R6] Acc: 0.9906, F1: 0.9906
+  [S20-R7] Acc: 0.9876, F1: 0.9876
+  [S20-R8] Acc: 0.9898, F1: 0.9898
+  [S20-R9] Acc: 0.9981, F1: 0.9981
+  [S20-R10] Acc: 0.9989, F1: 0.9989
+  >>> S20 完成 (Trimmed): Mean Acc=0.9935 (Std=0.0042)
+
+======== 测试样本量: 21 (Run 1-10) ========
+  [S21-R1] Acc: 0.9891, F1: 0.9890
+  [S21-R2] Acc: 0.9936, F1: 0.9936
+  [S21-R3] Acc: 0.9925, F1: 0.9925
+  [S21-R4] Acc: 0.9936, F1: 0.9936
+  [S21-R5] Acc: 0.9910, F1: 0.9910
+  [S21-R6] Acc: 0.9974, F1: 0.9974
+  [S21-R7] Acc: 0.9974, F1: 0.9974
+  [S21-R8] Acc: 0.9917, F1: 0.9917
+  [S21-R9] Acc: 0.9879, F1: 0.9879
+  [S21-R10] Acc: 0.9932, F1: 0.9932
+  >>> S21 完成 (Trimmed): Mean Acc=0.9927 (Std=0.0023)
+
+======== 测试样本量: 22 (Run 1-10) ========
+  [S22-R1] Acc: 0.9974, F1: 0.9974
+  [S22-R2] Acc: 0.9966, F1: 0.9966
+  [S22-R3] Acc: 0.9724, F1: 0.9722
+  [S22-R4] Acc: 0.9970, F1: 0.9970
+  [S22-R5] Acc: 0.9872, F1: 0.9870
+  [S22-R6] Acc: 0.9943, F1: 0.9943
+  [S22-R7] Acc: 0.9909, F1: 0.9909
+  [S22-R8] Acc: 0.9977, F1: 0.9977
+  [S22-R9] Acc: 0.9981, F1: 0.9981
+  [S22-R10] Acc: 0.9906, F1: 0.9905
+  >>> S22 完成 (Trimmed): Mean Acc=0.9940 (Std=0.0037)
+
+======== 测试样本量: 23 (Run 1-10) ========
+  [S23-R1] Acc: 0.9951, F1: 0.9951
+  [S23-R2] Acc: 0.9917, F1: 0.9917
+  [S23-R3] Acc: 0.9962, F1: 0.9962
+  [S23-R4] Acc: 0.9913, F1: 0.9913
+  [S23-R5] Acc: 0.9924, F1: 0.9924
+  [S23-R6] Acc: 0.9936, F1: 0.9936
+  [S23-R7] Acc: 0.9958, F1: 0.9958
+  [S23-R8] Acc: 0.9962, F1: 0.9962
+  [S23-R9] Acc: 0.9981, F1: 0.9981
+  [S23-R10] Acc: 0.9731, F1: 0.9728
+  >>> S23 完成 (Trimmed): Mean Acc=0.9940 (Std=0.0019)
+
+======== 测试样本量: 24 (Run 1-10) ========
+  [S24-R1] Acc: 0.9894, F1: 0.9894
+  [S24-R2] Acc: 0.9897, F1: 0.9897
+  [S24-R3] Acc: 0.9890, F1: 0.9890
+  [S24-R4] Acc: 0.9966, F1: 0.9966
+  [S24-R5] Acc: 0.9924, F1: 0.9924
+  [S24-R6] Acc: 0.9985, F1: 0.9985
+  [S24-R7] Acc: 0.9890, F1: 0.9890
+  [S24-R8] Acc: 0.9951, F1: 0.9951
+  [S24-R9] Acc: 0.9947, F1: 0.9947
+  [S24-R10] Acc: 0.9100, F1: 0.9076
+  >>> S24 完成 (Trimmed): Mean Acc=0.9920 (Std=0.0029)
+
+======== 测试样本量: 25 (Run 1-10) ========
+  [S25-R1] Acc: 0.9954, F1: 0.9954
+  [S25-R2] Acc: 0.9863, F1: 0.9863
+  [S25-R3] Acc: 0.9981, F1: 0.9981
+  [S25-R4] Acc: 0.9981, F1: 0.9981
+  [S25-R5] Acc: 0.9962, F1: 0.9962
+  [S25-R6] Acc: 0.9337, F1: 0.9354
+  [S25-R7] Acc: 0.9977, F1: 0.9977
+  [S25-R8] Acc: 0.9924, F1: 0.9924
+  [S25-R9] Acc: 0.9970, F1: 0.9970
+  [S25-R10] Acc: 0.9943, F1: 0.9943
+  >>> S25 完成 (Trimmed): Mean Acc=0.9947 (Std=0.0036)
+
+======== 测试样本量: 26 (Run 1-10) ========
+  [S26-R1] Acc: 0.9962, F1: 0.9962
+  [S26-R2] Acc: 0.9962, F1: 0.9962
+  [S26-R3] Acc: 0.9889, F1: 0.9889
+  [S26-R4] Acc: 0.9950, F1: 0.9950
+  [S26-R5] Acc: 0.9962, F1: 0.9962
+  [S26-R6] Acc: 0.9973, F1: 0.9973
+  [S26-R7] Acc: 0.9118, F1: 0.9097
+  [S26-R8] Acc: 0.9989, F1: 0.9989
+  [S26-R9] Acc: 0.9847, F1: 0.9847
+  [S26-R10] Acc: 0.9125, F1: 0.9125
+  >>> S26 完成 (Trimmed): Mean Acc=0.9834 (Std=0.0271)
+
+======== 测试样本量: 27 (Run 1-10) ========
+  [S27-R1] Acc: 0.9977, F1: 0.9977
+  [S27-R2] Acc: 0.9920, F1: 0.9920
+  [S27-R3] Acc: 0.9847, F1: 0.9847
+  [S27-R4] Acc: 0.9877, F1: 0.9877
+  [S27-R5] Acc: 0.9893, F1: 0.9893
+  [S27-R6] Acc: 1.0000, F1: 1.0000
+  [S27-R7] Acc: 0.9977, F1: 0.9977
+  [S27-R8] Acc: 0.9977, F1: 0.9977
+  [S27-R9] Acc: 1.0000, F1: 1.0000
+  [S27-R10] Acc: 0.9858, F1: 0.9858
+  >>> S27 完成 (Trimmed): Mean Acc=0.9935 (Std=0.0051)
+
+======== 测试样本量: 28 (Run 1-10) ========
+  [S28-R1] Acc: 0.9908, F1: 0.9908
+  [S28-R2] Acc: 0.9996, F1: 0.9996
+  [S28-R3] Acc: 0.9977, F1: 0.9977
+  [S28-R4] Acc: 0.9981, F1: 0.9981
+  [S28-R5] Acc: 0.9946, F1: 0.9946
+  [S28-R6] Acc: 0.9977, F1: 0.9977
+  [S28-R7] Acc: 0.9942, F1: 0.9942
+  [S28-R8] Acc: 0.9981, F1: 0.9981
+  [S28-R9] Acc: 0.9973, F1: 0.9973
+  [S28-R10] Acc: 0.9965, F1: 0.9965
+  >>> S28 完成 (Trimmed): Mean Acc=0.9968 (Std=0.0014)
+
+======== 测试样本量: 29 (Run 1-10) ========
+  [S29-R1] Acc: 0.9973, F1: 0.9973
+  [S29-R2] Acc: 0.9761, F1: 0.9760
+  [S29-R3] Acc: 0.9935, F1: 0.9935
+  [S29-R4] Acc: 0.9950, F1: 0.9950
+  [S29-R5] Acc: 0.9919, F1: 0.9919
+  [S29-R6] Acc: 0.9946, F1: 0.9946
+  [S29-R7] Acc: 0.9938, F1: 0.9938
+  [S29-R8] Acc: 0.9911, F1: 0.9911
+  [S29-R9] Acc: 0.9988, F1: 0.9988
+  [S29-R10] Acc: 0.9965, F1: 0.9965
+  >>> S29 完成 (Trimmed): Mean Acc=0.9942 (Std=0.0020)
+
+======== 测试样本量: 30 (Run 1-10) ========
+  [S30-R1] Acc: 0.9900, F1: 0.9900
+  [S30-R2] Acc: 0.9981, F1: 0.9981
+  [S30-R3] Acc: 0.9942, F1: 0.9942
+  [S30-R4] Acc: 0.9934, F1: 0.9934
+  [S30-R5] Acc: 0.9946, F1: 0.9946
+  [S30-R6] Acc: 0.9927, F1: 0.9927
+  [S30-R7] Acc: 0.9849, F1: 0.9849
+  [S30-R8] Acc: 0.9900, F1: 0.9900
+  [S30-R9] Acc: 0.9992, F1: 0.9992
+  [S30-R10] Acc: 0.9977, F1: 0.9977
+  >>> S30 完成 (Trimmed): Mean Acc=0.9938 (Std=0.0029)
+全部完成！结果已保存在: D:\机械故障诊断实验\MHCNN_Optuna_Experiment
+
+进程已结束，退出代码为 0

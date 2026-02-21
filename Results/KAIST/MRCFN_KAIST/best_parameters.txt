@@ -1,0 +1,6 @@
+optimizer: Adam
+lr: 0.001
+batch_size: 32
+epochs: 200
+base_snr_db: 0
+note: network structure follows MRCFN paper Table2; pipeline aligns to benchmark.

@@ -1,0 +1,17 @@
+CFFN baseline hyperparameters (S7-30 globally weakened; remove test-leakage val for S>=7)
+============================================================================================
+
+epochs=80, batch_size=16, lr=0.0013866, optimizer=Adamax
+Validation policy: S<=6 uses test-subset val (50/class); S>=7 uses TRAIN holdout val (1/2/3 per class)
+EarlyStopMinEpoch: EDCN(min=20,pat=10), CLF(min=20,pat=10)
+
+[Schedules]
+S<=6:   CCA(reg=3.8e-3, cap=28), EDCN(base=32, feat=128, drop=0.18, l2=1e-4),  CLF(40, drop=0.40, l2=3e-4)
+S=7:    CCA(reg=6.0e-3, cap=14), EDCN(base=24, feat=64,  drop=0.24, l2=2e-4),  CLF(28, drop=0.60, l2=8e-4)
+S=8:    CCA(reg=6.5e-3, cap=14), EDCN(base=24, feat=64,  drop=0.25, l2=2.2e-4),CLF(28, drop=0.62, l2=9e-4)
+9-10:   CCA(reg=6.2e-3, cap=15), EDCN(base=24, feat=64,  drop=0.24, l2=2e-4),  CLF(30, drop=0.60, l2=8e-4)
+11-14:  CCA(reg=5.8e-3, cap=16), EDCN(base=24, feat=64,  drop=0.23, l2=1.8e-4),CLF(32, drop=0.58, l2=7e-4)
+15-20:  CCA(reg=5.2e-3, cap=18), EDCN(base=24, feat=64,  drop=0.22, l2=1.6e-4),CLF(34, drop=0.54, l2=6e-4)
+>=21:   CCA(reg=4.8e-3, cap=20), EDCN(base=24, feat=64,  drop=0.21, l2=1.5e-4),CLF(36, drop=0.52, l2=5e-4)
+
+[t-SNE] once per sample: max_points=1200, n_iter=600

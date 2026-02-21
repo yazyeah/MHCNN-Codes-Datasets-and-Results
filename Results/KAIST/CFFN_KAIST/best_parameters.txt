@@ -1,0 +1,31 @@
+CFFN (KAIST Load-Shift) - FIXED TRAINING SETTINGS (Moderate Baseline)
+================================================================================
+EPOCHS_FULL = 80
+OPTIMIZER   = Adamax(lr=0.0008468950740919305, clipnorm=1.0)
+BATCH_SIZE  = 16
+LOSS        = CategoricalCrossentropy(label_smoothing=0.05)
+METRIC      = accuracy
+
+DATA SETTINGS
+--------------------------------------------------------------------------------
+SEG_LEN = 2048
+ENABLE_ZSCORE_PER_SEGMENT = True
+MAX_SEGMENTS_PER_CLASS = 400
+SAMPLE_RANGE = 5..30
+REPEAT_TIMES = 10
+VAL_PER_CLASS_MAIN = 50
+seed rule = n_train*100 + run_idx
+ENABLE_HASH_OVERLAP_CHECK = True
+
+NOISE SETTINGS (MHCNN-aligned)
+--------------------------------------------------------------------------------
+TRAIN_BASE_SNR_DB = 0.0
+TEST_SNR_DB_LIST  = [inf, 0, -2, -4, -6, -8, -10]
+EVAL_NOISE_REPEATS = 5
+POST_ZSCORE_AFTER_NOISE = False
+
+MODEL (Moderate EDCN)
+--------------------------------------------------------------------------------
+EDCN blocks: base=24 -> 24/48/96/192, kernel 64/32/32/16, pool 16/2/2/2 + BN+ReLU + GAP + FC(96)
+EDCN_L2=0.0002, EDCN_HEAD_DROPOUT=0.2, LABEL_SMOOTHING=0.05
+CCA_REG=0.005, CCA_MAX_COMPONENTS=64

@@ -1,0 +1,676 @@
+[TF] GPUs: [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
+>>> MSF-DFormer baseline experiment (Case 1, TensorFlow/Keras) <<<
+BASE_OUTPUT_DIR = D:\机械故障诊断实验\MSF_DFormer_Comparison_Experiment
+Training: epochs=80, batch_size=16, lr=0.0013866, optimizer=Adamax
+[Speed knobs] verbose=0, val_batch=16, val_freq=5, tsne_max_points=1400
+[Speed] mixed_precision=mixed_float16, jit_compile=False (Compatibility)
+正在加载数据...
+数据加载完成。
+[Data] classes=7, per-class samples=400 (per modality)
+
+==========================================================================================
+Model Summary (Lightweight Version)
+==========================================================================================
+Model: "MSF_DFormer_TF"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ vib_in (InputLayer)            [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ aco_in (InputLayer)            [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ MDSCB1_v (MDSCB)               (None, 1024, 32)     20960       ['vib_in[0][0]']                 
+                                                                                                  
+ MDSCB1_a (MDSCB)               (None, 1024, 32)     20960       ['aco_in[0][0]']                 
+                                                                                                  
+ SCRM1_v (SCRM)                 (None, 1024, 32)     129         ['MDSCB1_v[0][0]']               
+                                                                                                  
+ SCRM1_a (SCRM)                 (None, 1024, 32)     129         ['MDSCB1_a[0][0]']               
+                                                                                                  
+ MDSCB2_v (MDSCB)               (None, 512, 32)      70176       ['SCRM1_v[0][0]']                
+                                                                                                  
+ MDSCB2_a (MDSCB)               (None, 512, 32)      70176       ['SCRM1_a[0][0]']                
+                                                                                                  
+ SCRM2_v (SCRM)                 (None, 512, 32)      129         ['MDSCB2_v[0][0]']               
+                                                                                                  
+ SCRM2_a (SCRM)                 (None, 512, 32)      129         ['MDSCB2_a[0][0]']               
+                                                                                                  
+ MDSCB3_v (MDSCB)               (None, 256, 32)      142048      ['SCRM2_v[0][0]']                
+                                                                                                  
+ MDSCB3_a (MDSCB)               (None, 256, 32)      142048      ['SCRM2_a[0][0]']                
+                                                                                                  
+ SCRM3_v (SCRM)                 (None, 256, 32)      129         ['MDSCB3_v[0][0]']               
+                                                                                                  
+ SCRM3_a (SCRM)                 (None, 256, 32)      129         ['MDSCB3_a[0][0]']               
+                                                                                                  
+ SFFM1 (SFFM)                   (None, 1024, 32)     4128        ['SCRM1_v[0][0]',                
+                                                                  'SCRM1_a[0][0]']                
+                                                                                                  
+ SFFM2 (SFFM)                   (None, 512, 32)      4128        ['SCRM2_v[0][0]',                
+                                                                  'SCRM2_a[0][0]']                
+                                                                                                  
+ SFFM3 (SFFM)                   (None, 256, 32)      4128        ['SCRM3_v[0][0]',                
+                                                                  'SCRM3_a[0][0]']                
+                                                                                                  
+ ADFF (ADFF)                    (None, 3, 64)        14722       ['SFFM1[0][0]',                  
+                                                                  'SFFM2[0][0]',                  
+                                                                  'SFFM3[0][0]']                  
+                                                                                                  
+ DOT (DOT)                      (None, 3, 64)        99980       ['ADFF[0][0]']                   
+                                                                                                  
+ global_token_pool (GlobalAvera  (None, 64)          0           ['DOT[0][0]']                    
+ gePooling1D)                                                                                     
+                                                                                                  
+ cls (Dense)                    (None, 7)            455         ['global_token_pool[0][0]']      
+                                                                                                  
+==================================================================================================
+Total params: 594,683
+Trainable params: 588,027
+Non-trainable params: 6,656
+__________________________________________________________________________________________________
+==========================================================================================
+Total params: 594,683
+
+
+======== 测试样本量: 5 (Run 1-10) ========
+  -> Start Run_01, seed=501, train=35, test=2765
+  [S5-R1] Acc: 0.7497, F1: 0.6991, Prec: 0.6678, Recall: 0.7497
+  -> Start Run_02, seed=502, train=35, test=2765
+  [S5-R2] Acc: 0.5244, F1: 0.4614, Prec: 0.7015, Recall: 0.5244
+  -> Start Run_03, seed=503, train=35, test=2765
+  [S5-R3] Acc: 0.7371, F1: 0.7329, Prec: 0.8270, Recall: 0.7371
+  -> Start Run_04, seed=504, train=35, test=2765
+  [S5-R4] Acc: 0.7226, F1: 0.6862, Prec: 0.8356, Recall: 0.7226
+  -> Start Run_05, seed=505, train=35, test=2765
+  [S5-R5] Acc: 0.6141, F1: 0.5569, Prec: 0.7717, Recall: 0.6141
+  -> Start Run_06, seed=506, train=35, test=2765
+  [S5-R6] Acc: 0.8347, F1: 0.8271, Prec: 0.8754, Recall: 0.8347
+  -> Start Run_07, seed=507, train=35, test=2765
+  [S5-R7] Acc: 0.8043, F1: 0.7946, Prec: 0.8526, Recall: 0.8043
+  -> Start Run_08, seed=508, train=35, test=2765
+  [S5-R8] Acc: 0.7895, F1: 0.7674, Prec: 0.8548, Recall: 0.7895
+  -> Start Run_09, seed=509, train=35, test=2765
+  [S5-R9] Acc: 0.7772, F1: 0.7751, Prec: 0.8095, Recall: 0.7772
+  -> Start Run_10, seed=510, train=35, test=2765
+  [S5-R10] Acc: 0.6351, F1: 0.6105, Prec: 0.7303, Recall: 0.6351
+  >>> S5 完成 (Trimmed): Mean Acc=0.7287 (Std=0.0654)
+
+======== 测试样本量: 6 (Run 1-10) ========
+  -> Start Run_01, seed=601, train=42, test=2758
+  [S6-R1] Acc: 0.7393, F1: 0.7107, Prec: 0.8064, Recall: 0.7393
+  -> Start Run_02, seed=602, train=42, test=2758
+  [S6-R2] Acc: 0.8089, F1: 0.7980, Prec: 0.8575, Recall: 0.8089
+  -> Start Run_03, seed=603, train=42, test=2758
+  [S6-R3] Acc: 0.7266, F1: 0.7189, Prec: 0.8421, Recall: 0.7266
+  -> Start Run_04, seed=604, train=42, test=2758
+  [S6-R4] Acc: 0.7284, F1: 0.7067, Prec: 0.8232, Recall: 0.7284
+  -> Start Run_05, seed=605, train=42, test=2758
+  [S6-R5] Acc: 0.8285, F1: 0.8254, Prec: 0.8582, Recall: 0.8285
+  -> Start Run_06, seed=606, train=42, test=2758
+  [S6-R6] Acc: 0.8060, F1: 0.7951, Prec: 0.8566, Recall: 0.8060
+  -> Start Run_07, seed=607, train=42, test=2758
+  [S6-R7] Acc: 0.7273, F1: 0.6746, Prec: 0.8196, Recall: 0.7273
+  -> Start Run_08, seed=608, train=42, test=2758
+  [S6-R8] Acc: 0.8553, F1: 0.8523, Prec: 0.8610, Recall: 0.8553
+  -> Start Run_09, seed=609, train=42, test=2758
+  [S6-R9] Acc: 0.7621, F1: 0.7505, Prec: 0.8433, Recall: 0.7621
+  -> Start Run_10, seed=610, train=42, test=2758
+  [S6-R10] Acc: 0.7708, F1: 0.7230, Prec: 0.8371, Recall: 0.7708
+  >>> S6 完成 (Trimmed): Mean Acc=0.7714 (Std=0.0367)
+
+======== 测试样本量: 7 (Run 1-10) ========
+  -> Start Run_01, seed=701, train=49, test=2751
+  [S7-R1] Acc: 0.9317, F1: 0.9311, Prec: 0.9370, Recall: 0.9317
+  -> Start Run_02, seed=702, train=49, test=2751
+  [S7-R2] Acc: 0.8731, F1: 0.8700, Prec: 0.8926, Recall: 0.8731
+  -> Start Run_03, seed=703, train=49, test=2751
+  [S7-R3] Acc: 0.9298, F1: 0.9287, Prec: 0.9427, Recall: 0.9298
+  -> Start Run_04, seed=704, train=49, test=2751
+  [S7-R4] Acc: 0.6496, F1: 0.6063, Prec: 0.7222, Recall: 0.6496
+  -> Start Run_05, seed=705, train=49, test=2751
+  [S7-R5] Acc: 0.7677, F1: 0.7474, Prec: 0.8227, Recall: 0.7677
+  -> Start Run_06, seed=706, train=49, test=2751
+  [S7-R6] Acc: 0.7339, F1: 0.6815, Prec: 0.8361, Recall: 0.7339
+  -> Start Run_07, seed=707, train=49, test=2751
+  [S7-R7] Acc: 0.8121, F1: 0.8124, Prec: 0.8919, Recall: 0.8121
+  -> Start Run_08, seed=708, train=49, test=2751
+  [S7-R8] Acc: 0.8855, F1: 0.8817, Prec: 0.9029, Recall: 0.8855
+  -> Start Run_09, seed=709, train=49, test=2751
+  [S7-R9] Acc: 0.8521, F1: 0.8489, Prec: 0.8852, Recall: 0.8521
+  -> Start Run_10, seed=710, train=49, test=2751
+  [S7-R10] Acc: 0.7830, F1: 0.7674, Prec: 0.8443, Recall: 0.7830
+  >>> S7 完成 (Trimmed): Mean Acc=0.8297 (Std=0.0623)
+
+======== 测试样本量: 8 (Run 1-10) ========
+  -> Start Run_01, seed=801, train=56, test=2744
+  [S8-R1] Acc: 0.8936, F1: 0.8940, Prec: 0.9125, Recall: 0.8936
+  -> Start Run_02, seed=802, train=56, test=2744
+  [S8-R2] Acc: 0.7802, F1: 0.7753, Prec: 0.8310, Recall: 0.7802
+  -> Start Run_03, seed=803, train=56, test=2744
+  [S8-R3] Acc: 0.8652, F1: 0.8508, Prec: 0.8909, Recall: 0.8652
+  -> Start Run_04, seed=804, train=56, test=2744
+  [S8-R4] Acc: 0.9144, F1: 0.9137, Prec: 0.9293, Recall: 0.9144
+  -> Start Run_05, seed=805, train=56, test=2744
+  [S8-R5] Acc: 0.8808, F1: 0.8800, Prec: 0.9047, Recall: 0.8808
+  -> Start Run_06, seed=806, train=56, test=2744
+  [S8-R6] Acc: 0.9129, F1: 0.9112, Prec: 0.9206, Recall: 0.9129
+  -> Start Run_07, seed=807, train=56, test=2744
+  [S8-R7] Acc: 0.6822, F1: 0.6385, Prec: 0.8109, Recall: 0.6822
+  -> Start Run_08, seed=808, train=56, test=2744
+  [S8-R8] Acc: 0.7751, F1: 0.7743, Prec: 0.8594, Recall: 0.7751
+  -> Start Run_09, seed=809, train=56, test=2744
+  [S8-R9] Acc: 0.8021, F1: 0.7704, Prec: 0.8533, Recall: 0.8021
+  -> Start Run_10, seed=810, train=56, test=2744
+  [S8-R10] Acc: 0.9151, F1: 0.9123, Prec: 0.9223, Recall: 0.9151
+  >>> S8 完成 (Trimmed): Mean Acc=0.8530 (Std=0.0546)
+
+======== 测试样本量: 9 (Run 1-10) ========
+  -> Start Run_01, seed=901, train=63, test=2737
+  [S9-R1] Acc: 0.8856, F1: 0.8826, Prec: 0.9048, Recall: 0.8856
+  -> Start Run_02, seed=902, train=63, test=2737
+  [S9-R2] Acc: 0.8977, F1: 0.8962, Prec: 0.9067, Recall: 0.8977
+  -> Start Run_03, seed=903, train=63, test=2737
+  [S9-R3] Acc: 0.8944, F1: 0.8916, Prec: 0.8956, Recall: 0.8944
+  -> Start Run_04, seed=904, train=63, test=2737
+  [S9-R4] Acc: 0.9050, F1: 0.9020, Prec: 0.9163, Recall: 0.9050
+  -> Start Run_05, seed=905, train=63, test=2737
+  [S9-R5] Acc: 0.9112, F1: 0.9115, Prec: 0.9211, Recall: 0.9112
+  -> Start Run_06, seed=906, train=63, test=2737
+  [S9-R6] Acc: 0.9200, F1: 0.9203, Prec: 0.9249, Recall: 0.9200
+  -> Start Run_07, seed=907, train=63, test=2737
+  [S9-R7] Acc: 0.8012, F1: 0.7624, Prec: 0.8701, Recall: 0.8012
+  -> Start Run_08, seed=908, train=63, test=2737
+  [S9-R8] Acc: 0.8023, F1: 0.7995, Prec: 0.8642, Recall: 0.8023
+  -> Start Run_09, seed=909, train=63, test=2737
+  [S9-R9] Acc: 0.8535, F1: 0.8433, Prec: 0.8883, Recall: 0.8535
+  -> Start Run_10, seed=910, train=63, test=2737
+  [S9-R10] Acc: 0.8933, F1: 0.8895, Prec: 0.9109, Recall: 0.8933
+  >>> S9 完成 (Trimmed): Mean Acc=0.8804 (Std=0.0337)
+
+======== 测试样本量: 10 (Run 1-10) ========
+  -> Start Run_01, seed=1001, train=70, test=2730
+  [S10-R1] Acc: 0.8700, F1: 0.8647, Prec: 0.8983, Recall: 0.8700
+  -> Start Run_02, seed=1002, train=70, test=2730
+  [S10-R2] Acc: 0.8194, F1: 0.8150, Prec: 0.8509, Recall: 0.8194
+  -> Start Run_03, seed=1003, train=70, test=2730
+  [S10-R3] Acc: 0.8487, F1: 0.8529, Prec: 0.9106, Recall: 0.8487
+  -> Start Run_04, seed=1004, train=70, test=2730
+  [S10-R4] Acc: 0.9000, F1: 0.8939, Prec: 0.9224, Recall: 0.9000
+  -> Start Run_05, seed=1005, train=70, test=2730
+  [S10-R5] Acc: 0.7930, F1: 0.7932, Prec: 0.8587, Recall: 0.7930
+  -> Start Run_06, seed=1006, train=70, test=2730
+  [S10-R6] Acc: 0.9289, F1: 0.9289, Prec: 0.9299, Recall: 0.9289
+  -> Start Run_07, seed=1007, train=70, test=2730
+  [S10-R7] Acc: 0.9066, F1: 0.8992, Prec: 0.9281, Recall: 0.9066
+  -> Start Run_08, seed=1008, train=70, test=2730
+  [S10-R8] Acc: 0.7930, F1: 0.7611, Prec: 0.8734, Recall: 0.7930
+  -> Start Run_09, seed=1009, train=70, test=2730
+  [S10-R9] Acc: 0.9571, F1: 0.9569, Prec: 0.9607, Recall: 0.9571
+  -> Start Run_10, seed=1010, train=70, test=2730
+  [S10-R10] Acc: 0.8795, F1: 0.8734, Prec: 0.9056, Recall: 0.8795
+  >>> S10 完成 (Trimmed): Mean Acc=0.8683 (Std=0.0429)
+
+======== 测试样本量: 11 (Run 1-10) ========
+  -> Start Run_01, seed=1101, train=77, test=2723
+  [S11-R1] Acc: 0.7822, F1: 0.7809, Prec: 0.8297, Recall: 0.7822
+  -> Start Run_02, seed=1102, train=77, test=2723
+  [S11-R2] Acc: 0.9390, F1: 0.9383, Prec: 0.9474, Recall: 0.9390
+  -> Start Run_03, seed=1103, train=77, test=2723
+  [S11-R3] Acc: 0.8704, F1: 0.8684, Prec: 0.8889, Recall: 0.8704
+  -> Start Run_04, seed=1104, train=77, test=2723
+  [S11-R4] Acc: 0.9188, F1: 0.9175, Prec: 0.9299, Recall: 0.9188
+  -> Start Run_05, seed=1105, train=77, test=2723
+  [S11-R5] Acc: 0.8722, F1: 0.8672, Prec: 0.9095, Recall: 0.8722
+  -> Start Run_06, seed=1106, train=77, test=2723
+  [S11-R6] Acc: 0.9232, F1: 0.9229, Prec: 0.9310, Recall: 0.9232
+  -> Start Run_07, seed=1107, train=77, test=2723
+  [S11-R7] Acc: 0.8755, F1: 0.8716, Prec: 0.9077, Recall: 0.8755
+  -> Start Run_08, seed=1108, train=77, test=2723
+  [S11-R8] Acc: 0.9592, F1: 0.9593, Prec: 0.9610, Recall: 0.9592
+  -> Start Run_09, seed=1109, train=77, test=2723
+  [S11-R9] Acc: 0.8990, F1: 0.8948, Prec: 0.9250, Recall: 0.8990
+  -> Start Run_10, seed=1110, train=77, test=2723
+  [S11-R10] Acc: 0.8542, F1: 0.8537, Prec: 0.8635, Recall: 0.8542
+  >>> S11 完成 (Trimmed): Mean Acc=0.8941 (Std=0.0285)
+
+======== 测试样本量: 12 (Run 1-10) ========
+  -> Start Run_01, seed=1201, train=84, test=2716
+  [S12-R1] Acc: 0.8991, F1: 0.8957, Prec: 0.9179, Recall: 0.8991
+  -> Start Run_02, seed=1202, train=84, test=2716
+  [S12-R2] Acc: 0.9676, F1: 0.9675, Prec: 0.9686, Recall: 0.9676
+  -> Start Run_03, seed=1203, train=84, test=2716
+  [S12-R3] Acc: 0.8616, F1: 0.8345, Prec: 0.9187, Recall: 0.8616
+  -> Start Run_04, seed=1204, train=84, test=2716
+  [S12-R4] Acc: 0.9146, F1: 0.9124, Prec: 0.9286, Recall: 0.9146
+  -> Start Run_05, seed=1205, train=84, test=2716
+  [S12-R5] Acc: 0.9407, F1: 0.9394, Prec: 0.9526, Recall: 0.9407
+  -> Start Run_06, seed=1206, train=84, test=2716
+  [S12-R6] Acc: 0.9105, F1: 0.9081, Prec: 0.9271, Recall: 0.9105
+  -> Start Run_07, seed=1207, train=84, test=2716
+  [S12-R7] Acc: 0.9352, F1: 0.9349, Prec: 0.9381, Recall: 0.9352
+  -> Start Run_08, seed=1208, train=84, test=2716
+  [S12-R8] Acc: 0.9499, F1: 0.9498, Prec: 0.9524, Recall: 0.9499
+  -> Start Run_09, seed=1209, train=84, test=2716
+  [S12-R9] Acc: 0.9698, F1: 0.9697, Prec: 0.9725, Recall: 0.9698
+  -> Start Run_10, seed=1210, train=84, test=2716
+  [S12-R10] Acc: 0.8303, F1: 0.8093, Prec: 0.8802, Recall: 0.8303
+  >>> S12 完成 (Trimmed): Mean Acc=0.9224 (Std=0.0311)
+
+======== 测试样本量: 13 (Run 1-10) ========
+  -> Start Run_01, seed=1301, train=91, test=2709
+  [S13-R1] Acc: 0.8992, F1: 0.8956, Prec: 0.9267, Recall: 0.8992
+  -> Start Run_02, seed=1302, train=91, test=2709
+  [S13-R2] Acc: 0.9779, F1: 0.9778, Prec: 0.9785, Recall: 0.9779
+  -> Start Run_03, seed=1303, train=91, test=2709
+  [S13-R3] Acc: 0.9494, F1: 0.9492, Prec: 0.9555, Recall: 0.9494
+  -> Start Run_04, seed=1304, train=91, test=2709
+  [S13-R4] Acc: 0.8287, F1: 0.8244, Prec: 0.8912, Recall: 0.8287
+  -> Start Run_05, seed=1305, train=91, test=2709
+  [S13-R5] Acc: 0.9247, F1: 0.9237, Prec: 0.9369, Recall: 0.9247
+  -> Start Run_06, seed=1306, train=91, test=2709
+  [S13-R6] Acc: 0.9505, F1: 0.9495, Prec: 0.9600, Recall: 0.9505
+  -> Start Run_07, seed=1307, train=91, test=2709
+  [S13-R7] Acc: 0.9409, F1: 0.9399, Prec: 0.9498, Recall: 0.9409
+  -> Start Run_08, seed=1308, train=91, test=2709
+  [S13-R8] Acc: 0.9288, F1: 0.9283, Prec: 0.9366, Recall: 0.9288
+  -> Start Run_09, seed=1309, train=91, test=2709
+  [S13-R9] Acc: 0.8804, F1: 0.8759, Prec: 0.9036, Recall: 0.8804
+  -> Start Run_10, seed=1310, train=91, test=2709
+  [S13-R10] Acc: 0.8627, F1: 0.8526, Prec: 0.9055, Recall: 0.8627
+  >>> S13 完成 (Trimmed): Mean Acc=0.9171 (Std=0.0307)
+
+======== 测试样本量: 14 (Run 1-10) ========
+  -> Start Run_01, seed=1401, train=98, test=2702
+  [S14-R1] Acc: 0.9567, F1: 0.9554, Prec: 0.9615, Recall: 0.9567
+  -> Start Run_02, seed=1402, train=98, test=2702
+  [S14-R2] Acc: 0.9456, F1: 0.9452, Prec: 0.9527, Recall: 0.9456
+  -> Start Run_03, seed=1403, train=98, test=2702
+  [S14-R3] Acc: 0.8790, F1: 0.8746, Prec: 0.9140, Recall: 0.8790
+  -> Start Run_04, seed=1404, train=98, test=2702
+  [S14-R4] Acc: 0.9693, F1: 0.9693, Prec: 0.9697, Recall: 0.9693
+  -> Start Run_05, seed=1405, train=98, test=2702
+  [S14-R5] Acc: 0.9645, F1: 0.9644, Prec: 0.9649, Recall: 0.9645
+  -> Start Run_06, seed=1406, train=98, test=2702
+  [S14-R6] Acc: 0.9697, F1: 0.9694, Prec: 0.9735, Recall: 0.9697
+  -> Start Run_07, seed=1407, train=98, test=2702
+  [S14-R7] Acc: 0.8756, F1: 0.8726, Prec: 0.8967, Recall: 0.8756
+  -> Start Run_08, seed=1408, train=98, test=2702
+  [S14-R8] Acc: 0.9375, F1: 0.9363, Prec: 0.9415, Recall: 0.9375
+  -> Start Run_09, seed=1409, train=98, test=2702
+  [S14-R9] Acc: 0.9474, F1: 0.9472, Prec: 0.9504, Recall: 0.9474
+  -> Start Run_10, seed=1410, train=98, test=2702
+  [S14-R10] Acc: 0.9922, F1: 0.9922, Prec: 0.9923, Recall: 0.9922
+  >>> S14 完成 (Trimmed): Mean Acc=0.9462 (Std=0.0277)
+
+======== 测试样本量: 15 (Run 1-10) ========
+  -> Start Run_01, seed=1501, train=105, test=2695
+  [S15-R1] Acc: 0.8931, F1: 0.8886, Prec: 0.9172, Recall: 0.8931
+  -> Start Run_02, seed=1502, train=105, test=2695
+  [S15-R2] Acc: 0.9729, F1: 0.9729, Prec: 0.9734, Recall: 0.9729
+  -> Start Run_03, seed=1503, train=105, test=2695
+  [S15-R3] Acc: 0.9814, F1: 0.9815, Prec: 0.9820, Recall: 0.9814
+  -> Start Run_04, seed=1504, train=105, test=2695
+  [S15-R4] Acc: 0.9425, F1: 0.9407, Prec: 0.9555, Recall: 0.9425
+  -> Start Run_05, seed=1505, train=105, test=2695
+  [S15-R5] Acc: 0.9688, F1: 0.9688, Prec: 0.9691, Recall: 0.9688
+  -> Start Run_06, seed=1506, train=105, test=2695
+  [S15-R6] Acc: 0.9236, F1: 0.9231, Prec: 0.9298, Recall: 0.9236
+  -> Start Run_07, seed=1507, train=105, test=2695
+  [S15-R7] Acc: 0.9811, F1: 0.9810, Prec: 0.9819, Recall: 0.9811
+  -> Start Run_08, seed=1508, train=105, test=2695
+  [S15-R8] Acc: 0.9447, F1: 0.9446, Prec: 0.9485, Recall: 0.9447
+  -> Start Run_09, seed=1509, train=105, test=2695
+  [S15-R9] Acc: 0.9629, F1: 0.9627, Prec: 0.9672, Recall: 0.9629
+  -> Start Run_10, seed=1510, train=105, test=2695
+  [S15-R10] Acc: 0.9532, F1: 0.9529, Prec: 0.9580, Recall: 0.9532
+  >>> S15 完成 (Trimmed): Mean Acc=0.9562 (Std=0.0177)
+
+======== 测试样本量: 16 (Run 1-10) ========
+  -> Start Run_01, seed=1601, train=112, test=2688
+  [S16-R1] Acc: 0.9769, F1: 0.9768, Prec: 0.9776, Recall: 0.9769
+  -> Start Run_02, seed=1602, train=112, test=2688
+  [S16-R2] Acc: 0.9382, F1: 0.9367, Prec: 0.9485, Recall: 0.9382
+  -> Start Run_03, seed=1603, train=112, test=2688
+  [S16-R3] Acc: 0.9803, F1: 0.9803, Prec: 0.9811, Recall: 0.9803
+  -> Start Run_04, seed=1604, train=112, test=2688
+  [S16-R4] Acc: 0.9654, F1: 0.9653, Prec: 0.9674, Recall: 0.9654
+  -> Start Run_05, seed=1605, train=112, test=2688
+  [S16-R5] Acc: 0.8929, F1: 0.8760, Prec: 0.9376, Recall: 0.8929
+  -> Start Run_06, seed=1606, train=112, test=2688
+  [S16-R6] Acc: 0.9446, F1: 0.9429, Prec: 0.9500, Recall: 0.9446
+  -> Start Run_07, seed=1607, train=112, test=2688
+  [S16-R7] Acc: 0.9695, F1: 0.9694, Prec: 0.9713, Recall: 0.9695
+  -> Start Run_08, seed=1608, train=112, test=2688
+  [S16-R8] Acc: 0.9557, F1: 0.9556, Prec: 0.9582, Recall: 0.9557
+  -> Start Run_09, seed=1609, train=112, test=2688
+  [S16-R9] Acc: 0.8348, F1: 0.8171, Prec: 0.8780, Recall: 0.8348
+  -> Start Run_10, seed=1610, train=112, test=2688
+  [S16-R10] Acc: 0.9617, F1: 0.9620, Prec: 0.9627, Recall: 0.9617
+  >>> S16 完成 (Trimmed): Mean Acc=0.9506 (Std=0.0249)
+
+======== 测试样本量: 17 (Run 1-10) ========
+  -> Start Run_01, seed=1701, train=119, test=2681
+  [S17-R1] Acc: 0.9896, F1: 0.9896, Prec: 0.9896, Recall: 0.9896
+  -> Start Run_02, seed=1702, train=119, test=2681
+  [S17-R2] Acc: 0.9295, F1: 0.9291, Prec: 0.9339, Recall: 0.9295
+  -> Start Run_03, seed=1703, train=119, test=2681
+  [S17-R3] Acc: 0.9855, F1: 0.9855, Prec: 0.9856, Recall: 0.9855
+  -> Start Run_04, seed=1704, train=119, test=2681
+  [S17-R4] Acc: 0.9847, F1: 0.9847, Prec: 0.9851, Recall: 0.9847
+  -> Start Run_05, seed=1705, train=119, test=2681
+  [S17-R5] Acc: 0.9746, F1: 0.9746, Prec: 0.9750, Recall: 0.9746
+  -> Start Run_06, seed=1706, train=119, test=2681
+  [S17-R6] Acc: 0.9776, F1: 0.9776, Prec: 0.9776, Recall: 0.9776
+  -> Start Run_07, seed=1707, train=119, test=2681
+  [S17-R7] Acc: 0.9202, F1: 0.9181, Prec: 0.9383, Recall: 0.9202
+  -> Start Run_08, seed=1708, train=119, test=2681
+  [S17-R8] Acc: 0.9814, F1: 0.9813, Prec: 0.9827, Recall: 0.9814
+  -> Start Run_09, seed=1709, train=119, test=2681
+  [S17-R9] Acc: 0.9903, F1: 0.9903, Prec: 0.9907, Recall: 0.9903
+  -> Start Run_10, seed=1710, train=119, test=2681
+  [S17-R10] Acc: 0.9836, F1: 0.9835, Prec: 0.9850, Recall: 0.9836
+  >>> S17 完成 (Trimmed): Mean Acc=0.9758 (Std=0.0180)
+
+======== 测试样本量: 18 (Run 1-10) ========
+  -> Start Run_01, seed=1801, train=126, test=2674
+  [S18-R1] Acc: 0.9869, F1: 0.9869, Prec: 0.9871, Recall: 0.9869
+  -> Start Run_02, seed=1802, train=126, test=2674
+  [S18-R2] Acc: 0.9409, F1: 0.9410, Prec: 0.9484, Recall: 0.9409
+  -> Start Run_03, seed=1803, train=126, test=2674
+  [S18-R3] Acc: 0.9705, F1: 0.9703, Prec: 0.9741, Recall: 0.9705
+  -> Start Run_04, seed=1804, train=126, test=2674
+  [S18-R4] Acc: 0.9768, F1: 0.9767, Prec: 0.9789, Recall: 0.9768
+  -> Start Run_05, seed=1805, train=126, test=2674
+  [S18-R5] Acc: 0.9824, F1: 0.9824, Prec: 0.9828, Recall: 0.9824
+  -> Start Run_06, seed=1806, train=126, test=2674
+  [S18-R6] Acc: 0.9675, F1: 0.9673, Prec: 0.9712, Recall: 0.9675
+  -> Start Run_07, seed=1807, train=126, test=2674
+  [S18-R7] Acc: 0.9907, F1: 0.9906, Prec: 0.9909, Recall: 0.9907
+  -> Start Run_08, seed=1808, train=126, test=2674
+  [S18-R8] Acc: 0.9622, F1: 0.9620, Prec: 0.9660, Recall: 0.9622
+  -> Start Run_09, seed=1809, train=126, test=2674
+  [S18-R9] Acc: 0.9353, F1: 0.9348, Prec: 0.9421, Recall: 0.9353
+  -> Start Run_10, seed=1810, train=126, test=2674
+  [S18-R10] Acc: 0.9749, F1: 0.9749, Prec: 0.9760, Recall: 0.9749
+  >>> S18 完成 (Trimmed): Mean Acc=0.9703 (Std=0.0133)
+
+======== 测试样本量: 19 (Run 1-10) ========
+  -> Start Run_01, seed=1901, train=133, test=2667
+  [S19-R1] Acc: 0.9966, F1: 0.9966, Prec: 0.9967, Recall: 0.9966
+  -> Start Run_02, seed=1902, train=133, test=2667
+  [S19-R2] Acc: 0.9404, F1: 0.9398, Prec: 0.9495, Recall: 0.9404
+  -> Start Run_03, seed=1903, train=133, test=2667
+  [S19-R3] Acc: 0.9910, F1: 0.9910, Prec: 0.9914, Recall: 0.9910
+  -> Start Run_04, seed=1904, train=133, test=2667
+  [S19-R4] Acc: 0.9828, F1: 0.9827, Prec: 0.9829, Recall: 0.9828
+  -> Start Run_05, seed=1905, train=133, test=2667
+  [S19-R5] Acc: 0.9651, F1: 0.9649, Prec: 0.9692, Recall: 0.9651
+  -> Start Run_06, seed=1906, train=133, test=2667
+  [S19-R6] Acc: 0.9846, F1: 0.9846, Prec: 0.9857, Recall: 0.9846
+  -> Start Run_07, seed=1907, train=133, test=2667
+  [S19-R7] Acc: 0.9726, F1: 0.9724, Prec: 0.9767, Recall: 0.9726
+  -> Start Run_08, seed=1908, train=133, test=2667
+  [S19-R8] Acc: 0.9704, F1: 0.9703, Prec: 0.9715, Recall: 0.9704
+  -> Start Run_09, seed=1909, train=133, test=2667
+  [S19-R9] Acc: 0.9411, F1: 0.9394, Prec: 0.9550, Recall: 0.9411
+  -> Start Run_10, seed=1910, train=133, test=2667
+  [S19-R10] Acc: 0.9539, F1: 0.9530, Prec: 0.9628, Recall: 0.9539
+  >>> S19 完成 (Trimmed): Mean Acc=0.9702 (Std=0.0156)
+
+======== 测试样本量: 20 (Run 1-10) ========
+  -> Start Run_01, seed=2001, train=140, test=2660
+  [S20-R1] Acc: 0.9887, F1: 0.9887, Prec: 0.9889, Recall: 0.9887
+  -> Start Run_02, seed=2002, train=140, test=2660
+  [S20-R2] Acc: 0.9699, F1: 0.9696, Prec: 0.9746, Recall: 0.9699
+  -> Start Run_03, seed=2003, train=140, test=2660
+  [S20-R3] Acc: 0.9865, F1: 0.9865, Prec: 0.9867, Recall: 0.9865
+  -> Start Run_04, seed=2004, train=140, test=2660
+  [S20-R4] Acc: 0.9530, F1: 0.9524, Prec: 0.9601, Recall: 0.9530
+  -> Start Run_05, seed=2005, train=140, test=2660
+  [S20-R5] Acc: 0.9624, F1: 0.9624, Prec: 0.9628, Recall: 0.9624
+  -> Start Run_06, seed=2006, train=140, test=2660
+  [S20-R6] Acc: 0.9786, F1: 0.9785, Prec: 0.9805, Recall: 0.9786
+  -> Start Run_07, seed=2007, train=140, test=2660
+  [S20-R7] Acc: 0.9797, F1: 0.9796, Prec: 0.9810, Recall: 0.9797
+  -> Start Run_08, seed=2008, train=140, test=2660
+  [S20-R8] Acc: 0.9658, F1: 0.9657, Prec: 0.9673, Recall: 0.9658
+  -> Start Run_09, seed=2009, train=140, test=2660
+  [S20-R9] Acc: 0.9703, F1: 0.9700, Prec: 0.9746, Recall: 0.9703
+  -> Start Run_10, seed=2010, train=140, test=2660
+  [S20-R10] Acc: 0.9895, F1: 0.9895, Prec: 0.9896, Recall: 0.9895
+  >>> S20 完成 (Trimmed): Mean Acc=0.9752 (Std=0.0090)
+
+======== 测试样本量: 21 (Run 1-10) ========
+  -> Start Run_01, seed=2101, train=147, test=2653
+  [S21-R1] Acc: 0.9913, F1: 0.9913, Prec: 0.9913, Recall: 0.9913
+  -> Start Run_02, seed=2102, train=147, test=2653
+  [S21-R2] Acc: 0.9853, F1: 0.9853, Prec: 0.9857, Recall: 0.9853
+  -> Start Run_03, seed=2103, train=147, test=2653
+  [S21-R3] Acc: 0.9657, F1: 0.9655, Prec: 0.9702, Recall: 0.9657
+  -> Start Run_04, seed=2104, train=147, test=2653
+  [S21-R4] Acc: 0.9683, F1: 0.9681, Prec: 0.9728, Recall: 0.9683
+  -> Start Run_05, seed=2105, train=147, test=2653
+  [S21-R5] Acc: 0.9921, F1: 0.9921, Prec: 0.9923, Recall: 0.9921
+  -> Start Run_06, seed=2106, train=147, test=2653
+  [S21-R6] Acc: 0.9698, F1: 0.9696, Prec: 0.9742, Recall: 0.9698
+  -> Start Run_07, seed=2107, train=147, test=2653
+  [S21-R7] Acc: 0.9291, F1: 0.9258, Prec: 0.9458, Recall: 0.9291
+  -> Start Run_08, seed=2108, train=147, test=2653
+  [S21-R8] Acc: 0.9631, F1: 0.9625, Prec: 0.9659, Recall: 0.9631
+  -> Start Run_09, seed=2109, train=147, test=2653
+  [S21-R9] Acc: 0.9642, F1: 0.9636, Prec: 0.9712, Recall: 0.9642
+  -> Start Run_10, seed=2110, train=147, test=2653
+  [S21-R10] Acc: 0.9906, F1: 0.9906, Prec: 0.9908, Recall: 0.9906
+  >>> S21 完成 (Trimmed): Mean Acc=0.9748 (Std=0.0114)
+
+======== 测试样本量: 22 (Run 1-10) ========
+  -> Start Run_01, seed=2201, train=154, test=2646
+  [S22-R1] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981
+  -> Start Run_02, seed=2202, train=154, test=2646
+  [S22-R2] Acc: 0.9826, F1: 0.9826, Prec: 0.9835, Recall: 0.9826
+  -> Start Run_03, seed=2203, train=154, test=2646
+  [S22-R3] Acc: 0.9917, F1: 0.9917, Prec: 0.9917, Recall: 0.9917
+  -> Start Run_04, seed=2204, train=154, test=2646
+  [S22-R4] Acc: 0.9940, F1: 0.9940, Prec: 0.9940, Recall: 0.9940
+  -> Start Run_05, seed=2205, train=154, test=2646
+  [S22-R5] Acc: 0.9872, F1: 0.9871, Prec: 0.9872, Recall: 0.9872
+  -> Start Run_06, seed=2206, train=154, test=2646
+  [S22-R6] Acc: 0.9826, F1: 0.9826, Prec: 0.9837, Recall: 0.9826
+  -> Start Run_07, seed=2207, train=154, test=2646
+  [S22-R7] Acc: 0.9860, F1: 0.9860, Prec: 0.9869, Recall: 0.9860
+  -> Start Run_08, seed=2208, train=154, test=2646
+  [S22-R8] Acc: 0.9811, F1: 0.9811, Prec: 0.9827, Recall: 0.9811
+  -> Start Run_09, seed=2209, train=154, test=2646
+  [S22-R9] Acc: 0.9819, F1: 0.9819, Prec: 0.9822, Recall: 0.9819
+  -> Start Run_10, seed=2210, train=154, test=2646
+  [S22-R10] Acc: 0.9864, F1: 0.9864, Prec: 0.9867, Recall: 0.9864
+  >>> S22 完成 (Trimmed): Mean Acc=0.9865 (Std=0.0041)
+
+======== 测试样本量: 23 (Run 1-10) ========
+  -> Start Run_01, seed=2301, train=161, test=2639
+  [S23-R1] Acc: 0.9765, F1: 0.9765, Prec: 0.9780, Recall: 0.9765
+  -> Start Run_02, seed=2302, train=161, test=2639
+  [S23-R2] Acc: 0.9913, F1: 0.9913, Prec: 0.9913, Recall: 0.9913
+  -> Start Run_03, seed=2303, train=161, test=2639
+  [S23-R3] Acc: 0.9962, F1: 0.9962, Prec: 0.9962, Recall: 0.9962
+  -> Start Run_04, seed=2304, train=161, test=2639
+  [S23-R4] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981
+  -> Start Run_05, seed=2305, train=161, test=2639
+  [S23-R5] Acc: 0.9784, F1: 0.9783, Prec: 0.9803, Recall: 0.9784
+  -> Start Run_06, seed=2306, train=161, test=2639
+  [S23-R6] Acc: 0.9750, F1: 0.9749, Prec: 0.9765, Recall: 0.9750
+  -> Start Run_07, seed=2307, train=161, test=2639
+  [S23-R7] Acc: 0.9890, F1: 0.9890, Prec: 0.9893, Recall: 0.9890
+  -> Start Run_08, seed=2308, train=161, test=2639
+  [S23-R8] Acc: 0.9879, F1: 0.9879, Prec: 0.9883, Recall: 0.9879
+  -> Start Run_09, seed=2309, train=161, test=2639
+  [S23-R9] Acc: 0.9757, F1: 0.9756, Prec: 0.9786, Recall: 0.9757
+  -> Start Run_10, seed=2310, train=161, test=2639
+  [S23-R10] Acc: 0.9920, F1: 0.9920, Prec: 0.9921, Recall: 0.9920
+  >>> S23 完成 (Trimmed): Mean Acc=0.9859 (Std=0.0074)
+
+======== 测试样本量: 24 (Run 1-10) ========
+  -> Start Run_01, seed=2401, train=168, test=2632
+  [S24-R1] Acc: 0.9894, F1: 0.9893, Prec: 0.9900, Recall: 0.9894
+  -> Start Run_02, seed=2402, train=168, test=2632
+  [S24-R2] Acc: 0.9848, F1: 0.9848, Prec: 0.9856, Recall: 0.9848
+  -> Start Run_03, seed=2403, train=168, test=2632
+  [S24-R3] Acc: 0.9920, F1: 0.9920, Prec: 0.9924, Recall: 0.9920
+  -> Start Run_04, seed=2404, train=168, test=2632
+  [S24-R4] Acc: 0.9947, F1: 0.9947, Prec: 0.9948, Recall: 0.9947
+  -> Start Run_05, seed=2405, train=168, test=2632
+  [S24-R5] Acc: 0.9886, F1: 0.9886, Prec: 0.9888, Recall: 0.9886
+  -> Start Run_06, seed=2406, train=168, test=2632
+  [S24-R6] Acc: 0.9924, F1: 0.9924, Prec: 0.9927, Recall: 0.9924
+  -> Start Run_07, seed=2407, train=168, test=2632
+  [S24-R7] Acc: 0.9935, F1: 0.9935, Prec: 0.9936, Recall: 0.9935
+  -> Start Run_08, seed=2408, train=168, test=2632
+  [S24-R8] Acc: 0.9977, F1: 0.9977, Prec: 0.9977, Recall: 0.9977
+  -> Start Run_09, seed=2409, train=168, test=2632
+  [S24-R9] Acc: 0.9806, F1: 0.9806, Prec: 0.9808, Recall: 0.9806
+  -> Start Run_10, seed=2410, train=168, test=2632
+  [S24-R10] Acc: 0.9916, F1: 0.9916, Prec: 0.9918, Recall: 0.9916
+  >>> S24 完成 (Trimmed): Mean Acc=0.9909 (Std=0.0030)
+
+======== 测试样本量: 25 (Run 1-10) ========
+  -> Start Run_01, seed=2501, train=175, test=2625
+  [S25-R1] Acc: 0.9912, F1: 0.9912, Prec: 0.9913, Recall: 0.9912
+  -> Start Run_02, seed=2502, train=175, test=2625
+  [S25-R2] Acc: 0.9970, F1: 0.9970, Prec: 0.9970, Recall: 0.9970
+  -> Start Run_03, seed=2503, train=175, test=2625
+  [S25-R3] Acc: 0.9886, F1: 0.9886, Prec: 0.9887, Recall: 0.9886
+  -> Start Run_04, seed=2504, train=175, test=2625
+  [S25-R4] Acc: 0.9741, F1: 0.9740, Prec: 0.9764, Recall: 0.9741
+  -> Start Run_05, seed=2505, train=175, test=2625
+  [S25-R5] Acc: 0.9840, F1: 0.9840, Prec: 0.9847, Recall: 0.9840
+  -> Start Run_06, seed=2506, train=175, test=2625
+  [S25-R6] Acc: 0.9909, F1: 0.9909, Prec: 0.9909, Recall: 0.9909
+  -> Start Run_07, seed=2507, train=175, test=2625
+  [S25-R7] Acc: 0.9931, F1: 0.9931, Prec: 0.9932, Recall: 0.9931
+  -> Start Run_08, seed=2508, train=175, test=2625
+  [S25-R8] Acc: 0.9973, F1: 0.9973, Prec: 0.9974, Recall: 0.9973
+  -> Start Run_09, seed=2509, train=175, test=2625
+  [S25-R9] Acc: 0.9939, F1: 0.9939, Prec: 0.9939, Recall: 0.9939
+  -> Start Run_10, seed=2510, train=175, test=2625
+  [S25-R10] Acc: 0.9958, F1: 0.9958, Prec: 0.9958, Recall: 0.9958
+  >>> S25 完成 (Trimmed): Mean Acc=0.9918 (Std=0.0039)
+
+======== 测试样本量: 26 (Run 1-10) ========
+  -> Start Run_01, seed=2601, train=182, test=2618
+  [S26-R1] Acc: 0.9882, F1: 0.9882, Prec: 0.9882, Recall: 0.9882
+  -> Start Run_02, seed=2602, train=182, test=2618
+  [S26-R2] Acc: 0.9874, F1: 0.9874, Prec: 0.9882, Recall: 0.9874
+  -> Start Run_03, seed=2603, train=182, test=2618
+  [S26-R3] Acc: 0.9874, F1: 0.9874, Prec: 0.9884, Recall: 0.9874
+  -> Start Run_04, seed=2604, train=182, test=2618
+  [S26-R4] Acc: 0.9721, F1: 0.9719, Prec: 0.9761, Recall: 0.9721
+  -> Start Run_05, seed=2605, train=182, test=2618
+  [S26-R5] Acc: 0.9989, F1: 0.9989, Prec: 0.9989, Recall: 0.9989
+  -> Start Run_06, seed=2606, train=182, test=2618
+  [S26-R6] Acc: 0.9992, F1: 0.9992, Prec: 0.9992, Recall: 0.9992
+  -> Start Run_07, seed=2607, train=182, test=2618
+  [S26-R7] Acc: 0.9916, F1: 0.9916, Prec: 0.9917, Recall: 0.9916
+  -> Start Run_08, seed=2608, train=182, test=2618
+  [S26-R8] Acc: 0.9809, F1: 0.9809, Prec: 0.9819, Recall: 0.9809
+  -> Start Run_09, seed=2609, train=182, test=2618
+  [S26-R9] Acc: 0.9889, F1: 0.9889, Prec: 0.9896, Recall: 0.9889
+  -> Start Run_10, seed=2610, train=182, test=2618
+  [S26-R10] Acc: 0.9905, F1: 0.9904, Prec: 0.9908, Recall: 0.9905
+  >>> S26 完成 (Trimmed): Mean Acc=0.9892 (Std=0.0047)
+
+======== 测试样本量: 27 (Run 1-10) ========
+  -> Start Run_01, seed=2701, train=189, test=2611
+  [S27-R1] Acc: 0.9939, F1: 0.9939, Prec: 0.9940, Recall: 0.9939
+  -> Start Run_02, seed=2702, train=189, test=2611
+  [S27-R2] Acc: 0.9912, F1: 0.9912, Prec: 0.9915, Recall: 0.9912
+  -> Start Run_03, seed=2703, train=189, test=2611
+  [S27-R3] Acc: 0.9858, F1: 0.9858, Prec: 0.9869, Recall: 0.9858
+  -> Start Run_04, seed=2704, train=189, test=2611
+  [S27-R4] Acc: 0.9816, F1: 0.9816, Prec: 0.9823, Recall: 0.9816
+  -> Start Run_05, seed=2705, train=189, test=2611
+  [S27-R5] Acc: 0.9805, F1: 0.9804, Prec: 0.9820, Recall: 0.9805
+  -> Start Run_06, seed=2706, train=189, test=2611
+  [S27-R6] Acc: 0.9889, F1: 0.9889, Prec: 0.9891, Recall: 0.9889
+  -> Start Run_07, seed=2707, train=189, test=2611
+  [S27-R7] Acc: 0.9927, F1: 0.9927, Prec: 0.9929, Recall: 0.9927
+  -> Start Run_08, seed=2708, train=189, test=2611
+  [S27-R8] Acc: 0.9786, F1: 0.9785, Prec: 0.9800, Recall: 0.9786
+  -> Start Run_09, seed=2709, train=189, test=2611
+  [S27-R9] Acc: 0.9793, F1: 0.9793, Prec: 0.9801, Recall: 0.9793
+  -> Start Run_10, seed=2710, train=189, test=2611
+  [S27-R10] Acc: 0.9962, F1: 0.9962, Prec: 0.9962, Recall: 0.9962
+  >>> S27 完成 (Trimmed): Mean Acc=0.9867 (Std=0.0054)
+
+======== 测试样本量: 28 (Run 1-10) ========
+  -> Start Run_01, seed=2801, train=196, test=2604
+  [S28-R1] Acc: 0.9958, F1: 0.9958, Prec: 0.9958, Recall: 0.9958
+  -> Start Run_02, seed=2802, train=196, test=2604
+  [S28-R2] Acc: 0.9946, F1: 0.9946, Prec: 0.9947, Recall: 0.9946
+  -> Start Run_03, seed=2803, train=196, test=2604
+  [S28-R3] Acc: 0.9658, F1: 0.9657, Prec: 0.9693, Recall: 0.9658
+  -> Start Run_04, seed=2804, train=196, test=2604
+  [S28-R4] Acc: 0.9850, F1: 0.9850, Prec: 0.9859, Recall: 0.9850
+  -> Start Run_05, seed=2805, train=196, test=2604
+  [S28-R5] Acc: 0.9869, F1: 0.9869, Prec: 0.9878, Recall: 0.9869
+  -> Start Run_06, seed=2806, train=196, test=2604
+  [S28-R6] Acc: 0.9770, F1: 0.9769, Prec: 0.9786, Recall: 0.9770
+  -> Start Run_07, seed=2807, train=196, test=2604
+  [S28-R7] Acc: 0.9697, F1: 0.9694, Prec: 0.9738, Recall: 0.9697
+  -> Start Run_08, seed=2808, train=196, test=2604
+  [S28-R8] Acc: 0.9854, F1: 0.9854, Prec: 0.9861, Recall: 0.9854
+  -> Start Run_09, seed=2809, train=196, test=2604
+  [S28-R9] Acc: 0.9958, F1: 0.9958, Prec: 0.9958, Recall: 0.9958
+  -> Start Run_10, seed=2810, train=196, test=2604
+  [S28-R10] Acc: 0.9939, F1: 0.9939, Prec: 0.9939, Recall: 0.9939
+  >>> S28 完成 (Trimmed): Mean Acc=0.9860 (Std=0.0085)
+
+======== 测试样本量: 29 (Run 1-10) ========
+  -> Start Run_01, seed=2901, train=203, test=2597
+  [S29-R1] Acc: 0.9915, F1: 0.9915, Prec: 0.9916, Recall: 0.9915
+  -> Start Run_02, seed=2902, train=203, test=2597
+  [S29-R2] Acc: 0.9923, F1: 0.9923, Prec: 0.9924, Recall: 0.9923
+  -> Start Run_03, seed=2903, train=203, test=2597
+  [S29-R3] Acc: 0.9958, F1: 0.9958, Prec: 0.9958, Recall: 0.9958
+  -> Start Run_04, seed=2904, train=203, test=2597
+  [S29-R4] Acc: 0.9942, F1: 0.9942, Prec: 0.9942, Recall: 0.9942
+  -> Start Run_05, seed=2905, train=203, test=2597
+  [S29-R5] Acc: 0.9908, F1: 0.9908, Prec: 0.9909, Recall: 0.9908
+  -> Start Run_06, seed=2906, train=203, test=2597
+  [S29-R6] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981
+  -> Start Run_07, seed=2907, train=203, test=2597
+  [S29-R7] Acc: 0.9888, F1: 0.9888, Prec: 0.9892, Recall: 0.9888
+  -> Start Run_08, seed=2908, train=203, test=2597
+  [S29-R8] Acc: 0.9777, F1: 0.9776, Prec: 0.9787, Recall: 0.9777
+  -> Start Run_09, seed=2909, train=203, test=2597
+  [S29-R9] Acc: 0.9988, F1: 0.9988, Prec: 0.9988, Recall: 0.9988
+  -> Start Run_10, seed=2910, train=203, test=2597
+  [S29-R10] Acc: 0.9908, F1: 0.9908, Prec: 0.9909, Recall: 0.9908
+  >>> S29 完成 (Trimmed): Mean Acc=0.9928 (Std=0.0028)
+
+======== 测试样本量: 30 (Run 1-10) ========
+  -> Start Run_01, seed=3001, train=210, test=2590
+  [S30-R1] Acc: 0.9795, F1: 0.9795, Prec: 0.9797, Recall: 0.9795
+  -> Start Run_02, seed=3002, train=210, test=2590
+  [S30-R2] Acc: 0.9900, F1: 0.9900, Prec: 0.9904, Recall: 0.9900
+  -> Start Run_03, seed=3003, train=210, test=2590
+  [S30-R3] Acc: 0.9938, F1: 0.9938, Prec: 0.9939, Recall: 0.9938
+  -> Start Run_04, seed=3004, train=210, test=2590
+  [S30-R4] Acc: 0.9139, F1: 0.9100, Prec: 0.9419, Recall: 0.9139
+  -> Start Run_05, seed=3005, train=210, test=2590
+  [S30-R5] Acc: 0.9795, F1: 0.9795, Prec: 0.9813, Recall: 0.9795
+  -> Start Run_06, seed=3006, train=210, test=2590
+  [S30-R6] Acc: 0.9950, F1: 0.9950, Prec: 0.9950, Recall: 0.9950
+  -> Start Run_07, seed=3007, train=210, test=2590
+  [S30-R7] Acc: 0.9977, F1: 0.9977, Prec: 0.9977, Recall: 0.9977
+  -> Start Run_08, seed=3008, train=210, test=2590
+  [S30-R8] Acc: 0.9907, F1: 0.9907, Prec: 0.9911, Recall: 0.9907
+  -> Start Run_09, seed=3009, train=210, test=2590
+  [S30-R9] Acc: 0.9915, F1: 0.9915, Prec: 0.9915, Recall: 0.9915
+  -> Start Run_10, seed=3010, train=210, test=2590
+  [S30-R10] Acc: 0.9938, F1: 0.9938, Prec: 0.9939, Recall: 0.9938
+  >>> S30 完成 (Trimmed): Mean Acc=0.9892 (Std=0.0058)
+
+全部完成！结果已保存在: D:\机械故障诊断实验\MSF_DFormer_Comparison_Experiment
+日志文件: D:\机械故障诊断实验\MSF_DFormer_Comparison_Experiment\experiment_log_MSF_DFormer.txt
+best_parameters: D:\机械故障诊断实验\MSF_DFormer_Comparison_Experiment\best_parameters.txt
+summary CSV: D:\机械故障诊断实验\MSF_DFormer_Comparison_Experiment\Final_Summary_Stats_MSF_DFormer.csv

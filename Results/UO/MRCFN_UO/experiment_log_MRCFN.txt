@@ -1,0 +1,617 @@
+>>> MRCFN baseline experiment (Case 1) <<<
+BASE_OUTPUT_DIR = D:\机械故障诊断实验\MRCFN_Comparison_Experiment
+DATA_PATH_ROOT  = D:\渥太华数据\3_MatLab_Raw_Data
+SAMPLE_RANGE    = 5..30
+REPEAT_TIMES    = 10
+Training: epochs=80, batch_size=32, lr=0.001
+
+>>> MRCFN Model Architecture Summary:
+============================================================
+Model: "MRCFN"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ input_vib (InputLayer)         [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ input_aco (InputLayer)         [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ v_cpm_conv (Conv1D)            (None, 2048, 32)     544         ['input_vib[0][0]']              
+                                                                                                  
+ a_cpm_conv (Conv1D)            (None, 2048, 32)     544         ['input_aco[0][0]']              
+                                                                                                  
+ v_cpm_relu (Activation)        (None, 2048, 32)     0           ['v_cpm_conv[0][0]']             
+                                                                                                  
+ a_cpm_relu (Activation)        (None, 2048, 32)     0           ['a_cpm_conv[0][0]']             
+                                                                                                  
+ v_cpm_pool (MaxPooling1D)      (None, 1024, 32)     0           ['v_cpm_relu[0][0]']             
+                                                                                                  
+ a_cpm_pool (MaxPooling1D)      (None, 1024, 32)     0           ['a_cpm_relu[0][0]']             
+                                                                                                  
+ v_drrm1_sep1 (SeparableConv1D)  (None, 1024, 64)    2208        ['v_cpm_pool[0][0]']             
+                                                                                                  
+ a_drrm1_sep1 (SeparableConv1D)  (None, 1024, 64)    2208        ['a_cpm_pool[0][0]']             
+                                                                                                  
+ v_drrm1_bn1 (BatchNormalizatio  (None, 1024, 64)    256         ['v_drrm1_sep1[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm1_bn1 (BatchNormalizatio  (None, 1024, 64)    256         ['a_drrm1_sep1[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm1_relu1 (Activation)     (None, 1024, 64)     0           ['v_drrm1_bn1[0][0]']            
+                                                                                                  
+ a_drrm1_relu1 (Activation)     (None, 1024, 64)     0           ['a_drrm1_bn1[0][0]']            
+                                                                                                  
+ v_drrm1_sep2 (SeparableConv1D)  (None, 1024, 64)    4352        ['v_drrm1_relu1[0][0]']          
+                                                                                                  
+ a_drrm1_sep2 (SeparableConv1D)  (None, 1024, 64)    4352        ['a_drrm1_relu1[0][0]']          
+                                                                                                  
+ v_drrm1_proj (Conv1D)          (None, 1024, 64)     2112        ['v_cpm_pool[0][0]']             
+                                                                                                  
+ v_drrm1_bn2 (BatchNormalizatio  (None, 1024, 64)    256         ['v_drrm1_sep2[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm1_proj (Conv1D)          (None, 1024, 64)     2112        ['a_cpm_pool[0][0]']             
+                                                                                                  
+ a_drrm1_bn2 (BatchNormalizatio  (None, 1024, 64)    256         ['a_drrm1_sep2[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm1_add1 (Add)             (None, 1024, 64)     0           ['v_drrm1_proj[0][0]',           
+                                                                  'v_drrm1_bn2[0][0]']            
+                                                                                                  
+ a_drrm1_add1 (Add)             (None, 1024, 64)     0           ['a_drrm1_proj[0][0]',           
+                                                                  'a_drrm1_bn2[0][0]']            
+                                                                                                  
+ v_drrm1_relu2 (Activation)     (None, 1024, 64)     0           ['v_drrm1_add1[0][0]']           
+                                                                                                  
+ a_drrm1_relu2 (Activation)     (None, 1024, 64)     0           ['a_drrm1_add1[0][0]']           
+                                                                                                  
+ v_drrm1_sep3 (SeparableConv1D)  (None, 1024, 64)    4352        ['v_drrm1_relu2[0][0]']          
+                                                                                                  
+ a_drrm1_sep3 (SeparableConv1D)  (None, 1024, 64)    4352        ['a_drrm1_relu2[0][0]']          
+                                                                                                  
+ v_drrm1_bn3 (BatchNormalizatio  (None, 1024, 64)    256         ['v_drrm1_sep3[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm1_bn3 (BatchNormalizatio  (None, 1024, 64)    256         ['a_drrm1_sep3[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm1_relu3 (Activation)     (None, 1024, 64)     0           ['v_drrm1_bn3[0][0]']            
+                                                                                                  
+ a_drrm1_relu3 (Activation)     (None, 1024, 64)     0           ['a_drrm1_bn3[0][0]']            
+                                                                                                  
+ v_drrm1_sep4 (SeparableConv1D)  (None, 1024, 64)    4352        ['v_drrm1_relu3[0][0]']          
+                                                                                                  
+ a_drrm1_sep4 (SeparableConv1D)  (None, 1024, 64)    4352        ['a_drrm1_relu3[0][0]']          
+                                                                                                  
+ v_drrm1_bn4 (BatchNormalizatio  (None, 1024, 64)    256         ['v_drrm1_sep4[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm1_bn4 (BatchNormalizatio  (None, 1024, 64)    256         ['a_drrm1_sep4[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm1_add2 (Add)             (None, 1024, 64)     0           ['v_drrm1_relu2[0][0]',          
+                                                                  'v_drrm1_bn4[0][0]']            
+                                                                                                  
+ a_drrm1_add2 (Add)             (None, 1024, 64)     0           ['a_drrm1_relu2[0][0]',          
+                                                                  'a_drrm1_bn4[0][0]']            
+                                                                                                  
+ v_drrm1_relu4 (Activation)     (None, 1024, 64)     0           ['v_drrm1_add2[0][0]']           
+                                                                                                  
+ a_drrm1_relu4 (Activation)     (None, 1024, 64)     0           ['a_drrm1_add2[0][0]']           
+                                                                                                  
+ v_drrm2_sep1 (SeparableConv1D)  (None, 1024, 128)   8512        ['v_drrm1_relu4[0][0]']          
+                                                                                                  
+ a_drrm2_sep1 (SeparableConv1D)  (None, 1024, 128)   8512        ['a_drrm1_relu4[0][0]']          
+                                                                                                  
+ v_drrm2_bn1 (BatchNormalizatio  (None, 1024, 128)   512         ['v_drrm2_sep1[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm2_bn1 (BatchNormalizatio  (None, 1024, 128)   512         ['a_drrm2_sep1[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm2_relu1 (Activation)     (None, 1024, 128)    0           ['v_drrm2_bn1[0][0]']            
+                                                                                                  
+ a_drrm2_relu1 (Activation)     (None, 1024, 128)    0           ['a_drrm2_bn1[0][0]']            
+                                                                                                  
+ v_drrm2_sep2 (SeparableConv1D)  (None, 1024, 128)   16896       ['v_drrm2_relu1[0][0]']          
+                                                                                                  
+ a_drrm2_sep2 (SeparableConv1D)  (None, 1024, 128)   16896       ['a_drrm2_relu1[0][0]']          
+                                                                                                  
+ v_drrm2_proj (Conv1D)          (None, 1024, 128)    8320        ['v_drrm1_relu4[0][0]']          
+                                                                                                  
+ v_drrm2_bn2 (BatchNormalizatio  (None, 1024, 128)   512         ['v_drrm2_sep2[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm2_proj (Conv1D)          (None, 1024, 128)    8320        ['a_drrm1_relu4[0][0]']          
+                                                                                                  
+ a_drrm2_bn2 (BatchNormalizatio  (None, 1024, 128)   512         ['a_drrm2_sep2[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm2_add1 (Add)             (None, 1024, 128)    0           ['v_drrm2_proj[0][0]',           
+                                                                  'v_drrm2_bn2[0][0]']            
+                                                                                                  
+ a_drrm2_add1 (Add)             (None, 1024, 128)    0           ['a_drrm2_proj[0][0]',           
+                                                                  'a_drrm2_bn2[0][0]']            
+                                                                                                  
+ v_drrm2_relu2 (Activation)     (None, 1024, 128)    0           ['v_drrm2_add1[0][0]']           
+                                                                                                  
+ a_drrm2_relu2 (Activation)     (None, 1024, 128)    0           ['a_drrm2_add1[0][0]']           
+                                                                                                  
+ v_drrm2_sep3 (SeparableConv1D)  (None, 1024, 128)   16896       ['v_drrm2_relu2[0][0]']          
+                                                                                                  
+ a_drrm2_sep3 (SeparableConv1D)  (None, 1024, 128)   16896       ['a_drrm2_relu2[0][0]']          
+                                                                                                  
+ v_drrm2_bn3 (BatchNormalizatio  (None, 1024, 128)   512         ['v_drrm2_sep3[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm2_bn3 (BatchNormalizatio  (None, 1024, 128)   512         ['a_drrm2_sep3[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm2_relu3 (Activation)     (None, 1024, 128)    0           ['v_drrm2_bn3[0][0]']            
+                                                                                                  
+ a_drrm2_relu3 (Activation)     (None, 1024, 128)    0           ['a_drrm2_bn3[0][0]']            
+                                                                                                  
+ v_drrm2_sep4 (SeparableConv1D)  (None, 1024, 128)   16896       ['v_drrm2_relu3[0][0]']          
+                                                                                                  
+ a_drrm2_sep4 (SeparableConv1D)  (None, 1024, 128)   16896       ['a_drrm2_relu3[0][0]']          
+                                                                                                  
+ v_drrm2_bn4 (BatchNormalizatio  (None, 1024, 128)   512         ['v_drrm2_sep4[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm2_bn4 (BatchNormalizatio  (None, 1024, 128)   512         ['a_drrm2_sep4[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm2_add2 (Add)             (None, 1024, 128)    0           ['v_drrm2_relu2[0][0]',          
+                                                                  'v_drrm2_bn4[0][0]']            
+                                                                                                  
+ a_drrm2_add2 (Add)             (None, 1024, 128)    0           ['a_drrm2_relu2[0][0]',          
+                                                                  'a_drrm2_bn4[0][0]']            
+                                                                                                  
+ v_drrm2_relu4 (Activation)     (None, 1024, 128)    0           ['v_drrm2_add2[0][0]']           
+                                                                                                  
+ a_drrm2_relu4 (Activation)     (None, 1024, 128)    0           ['a_drrm2_add2[0][0]']           
+                                                                                                  
+ v_scrm_gap (GlobalAveragePooli  (None, 128)         0           ['v_drrm2_relu4[0][0]']          
+ ng1D)                                                                                            
+                                                                                                  
+ v_scrm_gmp (GlobalMaxPooling1D  (None, 128)         0           ['v_drrm2_relu4[0][0]']          
+ )                                                                                                
+                                                                                                  
+ a_scrm_gap (GlobalAveragePooli  (None, 128)         0           ['a_drrm2_relu4[0][0]']          
+ ng1D)                                                                                            
+                                                                                                  
+ a_scrm_gmp (GlobalMaxPooling1D  (None, 128)         0           ['a_drrm2_relu4[0][0]']          
+ )                                                                                                
+                                                                                                  
+ v_scrm_ca_fc1 (Dense)          (None, 16)           2064        ['v_scrm_gap[0][0]',             
+                                                                  'v_scrm_gmp[0][0]']             
+                                                                                                  
+ a_scrm_ca_fc1 (Dense)          (None, 16)           2064        ['a_scrm_gap[0][0]',             
+                                                                  'a_scrm_gmp[0][0]']             
+                                                                                                  
+ v_scrm_ca_fc2 (Dense)          (None, 128)          2176        ['v_scrm_ca_fc1[0][0]',          
+                                                                  'v_scrm_ca_fc1[1][0]']          
+                                                                                                  
+ a_scrm_ca_fc2 (Dense)          (None, 128)          2176        ['a_scrm_ca_fc1[0][0]',          
+                                                                  'a_scrm_ca_fc1[1][0]']          
+                                                                                                  
+ v_scrm_ca_add (Add)            (None, 128)          0           ['v_scrm_ca_fc2[0][0]',          
+                                                                  'v_scrm_ca_fc2[1][0]']          
+                                                                                                  
+ a_scrm_ca_add (Add)            (None, 128)          0           ['a_scrm_ca_fc2[0][0]',          
+                                                                  'a_scrm_ca_fc2[1][0]']          
+                                                                                                  
+ v_scrm_ca_sigmoid (Activation)  (None, 128)         0           ['v_scrm_ca_add[0][0]']          
+                                                                                                  
+ a_scrm_ca_sigmoid (Activation)  (None, 128)         0           ['a_scrm_ca_add[0][0]']          
+                                                                                                  
+ v_scrm_ca_expand (Lambda)      (None, 1, 128)       0           ['v_scrm_ca_sigmoid[0][0]']      
+                                                                                                  
+ a_scrm_ca_expand (Lambda)      (None, 1, 128)       0           ['a_scrm_ca_sigmoid[0][0]']      
+                                                                                                  
+ v_scrm_ca_mul (Multiply)       (None, 1024, 128)    0           ['v_drrm2_relu4[0][0]',          
+                                                                  'v_scrm_ca_expand[0][0]']       
+                                                                                                  
+ a_scrm_ca_mul (Multiply)       (None, 1024, 128)    0           ['a_drrm2_relu4[0][0]',          
+                                                                  'a_scrm_ca_expand[0][0]']       
+                                                                                                  
+ v_scrm_sa_avg (Lambda)         (None, 1024, 1)      0           ['v_scrm_ca_mul[0][0]']          
+                                                                                                  
+ v_scrm_sa_max (Lambda)         (None, 1024, 1)      0           ['v_scrm_ca_mul[0][0]']          
+                                                                                                  
+ a_scrm_sa_avg (Lambda)         (None, 1024, 1)      0           ['a_scrm_ca_mul[0][0]']          
+                                                                                                  
+ a_scrm_sa_max (Lambda)         (None, 1024, 1)      0           ['a_scrm_ca_mul[0][0]']          
+                                                                                                  
+ v_scrm_sa_cat (Concatenate)    (None, 1024, 2)      0           ['v_scrm_sa_avg[0][0]',          
+                                                                  'v_scrm_sa_max[0][0]']          
+                                                                                                  
+ a_scrm_sa_cat (Concatenate)    (None, 1024, 2)      0           ['a_scrm_sa_avg[0][0]',          
+                                                                  'a_scrm_sa_max[0][0]']          
+                                                                                                  
+ v_scrm_sa_conv (Conv1D)        (None, 1024, 1)      15          ['v_scrm_sa_cat[0][0]']          
+                                                                                                  
+ a_scrm_sa_conv (Conv1D)        (None, 1024, 1)      15          ['a_scrm_sa_cat[0][0]']          
+                                                                                                  
+ v_scrm_sa_mul (Multiply)       (None, 1024, 128)    0           ['v_scrm_ca_mul[0][0]',          
+                                                                  'v_scrm_sa_conv[0][0]']         
+                                                                                                  
+ a_scrm_sa_mul (Multiply)       (None, 1024, 128)    0           ['a_scrm_ca_mul[0][0]',          
+                                                                  'a_scrm_sa_conv[0][0]']         
+                                                                                                  
+ gipfm_cat (Concatenate)        (None, 1024, 256)    0           ['v_scrm_sa_mul[0][0]',          
+                                                                  'a_scrm_sa_mul[0][0]']          
+                                                                                                  
+ gipfm_gap (GlobalAveragePoolin  (None, 256)         0           ['gipfm_cat[0][0]']              
+ g1D)                                                                                             
+                                                                                                  
+ gipfm_w (Dense)                (None, 2)            514         ['gipfm_gap[0][0]']              
+                                                                                                  
+ gipfm_wv (Lambda)              (None,)              0           ['gipfm_w[0][0]']                
+                                                                                                  
+ gipfm_wa (Lambda)              (None,)              0           ['gipfm_w[0][0]']                
+                                                                                                  
+ gipfm_scale_v (Lambda)         (None, 1024, 128)    0           ['v_scrm_sa_mul[0][0]',          
+                                                                  'gipfm_wv[0][0]']               
+                                                                                                  
+ gipfm_scale_a (Lambda)         (None, 1024, 128)    0           ['a_scrm_sa_mul[0][0]',          
+                                                                  'gipfm_wa[0][0]']               
+                                                                                                  
+ gipfm_add (Add)                (None, 1024, 128)    0           ['gipfm_scale_v[0][0]',          
+                                                                  'gipfm_scale_a[0][0]']          
+                                                                                                  
+ cb_gap (GlobalAveragePooling1D  (None, 128)         0           ['gipfm_add[0][0]']              
+ )                                                                                                
+                                                                                                  
+ cb_fc (Dense)                  (None, 7)            903         ['cb_gap[0][0]']                 
+                                                                                                  
+ softmax (Activation)           (None, 7)            0           ['cb_fc[0][0]']                  
+                                                                                                  
+==================================================================================================
+Total params: 186,951
+Trainable params: 183,879
+Non-trainable params: 3,072
+__________________________________________________________________________________________________
+============================================================
+
+
+======== 测试样本量: 5 (Run 1-10) ========
+  [S5-R1] Acc: 0.6058, F1: 0.5479
+  [S5-R2] Acc: 0.5024, F1: 0.3972
+  [S5-R3] Acc: 0.8691, F1: 0.8650
+  [S5-R4] Acc: 0.4568, F1: 0.3884
+  [S5-R5] Acc: 0.8344, F1: 0.8294
+  [S5-R6] Acc: 0.4904, F1: 0.3776
+  [S5-R7] Acc: 0.3577, F1: 0.2810
+  [S5-R8] Acc: 0.5552, F1: 0.5363
+  [S5-R9] Acc: 0.5772, F1: 0.4959
+  [S5-R10] Acc: 0.4904, F1: 0.4771
+  >>> S5 完成 (Trimmed): Mean Acc=0.5641 (Std=0.1125)
+
+======== 测试样本量: 6 (Run 1-10) ========
+  [S6-R1] Acc: 0.7676, F1: 0.7496
+  [S6-R2] Acc: 0.7194, F1: 0.6670
+  [S6-R3] Acc: 0.5867, F1: 0.5471
+  [S6-R4] Acc: 0.6131, F1: 0.5545
+  [S6-R5] Acc: 0.3481, F1: 0.2541
+  [S6-R6] Acc: 0.7745, F1: 0.7147
+  [S6-R7] Acc: 0.7197, F1: 0.7223
+  [S6-R8] Acc: 0.8336, F1: 0.8311
+  [S6-R9] Acc: 0.5696, F1: 0.5221
+  [S6-R10] Acc: 0.7092, F1: 0.7123
+  >>> S6 完成 (Trimmed): Mean Acc=0.6825 (Std=0.0757)
+
+======== 测试样本量: 7 (Run 1-10) ========
+  [S7-R1] Acc: 0.7059, F1: 0.6985
+  [S7-R2] Acc: 0.8295, F1: 0.8330
+  [S7-R3] Acc: 0.9258, F1: 0.9263
+  [S7-R4] Acc: 0.7586, F1: 0.7201
+  [S7-R5] Acc: 0.6583, F1: 0.6576
+  [S7-R6] Acc: 0.2145, F1: 0.1335
+  [S7-R7] Acc: 0.7844, F1: 0.7253
+  [S7-R8] Acc: 0.8528, F1: 0.8444
+  [S7-R9] Acc: 0.8404, F1: 0.8164
+  [S7-R10] Acc: 0.6314, F1: 0.5996
+  >>> S7 完成 (Trimmed): Mean Acc=0.7577 (Std=0.0793)
+
+======== 测试样本量: 8 (Run 1-10) ========
+  [S8-R1] Acc: 0.7026, F1: 0.6658
+  [S8-R2] Acc: 0.2088, F1: 0.1464
+  [S8-R3] Acc: 0.4781, F1: 0.4069
+  [S8-R4] Acc: 0.7041, F1: 0.6827
+  [S8-R5] Acc: 0.7956, F1: 0.8001
+  [S8-R6] Acc: 0.7289, F1: 0.7055
+  [S8-R7] Acc: 0.1429, F1: 0.0357
+  [S8-R8] Acc: 0.5773, F1: 0.5439
+  [S8-R9] Acc: 0.9559, F1: 0.9553
+  [S8-R10] Acc: 0.4967, F1: 0.4288
+  >>> S8 完成 (Trimmed): Mean Acc=0.5865 (Std=0.1781)
+
+======== 测试样本量: 9 (Run 1-10) ========
+  [S9-R1] Acc: 0.7822, F1: 0.7775
+  [S9-R2] Acc: 0.7844, F1: 0.7702
+  [S9-R3] Acc: 0.7081, F1: 0.7082
+  [S9-R4] Acc: 0.9642, F1: 0.9637
+  [S9-R5] Acc: 0.5992, F1: 0.5648
+  [S9-R6] Acc: 0.2137, F1: 0.1328
+  [S9-R7] Acc: 0.8469, F1: 0.8471
+  [S9-R8] Acc: 0.7358, F1: 0.6841
+  [S9-R9] Acc: 0.5849, F1: 0.4817
+  [S9-R10] Acc: 0.7961, F1: 0.7958
+  >>> S9 完成 (Trimmed): Mean Acc=0.7297 (Std=0.0883)
+
+======== 测试样本量: 10 (Run 1-10) ========
+  [S10-R1] Acc: 0.9077, F1: 0.9036
+  [S10-R2] Acc: 0.8890, F1: 0.8816
+  [S10-R3] Acc: 0.4993, F1: 0.4323
+  [S10-R4] Acc: 0.5176, F1: 0.4684
+  [S10-R5] Acc: 0.8985, F1: 0.8951
+  [S10-R6] Acc: 0.5341, F1: 0.4860
+  [S10-R7] Acc: 0.4982, F1: 0.4320
+  [S10-R8] Acc: 0.1429, F1: 0.0357
+  [S10-R9] Acc: 0.8872, F1: 0.8781
+  [S10-R10] Acc: 0.7165, F1: 0.7250
+  >>> S10 完成 (Trimmed): Mean Acc=0.6800 (Std=0.1765)
+
+======== 测试样本量: 11 (Run 1-10) ========
+  [S11-R1] Acc: 0.6754, F1: 0.6643
+  [S11-R2] Acc: 0.5002, F1: 0.3858
+  [S11-R3] Acc: 0.6757, F1: 0.6431
+  [S11-R4] Acc: 0.5509, F1: 0.5089
+  [S11-R5] Acc: 0.2839, F1: 0.2293
+  [S11-R6] Acc: 0.5384, F1: 0.4712
+  [S11-R7] Acc: 0.8274, F1: 0.8216
+  [S11-R8] Acc: 0.8990, F1: 0.8954
+  [S11-R9] Acc: 0.7752, F1: 0.7160
+  [S11-R10] Acc: 0.5006, F1: 0.4333
+  >>> S11 完成 (Trimmed): Mean Acc=0.6305 (Std=0.1186)
+
+======== 测试样本量: 12 (Run 1-10) ========
+  [S12-R1] Acc: 0.8704, F1: 0.8668
+  [S12-R2] Acc: 0.5033, F1: 0.4155
+  [S12-R3] Acc: 0.8520, F1: 0.8471
+  [S12-R4] Acc: 0.5015, F1: 0.4321
+  [S12-R5] Acc: 0.6377, F1: 0.6116
+  [S12-R6] Acc: 0.9043, F1: 0.9015
+  [S12-R7] Acc: 0.5722, F1: 0.5147
+  [S12-R8] Acc: 0.9098, F1: 0.9065
+  [S12-R9] Acc: 0.9172, F1: 0.9105
+  [S12-R10] Acc: 0.4834, F1: 0.4197
+  >>> S12 完成 (Trimmed): Mean Acc=0.7189 (Std=0.1708)
+
+======== 测试样本量: 13 (Run 1-10) ========
+  [S13-R1] Acc: 0.6648, F1: 0.6594
+  [S13-R2] Acc: 0.6394, F1: 0.6308
+  [S13-R3] Acc: 0.7704, F1: 0.7202
+  [S13-R4] Acc: 0.9317, F1: 0.9316
+  [S13-R5] Acc: 0.9616, F1: 0.9616
+  [S13-R6] Acc: 0.6294, F1: 0.6197
+  [S13-R7] Acc: 0.3581, F1: 0.2720
+  [S13-R8] Acc: 0.6980, F1: 0.6642
+  [S13-R9] Acc: 0.8032, F1: 0.7499
+  [S13-R10] Acc: 0.6903, F1: 0.6803
+  >>> S13 完成 (Trimmed): Mean Acc=0.7284 (Std=0.0954)
+
+======== 测试样本量: 14 (Run 1-10) ========
+  [S14-R1] Acc: 0.9127, F1: 0.9081
+  [S14-R2] Acc: 0.7565, F1: 0.7743
+  [S14-R3] Acc: 0.8694, F1: 0.8657
+  [S14-R4] Acc: 0.6395, F1: 0.6407
+  [S14-R5] Acc: 0.9212, F1: 0.9165
+  [S14-R6] Acc: 0.7124, F1: 0.7315
+  [S14-R7] Acc: 0.6636, F1: 0.6598
+  [S14-R8] Acc: 0.7084, F1: 0.6543
+  [S14-R9] Acc: 0.5725, F1: 0.5326
+  [S14-R10] Acc: 0.6314, F1: 0.6263
+  >>> S14 完成 (Trimmed): Mean Acc=0.7367 (Std=0.0976)
+
+======== 测试样本量: 15 (Run 1-10) ========
+  [S15-R1] Acc: 0.9035, F1: 0.9025
+  [S15-R2] Acc: 0.3462, F1: 0.2760
+  [S15-R3] Acc: 0.9232, F1: 0.9190
+  [S15-R4] Acc: 0.9228, F1: 0.9180
+  [S15-R5] Acc: 0.2327, F1: 0.1317
+  [S15-R6] Acc: 0.4267, F1: 0.3666
+  [S15-R7] Acc: 0.9102, F1: 0.9067
+  [S15-R8] Acc: 0.6820, F1: 0.6262
+  [S15-R9] Acc: 0.7492, F1: 0.7437
+  [S15-R10] Acc: 0.8976, F1: 0.8908
+  >>> S15 完成 (Trimmed): Mean Acc=0.7298 (Std=0.2150)
+
+======== 测试样本量: 16 (Run 1-10) ========
+  [S16-R1] Acc: 0.9222, F1: 0.9177
+  [S16-R2] Acc: 0.8266, F1: 0.8271
+  [S16-R3] Acc: 0.8065, F1: 0.8000
+  [S16-R4] Acc: 0.1429, F1: 0.0357
+  [S16-R5] Acc: 0.9241, F1: 0.9191
+  [S16-R6] Acc: 0.9211, F1: 0.9167
+  [S16-R7] Acc: 0.3534, F1: 0.2804
+  [S16-R8] Acc: 0.7865, F1: 0.7807
+  [S16-R9] Acc: 0.7336, F1: 0.7266
+  [S16-R10] Acc: 0.4286, F1: 0.3807
+  >>> S16 完成 (Trimmed): Mean Acc=0.7223 (Std=0.2013)
+
+======== 测试样本量: 17 (Run 1-10) ========
+  [S17-R1] Acc: 0.6404, F1: 0.6323
+  [S17-R2] Acc: 0.6020, F1: 0.5664
+  [S17-R3] Acc: 0.1429, F1: 0.0357
+  [S17-R4] Acc: 0.5539, F1: 0.4984
+  [S17-R5] Acc: 0.9026, F1: 0.9001
+  [S17-R6] Acc: 0.7232, F1: 0.6978
+  [S17-R7] Acc: 0.2969, F1: 0.2442
+  [S17-R8] Acc: 0.6386, F1: 0.6273
+  [S17-R9] Acc: 0.5002, F1: 0.4329
+  [S17-R10] Acc: 0.1429, F1: 0.0357
+  >>> S17 完成 (Trimmed): Mean Acc=0.5123 (Std=0.1836)
+
+======== 测试样本量: 18 (Run 1-10) ========
+  [S18-R1] Acc: 0.6365, F1: 0.6266
+  [S18-R2] Acc: 0.6548, F1: 0.6189
+  [S18-R3] Acc: 0.5999, F1: 0.5576
+  [S18-R4] Acc: 0.3568, F1: 0.2817
+  [S18-R5] Acc: 0.6099, F1: 0.5832
+  [S18-R6] Acc: 0.8923, F1: 0.8885
+  [S18-R7] Acc: 0.9783, F1: 0.9782
+  [S18-R8] Acc: 0.4989, F1: 0.4317
+  [S18-R9] Acc: 0.9940, F1: 0.9940
+  [S18-R10] Acc: 0.8455, F1: 0.8360
+  >>> S18 完成 (Trimmed): Mean Acc=0.7145 (Std=0.1576)
+
+======== 测试样本量: 19 (Run 1-10) ========
+  [S19-R1] Acc: 0.4983, F1: 0.4306
+  [S19-R2] Acc: 0.6423, F1: 0.6341
+  [S19-R3] Acc: 0.7833, F1: 0.7938
+  [S19-R4] Acc: 0.5718, F1: 0.5337
+  [S19-R5] Acc: 0.9663, F1: 0.9658
+  [S19-R6] Acc: 0.7278, F1: 0.7273
+  [S19-R7] Acc: 0.3570, F1: 0.2756
+  [S19-R8] Acc: 0.5579, F1: 0.5166
+  [S19-R9] Acc: 0.6948, F1: 0.6765
+  [S19-R10] Acc: 0.8373, F1: 0.8418
+  >>> S19 完成 (Trimmed): Mean Acc=0.6642 (Std=0.1101)
+
+======== 测试样本量: 20 (Run 1-10) ========
+  [S20-R1] Acc: 0.9827, F1: 0.9827
+  [S20-R2] Acc: 0.6350, F1: 0.6266
+  [S20-R3] Acc: 0.8147, F1: 0.7649
+  [S20-R4] Acc: 0.6391, F1: 0.5788
+  [S20-R5] Acc: 0.7511, F1: 0.7342
+  [S20-R6] Acc: 0.5771, F1: 0.5189
+  [S20-R7] Acc: 0.8703, F1: 0.8654
+  [S20-R8] Acc: 0.5015, F1: 0.4343
+  [S20-R9] Acc: 0.1429, F1: 0.0357
+  [S20-R10] Acc: 0.8756, F1: 0.8676
+  >>> S20 完成 (Trimmed): Mean Acc=0.7080 (Std=0.1311)
+
+======== 测试样本量: 21 (Run 1-10) ========
+  [S21-R1] Acc: 0.7086, F1: 0.6372
+  [S21-R2] Acc: 0.5164, F1: 0.4398
+  [S21-R3] Acc: 0.8734, F1: 0.8702
+  [S21-R4] Acc: 0.8865, F1: 0.8815
+  [S21-R5] Acc: 0.7787, F1: 0.7741
+  [S21-R6] Acc: 0.3566, F1: 0.2815
+  [S21-R7] Acc: 0.7833, F1: 0.7389
+  [S21-R8] Acc: 0.9951, F1: 0.9951
+  [S21-R9] Acc: 0.6438, F1: 0.6356
+  [S21-R10] Acc: 0.9446, F1: 0.9442
+  >>> S21 完成 (Trimmed): Mean Acc=0.7669 (Std=0.1318)
+
+======== 测试样本量: 22 (Run 1-10) ========
+  [S22-R1] Acc: 0.9977, F1: 0.9977
+  [S22-R2] Acc: 0.4985, F1: 0.4050
+  [S22-R3] Acc: 0.5004, F1: 0.4206
+  [S22-R4] Acc: 0.9252, F1: 0.9175
+  [S22-R5] Acc: 0.2128, F1: 0.1319
+  [S22-R6] Acc: 0.9913, F1: 0.9913
+  [S22-R7] Acc: 0.3609, F1: 0.2907
+  [S22-R8] Acc: 0.9875, F1: 0.9875
+  [S22-R9] Acc: 0.5605, F1: 0.5232
+  [S22-R10] Acc: 0.3568, F1: 0.2827
+  >>> S22 完成 (Trimmed): Mean Acc=0.6476 (Std=0.2571)
+
+======== 测试样本量: 23 (Run 1-10) ========
+  [S23-R1] Acc: 0.5017, F1: 0.4358
+  [S23-R2] Acc: 0.7097, F1: 0.6857
+  [S23-R3] Acc: 0.6931, F1: 0.6761
+  [S23-R4] Acc: 0.9970, F1: 0.9970
+  [S23-R5] Acc: 0.5263, F1: 0.4612
+  [S23-R6] Acc: 0.8583, F1: 0.8514
+  [S23-R7] Acc: 0.7393, F1: 0.6833
+  [S23-R8] Acc: 0.5669, F1: 0.5074
+  [S23-R9] Acc: 0.9879, F1: 0.9879
+  [S23-R10] Acc: 0.6040, F1: 0.5387
+  >>> S23 完成 (Trimmed): Mean Acc=0.7107 (Std=0.1440)
+
+======== 测试样本量: 24 (Run 1-10) ========
+  [S24-R1] Acc: 0.3818, F1: 0.3278
+  [S24-R2] Acc: 0.4992, F1: 0.4322
+  [S24-R3] Acc: 0.6136, F1: 0.5556
+  [S24-R4] Acc: 0.8910, F1: 0.8867
+  [S24-R5] Acc: 0.9985, F1: 0.9985
+  [S24-R6] Acc: 0.4996, F1: 0.4320
+  [S24-R7] Acc: 0.9187, F1: 0.9142
+  [S24-R8] Acc: 0.7823, F1: 0.7773
+  [S24-R9] Acc: 0.6425, F1: 0.6344
+  [S24-R10] Acc: 0.7857, F1: 0.7321
+  >>> S24 完成 (Trimmed): Mean Acc=0.7041 (Std=0.1539)
+
+======== 测试样本量: 25 (Run 1-10) ========
+  [S25-R1] Acc: 0.8495, F1: 0.8492
+  [S25-R2] Acc: 0.5699, F1: 0.5381
+  [S25-R3] Acc: 0.8731, F1: 0.8710
+  [S25-R4] Acc: 0.8507, F1: 0.8500
+  [S25-R5] Acc: 0.7105, F1: 0.6862
+  [S25-R6] Acc: 0.9970, F1: 0.9970
+  [S25-R7] Acc: 0.9432, F1: 0.9414
+  [S25-R8] Acc: 0.7055, F1: 0.6707
+  [S25-R9] Acc: 0.9269, F1: 0.9218
+  [S25-R10] Acc: 0.4994, F1: 0.4324
+  >>> S25 完成 (Trimmed): Mean Acc=0.8037 (Std=0.1208)
+
+======== 测试样本量: 26 (Run 1-10) ========
+  [S26-R1] Acc: 0.9885, F1: 0.9885
+  [S26-R2] Acc: 0.9973, F1: 0.9973
+  [S26-R3] Acc: 0.9152, F1: 0.9147
+  [S26-R4] Acc: 0.8056, F1: 0.7648
+  [S26-R5] Acc: 0.7834, F1: 0.7394
+  [S26-R6] Acc: 0.8720, F1: 0.8714
+  [S26-R7] Acc: 0.6910, F1: 0.6753
+  [S26-R8] Acc: 0.3541, F1: 0.2329
+  [S26-R9] Acc: 0.9286, F1: 0.9242
+  [S26-R10] Acc: 0.6429, F1: 0.6349
+  >>> S26 完成 (Trimmed): Mean Acc=0.8284 (Std=0.1123)
+
+======== 测试样本量: 27 (Run 1-10) ========
+  [S27-R1] Acc: 0.3585, F1: 0.2833
+  [S27-R2] Acc: 0.6446, F1: 0.6366
+  [S27-R3] Acc: 0.9946, F1: 0.9946
+  [S27-R4] Acc: 0.2156, F1: 0.1346
+  [S27-R5] Acc: 0.8246, F1: 0.8181
+  [S27-R6] Acc: 0.9920, F1: 0.9919
+  [S27-R7] Acc: 0.5848, F1: 0.5443
+  [S27-R8] Acc: 0.9058, F1: 0.9048
+  [S27-R9] Acc: 0.9877, F1: 0.9877
+  [S27-R10] Acc: 0.8778, F1: 0.8749
+  >>> S27 完成 (Trimmed): Mean Acc=0.7720 (Std=0.2089)
+
+======== 测试样本量: 28 (Run 1-10) ========
+  [S28-R1] Acc: 0.8452, F1: 0.8454
+  [S28-R2] Acc: 0.8502, F1: 0.8036
+  [S28-R3] Acc: 0.9078, F1: 0.9060
+  [S28-R4] Acc: 0.5330, F1: 0.5082
+  [S28-R5] Acc: 0.9228, F1: 0.9182
+  [S28-R6] Acc: 0.3610, F1: 0.2698
+  [S28-R7] Acc: 0.9098, F1: 0.9075
+  [S28-R8] Acc: 0.7404, F1: 0.7375
+  [S28-R9] Acc: 0.2834, F1: 0.1849
+  [S28-R10] Acc: 0.9478, F1: 0.9462
+  >>> S28 完成 (Trimmed): Mean Acc=0.7588 (Std=0.1928)
+
+======== 测试样本量: 29 (Run 1-10) ========
+  [S29-R1] Acc: 0.9992, F1: 0.9992
+  [S29-R2] Acc: 0.9207, F1: 0.9158
+  [S29-R3] Acc: 0.5838, F1: 0.5445
+  [S29-R4] Acc: 0.8410, F1: 0.8391
+  [S29-R5] Acc: 0.7116, F1: 0.6877
+  [S29-R6] Acc: 0.5341, F1: 0.4746
+  [S29-R7] Acc: 0.9977, F1: 0.9977
+  [S29-R8] Acc: 0.7081, F1: 0.6845
+  [S29-R9] Acc: 0.5768, F1: 0.4966
+  [S29-R10] Acc: 0.5888, F1: 0.5491
+  >>> S29 完成 (Trimmed): Mean Acc=0.7410 (Std=0.1521)
+
+======== 测试样本量: 30 (Run 1-10) ========
+  [S30-R1] Acc: 0.7452, F1: 0.7344
+  [S30-R2] Acc: 0.9205, F1: 0.9142
+  [S30-R3] Acc: 0.9907, F1: 0.9907
+  [S30-R4] Acc: 0.9239, F1: 0.9202
+  [S30-R5] Acc: 0.1514, F1: 0.0520
+  [S30-R6] Acc: 0.9591, F1: 0.9584
+  [S30-R7] Acc: 0.9942, F1: 0.9942
+  [S30-R8] Acc: 0.9900, F1: 0.9900
+  [S30-R9] Acc: 0.8537, F1: 0.8060
+  [S30-R10] Acc: 0.9270, F1: 0.9223
+  >>> S30 完成 (Trimmed): Mean Acc=0.9138 (Std=0.0759)
+
+全部完成！结果已保存在: D:\机械故障诊断实验\MRCFN_Comparison_Experiment
+日志文件: D:\机械故障诊断实验\MRCFN_Comparison_Experiment\experiment_log_MRCFN.txt

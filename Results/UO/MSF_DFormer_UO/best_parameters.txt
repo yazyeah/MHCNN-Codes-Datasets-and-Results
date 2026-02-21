@@ -1,0 +1,20 @@
+MSF-DFormer fixed hyperparameters (baseline, TensorFlow/Keras)
+==============================================================================
+
+Paper: MSF-DFormer (Multisensor Multiscale Fusion Network with Deformable Transformer)
+Key idea: MDSCB -> SCAFM(SCRM+SFFM) x3 -> ADFF -> DOT -> classifier
+
+[Training protocol aligned to MHCNN]
+  Sample range: 5..30
+  Repeats per N: 10
+  epochs=80, batch_size=16, lr=0.0013866, optimizer=Adamax
+  train_verbose=0, validation_batch_size=16
+  validation_freq=5
+  mixed_precision=mixed_float16, jit_compile=False (Fixed for compatibility)
+  tsne_max_points=1400
+
+[Model (Lightweight)]
+  MDSCB filters=32, expansion rates=2/4/6, 3 stages
+  ADFF filters=64, seq_len(tokens)=3
+  DOT d_model=64, nhead=2, n_layers=2
+  Classes=7

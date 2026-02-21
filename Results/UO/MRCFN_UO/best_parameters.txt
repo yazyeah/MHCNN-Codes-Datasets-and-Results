@@ -1,0 +1,276 @@
+Best MRCFN Model Architecture Summary (fixed baseline config)
+======================================================================
+epochs: 80
+batch_size: 32
+learning_rate: 0.001
+num_classes: 7
+sample_range: 5..30
+repeat_times: 10
+
+Model Summary:
+----------------------------------------------------------------------
+Model: "MRCFN"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ input_vib (InputLayer)         [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ input_aco (InputLayer)         [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ v_cpm_conv (Conv1D)            (None, 2048, 32)     544         ['input_vib[0][0]']              
+                                                                                                  
+ a_cpm_conv (Conv1D)            (None, 2048, 32)     544         ['input_aco[0][0]']              
+                                                                                                  
+ v_cpm_relu (Activation)        (None, 2048, 32)     0           ['v_cpm_conv[0][0]']             
+                                                                                                  
+ a_cpm_relu (Activation)        (None, 2048, 32)     0           ['a_cpm_conv[0][0]']             
+                                                                                                  
+ v_cpm_pool (MaxPooling1D)      (None, 1024, 32)     0           ['v_cpm_relu[0][0]']             
+                                                                                                  
+ a_cpm_pool (MaxPooling1D)      (None, 1024, 32)     0           ['a_cpm_relu[0][0]']             
+                                                                                                  
+ v_drrm1_sep1 (SeparableConv1D)  (None, 1024, 64)    2208        ['v_cpm_pool[0][0]']             
+                                                                                                  
+ a_drrm1_sep1 (SeparableConv1D)  (None, 1024, 64)    2208        ['a_cpm_pool[0][0]']             
+                                                                                                  
+ v_drrm1_bn1 (BatchNormalizatio  (None, 1024, 64)    256         ['v_drrm1_sep1[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm1_bn1 (BatchNormalizatio  (None, 1024, 64)    256         ['a_drrm1_sep1[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm1_relu1 (Activation)     (None, 1024, 64)     0           ['v_drrm1_bn1[0][0]']            
+                                                                                                  
+ a_drrm1_relu1 (Activation)     (None, 1024, 64)     0           ['a_drrm1_bn1[0][0]']            
+                                                                                                  
+ v_drrm1_sep2 (SeparableConv1D)  (None, 1024, 64)    4352        ['v_drrm1_relu1[0][0]']          
+                                                                                                  
+ a_drrm1_sep2 (SeparableConv1D)  (None, 1024, 64)    4352        ['a_drrm1_relu1[0][0]']          
+                                                                                                  
+ v_drrm1_proj (Conv1D)          (None, 1024, 64)     2112        ['v_cpm_pool[0][0]']             
+                                                                                                  
+ v_drrm1_bn2 (BatchNormalizatio  (None, 1024, 64)    256         ['v_drrm1_sep2[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm1_proj (Conv1D)          (None, 1024, 64)     2112        ['a_cpm_pool[0][0]']             
+                                                                                                  
+ a_drrm1_bn2 (BatchNormalizatio  (None, 1024, 64)    256         ['a_drrm1_sep2[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm1_add1 (Add)             (None, 1024, 64)     0           ['v_drrm1_proj[0][0]',           
+                                                                  'v_drrm1_bn2[0][0]']            
+                                                                                                  
+ a_drrm1_add1 (Add)             (None, 1024, 64)     0           ['a_drrm1_proj[0][0]',           
+                                                                  'a_drrm1_bn2[0][0]']            
+                                                                                                  
+ v_drrm1_relu2 (Activation)     (None, 1024, 64)     0           ['v_drrm1_add1[0][0]']           
+                                                                                                  
+ a_drrm1_relu2 (Activation)     (None, 1024, 64)     0           ['a_drrm1_add1[0][0]']           
+                                                                                                  
+ v_drrm1_sep3 (SeparableConv1D)  (None, 1024, 64)    4352        ['v_drrm1_relu2[0][0]']          
+                                                                                                  
+ a_drrm1_sep3 (SeparableConv1D)  (None, 1024, 64)    4352        ['a_drrm1_relu2[0][0]']          
+                                                                                                  
+ v_drrm1_bn3 (BatchNormalizatio  (None, 1024, 64)    256         ['v_drrm1_sep3[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm1_bn3 (BatchNormalizatio  (None, 1024, 64)    256         ['a_drrm1_sep3[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm1_relu3 (Activation)     (None, 1024, 64)     0           ['v_drrm1_bn3[0][0]']            
+                                                                                                  
+ a_drrm1_relu3 (Activation)     (None, 1024, 64)     0           ['a_drrm1_bn3[0][0]']            
+                                                                                                  
+ v_drrm1_sep4 (SeparableConv1D)  (None, 1024, 64)    4352        ['v_drrm1_relu3[0][0]']          
+                                                                                                  
+ a_drrm1_sep4 (SeparableConv1D)  (None, 1024, 64)    4352        ['a_drrm1_relu3[0][0]']          
+                                                                                                  
+ v_drrm1_bn4 (BatchNormalizatio  (None, 1024, 64)    256         ['v_drrm1_sep4[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm1_bn4 (BatchNormalizatio  (None, 1024, 64)    256         ['a_drrm1_sep4[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm1_add2 (Add)             (None, 1024, 64)     0           ['v_drrm1_relu2[0][0]',          
+                                                                  'v_drrm1_bn4[0][0]']            
+                                                                                                  
+ a_drrm1_add2 (Add)             (None, 1024, 64)     0           ['a_drrm1_relu2[0][0]',          
+                                                                  'a_drrm1_bn4[0][0]']            
+                                                                                                  
+ v_drrm1_relu4 (Activation)     (None, 1024, 64)     0           ['v_drrm1_add2[0][0]']           
+                                                                                                  
+ a_drrm1_relu4 (Activation)     (None, 1024, 64)     0           ['a_drrm1_add2[0][0]']           
+                                                                                                  
+ v_drrm2_sep1 (SeparableConv1D)  (None, 1024, 128)   8512        ['v_drrm1_relu4[0][0]']          
+                                                                                                  
+ a_drrm2_sep1 (SeparableConv1D)  (None, 1024, 128)   8512        ['a_drrm1_relu4[0][0]']          
+                                                                                                  
+ v_drrm2_bn1 (BatchNormalizatio  (None, 1024, 128)   512         ['v_drrm2_sep1[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm2_bn1 (BatchNormalizatio  (None, 1024, 128)   512         ['a_drrm2_sep1[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm2_relu1 (Activation)     (None, 1024, 128)    0           ['v_drrm2_bn1[0][0]']            
+                                                                                                  
+ a_drrm2_relu1 (Activation)     (None, 1024, 128)    0           ['a_drrm2_bn1[0][0]']            
+                                                                                                  
+ v_drrm2_sep2 (SeparableConv1D)  (None, 1024, 128)   16896       ['v_drrm2_relu1[0][0]']          
+                                                                                                  
+ a_drrm2_sep2 (SeparableConv1D)  (None, 1024, 128)   16896       ['a_drrm2_relu1[0][0]']          
+                                                                                                  
+ v_drrm2_proj (Conv1D)          (None, 1024, 128)    8320        ['v_drrm1_relu4[0][0]']          
+                                                                                                  
+ v_drrm2_bn2 (BatchNormalizatio  (None, 1024, 128)   512         ['v_drrm2_sep2[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm2_proj (Conv1D)          (None, 1024, 128)    8320        ['a_drrm1_relu4[0][0]']          
+                                                                                                  
+ a_drrm2_bn2 (BatchNormalizatio  (None, 1024, 128)   512         ['a_drrm2_sep2[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm2_add1 (Add)             (None, 1024, 128)    0           ['v_drrm2_proj[0][0]',           
+                                                                  'v_drrm2_bn2[0][0]']            
+                                                                                                  
+ a_drrm2_add1 (Add)             (None, 1024, 128)    0           ['a_drrm2_proj[0][0]',           
+                                                                  'a_drrm2_bn2[0][0]']            
+                                                                                                  
+ v_drrm2_relu2 (Activation)     (None, 1024, 128)    0           ['v_drrm2_add1[0][0]']           
+                                                                                                  
+ a_drrm2_relu2 (Activation)     (None, 1024, 128)    0           ['a_drrm2_add1[0][0]']           
+                                                                                                  
+ v_drrm2_sep3 (SeparableConv1D)  (None, 1024, 128)   16896       ['v_drrm2_relu2[0][0]']          
+                                                                                                  
+ a_drrm2_sep3 (SeparableConv1D)  (None, 1024, 128)   16896       ['a_drrm2_relu2[0][0]']          
+                                                                                                  
+ v_drrm2_bn3 (BatchNormalizatio  (None, 1024, 128)   512         ['v_drrm2_sep3[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm2_bn3 (BatchNormalizatio  (None, 1024, 128)   512         ['a_drrm2_sep3[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm2_relu3 (Activation)     (None, 1024, 128)    0           ['v_drrm2_bn3[0][0]']            
+                                                                                                  
+ a_drrm2_relu3 (Activation)     (None, 1024, 128)    0           ['a_drrm2_bn3[0][0]']            
+                                                                                                  
+ v_drrm2_sep4 (SeparableConv1D)  (None, 1024, 128)   16896       ['v_drrm2_relu3[0][0]']          
+                                                                                                  
+ a_drrm2_sep4 (SeparableConv1D)  (None, 1024, 128)   16896       ['a_drrm2_relu3[0][0]']          
+                                                                                                  
+ v_drrm2_bn4 (BatchNormalizatio  (None, 1024, 128)   512         ['v_drrm2_sep4[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ a_drrm2_bn4 (BatchNormalizatio  (None, 1024, 128)   512         ['a_drrm2_sep4[0][0]']           
+ n)                                                                                               
+                                                                                                  
+ v_drrm2_add2 (Add)             (None, 1024, 128)    0           ['v_drrm2_relu2[0][0]',          
+                                                                  'v_drrm2_bn4[0][0]']            
+                                                                                                  
+ a_drrm2_add2 (Add)             (None, 1024, 128)    0           ['a_drrm2_relu2[0][0]',          
+                                                                  'a_drrm2_bn4[0][0]']            
+                                                                                                  
+ v_drrm2_relu4 (Activation)     (None, 1024, 128)    0           ['v_drrm2_add2[0][0]']           
+                                                                                                  
+ a_drrm2_relu4 (Activation)     (None, 1024, 128)    0           ['a_drrm2_add2[0][0]']           
+                                                                                                  
+ v_scrm_gap (GlobalAveragePooli  (None, 128)         0           ['v_drrm2_relu4[0][0]']          
+ ng1D)                                                                                            
+                                                                                                  
+ v_scrm_gmp (GlobalMaxPooling1D  (None, 128)         0           ['v_drrm2_relu4[0][0]']          
+ )                                                                                                
+                                                                                                  
+ a_scrm_gap (GlobalAveragePooli  (None, 128)         0           ['a_drrm2_relu4[0][0]']          
+ ng1D)                                                                                            
+                                                                                                  
+ a_scrm_gmp (GlobalMaxPooling1D  (None, 128)         0           ['a_drrm2_relu4[0][0]']          
+ )                                                                                                
+                                                                                                  
+ v_scrm_ca_fc1 (Dense)          (None, 16)           2064        ['v_scrm_gap[0][0]',             
+                                                                  'v_scrm_gmp[0][0]']             
+                                                                                                  
+ a_scrm_ca_fc1 (Dense)          (None, 16)           2064        ['a_scrm_gap[0][0]',             
+                                                                  'a_scrm_gmp[0][0]']             
+                                                                                                  
+ v_scrm_ca_fc2 (Dense)          (None, 128)          2176        ['v_scrm_ca_fc1[0][0]',          
+                                                                  'v_scrm_ca_fc1[1][0]']          
+                                                                                                  
+ a_scrm_ca_fc2 (Dense)          (None, 128)          2176        ['a_scrm_ca_fc1[0][0]',          
+                                                                  'a_scrm_ca_fc1[1][0]']          
+                                                                                                  
+ v_scrm_ca_add (Add)            (None, 128)          0           ['v_scrm_ca_fc2[0][0]',          
+                                                                  'v_scrm_ca_fc2[1][0]']          
+                                                                                                  
+ a_scrm_ca_add (Add)            (None, 128)          0           ['a_scrm_ca_fc2[0][0]',          
+                                                                  'a_scrm_ca_fc2[1][0]']          
+                                                                                                  
+ v_scrm_ca_sigmoid (Activation)  (None, 128)         0           ['v_scrm_ca_add[0][0]']          
+                                                                                                  
+ a_scrm_ca_sigmoid (Activation)  (None, 128)         0           ['a_scrm_ca_add[0][0]']          
+                                                                                                  
+ v_scrm_ca_expand (Lambda)      (None, 1, 128)       0           ['v_scrm_ca_sigmoid[0][0]']      
+                                                                                                  
+ a_scrm_ca_expand (Lambda)      (None, 1, 128)       0           ['a_scrm_ca_sigmoid[0][0]']      
+                                                                                                  
+ v_scrm_ca_mul (Multiply)       (None, 1024, 128)    0           ['v_drrm2_relu4[0][0]',          
+                                                                  'v_scrm_ca_expand[0][0]']       
+                                                                                                  
+ a_scrm_ca_mul (Multiply)       (None, 1024, 128)    0           ['a_drrm2_relu4[0][0]',          
+                                                                  'a_scrm_ca_expand[0][0]']       
+                                                                                                  
+ v_scrm_sa_avg (Lambda)         (None, 1024, 1)      0           ['v_scrm_ca_mul[0][0]']          
+                                                                                                  
+ v_scrm_sa_max (Lambda)         (None, 1024, 1)      0           ['v_scrm_ca_mul[0][0]']          
+                                                                                                  
+ a_scrm_sa_avg (Lambda)         (None, 1024, 1)      0           ['a_scrm_ca_mul[0][0]']          
+                                                                                                  
+ a_scrm_sa_max (Lambda)         (None, 1024, 1)      0           ['a_scrm_ca_mul[0][0]']          
+                                                                                                  
+ v_scrm_sa_cat (Concatenate)    (None, 1024, 2)      0           ['v_scrm_sa_avg[0][0]',          
+                                                                  'v_scrm_sa_max[0][0]']          
+                                                                                                  
+ a_scrm_sa_cat (Concatenate)    (None, 1024, 2)      0           ['a_scrm_sa_avg[0][0]',          
+                                                                  'a_scrm_sa_max[0][0]']          
+                                                                                                  
+ v_scrm_sa_conv (Conv1D)        (None, 1024, 1)      15          ['v_scrm_sa_cat[0][0]']          
+                                                                                                  
+ a_scrm_sa_conv (Conv1D)        (None, 1024, 1)      15          ['a_scrm_sa_cat[0][0]']          
+                                                                                                  
+ v_scrm_sa_mul (Multiply)       (None, 1024, 128)    0           ['v_scrm_ca_mul[0][0]',          
+                                                                  'v_scrm_sa_conv[0][0]']         
+                                                                                                  
+ a_scrm_sa_mul (Multiply)       (None, 1024, 128)    0           ['a_scrm_ca_mul[0][0]',          
+                                                                  'a_scrm_sa_conv[0][0]']         
+                                                                                                  
+ gipfm_cat (Concatenate)        (None, 1024, 256)    0           ['v_scrm_sa_mul[0][0]',          
+                                                                  'a_scrm_sa_mul[0][0]']          
+                                                                                                  
+ gipfm_gap (GlobalAveragePoolin  (None, 256)         0           ['gipfm_cat[0][0]']              
+ g1D)                                                                                             
+                                                                                                  
+ gipfm_w (Dense)                (None, 2)            514         ['gipfm_gap[0][0]']              
+                                                                                                  
+ gipfm_wv (Lambda)              (None,)              0           ['gipfm_w[0][0]']                
+                                                                                                  
+ gipfm_wa (Lambda)              (None,)              0           ['gipfm_w[0][0]']                
+                                                                                                  
+ gipfm_scale_v (Lambda)         (None, 1024, 128)    0           ['v_scrm_sa_mul[0][0]',          
+                                                                  'gipfm_wv[0][0]']               
+                                                                                                  
+ gipfm_scale_a (Lambda)         (None, 1024, 128)    0           ['a_scrm_sa_mul[0][0]',          
+                                                                  'gipfm_wa[0][0]']               
+                                                                                                  
+ gipfm_add (Add)                (None, 1024, 128)    0           ['gipfm_scale_v[0][0]',          
+                                                                  'gipfm_scale_a[0][0]']          
+                                                                                                  
+ cb_gap (GlobalAveragePooling1D  (None, 128)         0           ['gipfm_add[0][0]']              
+ )                                                                                                
+                                                                                                  
+ cb_fc (Dense)                  (None, 7)            903         ['cb_gap[0][0]']                 
+                                                                                                  
+ softmax (Activation)           (None, 7)            0           ['cb_fc[0][0]']                  
+                                                                                                  
+==================================================================================================
+Total params: 186,951
+Trainable params: 183,879
+Non-trainable params: 3,072
+__________________________________________________________________________________________________

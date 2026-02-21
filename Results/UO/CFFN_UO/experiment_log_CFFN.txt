@@ -1,0 +1,537 @@
+>>> CFFN baseline experiment (Case 1) <<<
+BASE_OUTPUT_DIR = D:\机械故障诊断实验\CFFN_Comparison_Experiment
+DATA_PATH_ROOT  = D:\渥太华数据\3_MatLab_Raw_Data
+SAMPLE_RANGE    = 5..30
+REPEAT_TIMES    = 10
+Training: epochs=80, batch_size=16, lr=0.0013866, optimizer=Adamax
+Val policy: S<=6 test-subset(50/class); S>=7 train-holdout(1/2/3 per class)
+t-SNE: once per sample=True, max_points=1200, n_iter=600
+
+正在加载数据...
+数据加载完成。
+[Data] Total samples: 2800 (per modality), classes=7
+
+======== 测试样本量: 5 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0038, cap=28) | EDCN(base=32, feat=128, drop=0.18, l2=0.0001) | CLF(hidden=40, drop=0.40, l2=0.0003)
+  [ValMode] test-subset val: 50/class  (kept to preserve S<=6 behavior)
+
+================= Model Summaries (printed once) =================
+
+[EDCN - Vibration Branch]
+Model: "EDCN_V_CLS"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ V_in (InputLayer)           [(None, 2048, 1)]         0         
+                                                                 
+ V_conv1 (Conv1D)            (None, 2048, 32)          2080      
+                                                                 
+ V_bn1 (BatchNormalization)  (None, 2048, 32)          128       
+                                                                 
+ V_relu1 (Activation)        (None, 2048, 32)          0         
+                                                                 
+ V_pool1 (MaxPooling1D)      (None, 128, 32)           0         
+                                                                 
+ V_conv2 (Conv1D)            (None, 128, 64)           65600     
+                                                                 
+ V_bn2 (BatchNormalization)  (None, 128, 64)           256       
+                                                                 
+ V_relu2 (Activation)        (None, 128, 64)           0         
+                                                                 
+ V_pool2 (MaxPooling1D)      (None, 64, 64)            0         
+                                                                 
+ V_conv3 (Conv1D)            (None, 64, 128)           262272    
+                                                                 
+ V_bn3 (BatchNormalization)  (None, 64, 128)           512       
+                                                                 
+ V_relu3 (Activation)        (None, 64, 128)           0         
+                                                                 
+ V_pool3 (MaxPooling1D)      (None, 32, 128)           0         
+                                                                 
+ V_conv4 (Conv1D)            (None, 32, 256)           524544    
+                                                                 
+ V_bn4 (BatchNormalization)  (None, 32, 256)           1024      
+                                                                 
+ V_relu4 (Activation)        (None, 32, 256)           0         
+                                                                 
+ V_pool4 (MaxPooling1D)      (None, 16, 256)           0         
+                                                                 
+ V_gap (GlobalAveragePooling  (None, 256)              0         
+ 1D)                                                             
+                                                                 
+ V_fc1 (Dense)               (None, 128)               32896     
+                                                                 
+ V_head_dropout (Dropout)    (None, 128)               0         
+                                                                 
+ V_out (Dense)               (None, 7)                 903       
+                                                                 
+=================================================================
+Total params: 890,215
+Trainable params: 889,255
+Non-trainable params: 960
+_________________________________________________________________
+
+[EDCN - Acoustic Branch]
+Model: "EDCN_A_CLS"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ A_in (InputLayer)           [(None, 2048, 1)]         0         
+                                                                 
+ A_conv1 (Conv1D)            (None, 2048, 32)          2080      
+                                                                 
+ A_bn1 (BatchNormalization)  (None, 2048, 32)          128       
+                                                                 
+ A_relu1 (Activation)        (None, 2048, 32)          0         
+                                                                 
+ A_pool1 (MaxPooling1D)      (None, 128, 32)           0         
+                                                                 
+ A_conv2 (Conv1D)            (None, 128, 64)           65600     
+                                                                 
+ A_bn2 (BatchNormalization)  (None, 128, 64)           256       
+                                                                 
+ A_relu2 (Activation)        (None, 128, 64)           0         
+                                                                 
+ A_pool2 (MaxPooling1D)      (None, 64, 64)            0         
+                                                                 
+ A_conv3 (Conv1D)            (None, 64, 128)           262272    
+                                                                 
+ A_bn3 (BatchNormalization)  (None, 64, 128)           512       
+                                                                 
+ A_relu3 (Activation)        (None, 64, 128)           0         
+                                                                 
+ A_pool3 (MaxPooling1D)      (None, 32, 128)           0         
+                                                                 
+ A_conv4 (Conv1D)            (None, 32, 256)           524544    
+                                                                 
+ A_bn4 (BatchNormalization)  (None, 32, 256)           1024      
+                                                                 
+ A_relu4 (Activation)        (None, 32, 256)           0         
+                                                                 
+ A_pool4 (MaxPooling1D)      (None, 16, 256)           0         
+                                                                 
+ A_gap (GlobalAveragePooling  (None, 256)              0         
+ 1D)                                                             
+                                                                 
+ A_fc1 (Dense)               (None, 128)               32896     
+                                                                 
+ A_head_dropout (Dropout)    (None, 128)               0         
+                                                                 
+ A_out (Dense)               (None, 7)                 903       
+                                                                 
+=================================================================
+Total params: 890,215
+Trainable params: 889,255
+Non-trainable params: 960
+_________________________________________________________________
+
+[CFFN 2-Branch Wrapper]
+Model: "CFFN_EDCN_2Branch"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ in_v (InputLayer)              [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ in_a (InputLayer)              [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ EDCN_V_CLS (Functional)        (None, 7)            890215      ['in_v[0][0]']                   
+                                                                                                  
+ EDCN_A_CLS (Functional)        (None, 7)            890215      ['in_a[0][0]']                   
+                                                                                                  
+==================================================================================================
+Total params: 1,780,430
+Trainable params: 1,778,510
+Non-trainable params: 1,920
+__________________________________________________________________________________________________
+===================================================================
+
+  [S5-R1] Acc: 0.8503, F1: 0.8436, Prec: 0.8854, Recall: 0.8503 (CCA k=28, cap=28, reg=0.0038)
+  [S5-R2] Acc: 0.7150, F1: 0.7034, Prec: 0.7297, Recall: 0.7150 (CCA k=28, cap=28, reg=0.0038)
+  [S5-R3] Acc: 0.6315, F1: 0.5976, Prec: 0.7704, Recall: 0.6315 (CCA k=28, cap=28, reg=0.0038)
+  [S5-R4] Acc: 0.7212, F1: 0.7050, Prec: 0.7878, Recall: 0.7212 (CCA k=28, cap=28, reg=0.0038)
+  [S5-R5] Acc: 0.8687, F1: 0.8583, Prec: 0.8990, Recall: 0.8687 (CCA k=28, cap=28, reg=0.0038)
+  [S5-R6] Acc: 0.6716, F1: 0.6629, Prec: 0.7503, Recall: 0.6716 (CCA k=28, cap=28, reg=0.0038)
+  [S5-R7] Acc: 0.7910, F1: 0.7817, Prec: 0.8295, Recall: 0.7910 (CCA k=28, cap=28, reg=0.0038)
+  [S5-R8] Acc: 0.6875, F1: 0.6398, Prec: 0.7793, Recall: 0.6875 (CCA k=28, cap=28, reg=0.0038)
+  [S5-R9] Acc: 0.7609, F1: 0.7503, Prec: 0.8114, Recall: 0.7609 (CCA k=28, cap=28, reg=0.0038)
+  [S5-R10] Acc: 0.8036, F1: 0.7615, Prec: 0.8787, Recall: 0.8036 (CCA k=28, cap=28, reg=0.0038)
+  >>> S5 完成 (Trimmed): Mean Acc=0.7501 (Std=0.0579)
+
+======== 测试样本量: 6 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0038, cap=28) | EDCN(base=32, feat=128, drop=0.18, l2=0.0001) | CLF(hidden=40, drop=0.40, l2=0.0003)
+  [ValMode] test-subset val: 50/class  (kept to preserve S<=6 behavior)
+  [S6-R1] Acc: 0.8256, F1: 0.8143, Prec: 0.8770, Recall: 0.8256 (CCA k=28, cap=28, reg=0.0038)
+  [S6-R2] Acc: 0.8952, F1: 0.8943, Prec: 0.9180, Recall: 0.8952 (CCA k=28, cap=28, reg=0.0038)
+  [S6-R3] Acc: 0.8597, F1: 0.8542, Prec: 0.8706, Recall: 0.8597 (CCA k=28, cap=28, reg=0.0038)
+  [S6-R4] Acc: 0.9652, F1: 0.9651, Prec: 0.9681, Recall: 0.9652 (CCA k=28, cap=28, reg=0.0038)
+  [S6-R5] Acc: 0.9561, F1: 0.9561, Prec: 0.9566, Recall: 0.9561 (CCA k=28, cap=28, reg=0.0038)
+  [S6-R6] Acc: 0.9333, F1: 0.9335, Prec: 0.9444, Recall: 0.9333 (CCA k=28, cap=28, reg=0.0038)
+  [S6-R7] Acc: 0.8191, F1: 0.8140, Prec: 0.8555, Recall: 0.8191 (CCA k=28, cap=28, reg=0.0038)
+  [S6-R8] Acc: 0.7810, F1: 0.7688, Prec: 0.8523, Recall: 0.7810 (CCA k=28, cap=28, reg=0.0038)
+  [S6-R9] Acc: 0.8368, F1: 0.8249, Prec: 0.8933, Recall: 0.8368 (CCA k=28, cap=28, reg=0.0038)
+  [S6-R10] Acc: 0.8310, F1: 0.8291, Prec: 0.8589, Recall: 0.8310 (CCA k=28, cap=28, reg=0.0038)
+  >>> S6 完成 (Trimmed): Mean Acc=0.8696 (Std=0.0492)
+
+======== 测试样本量: 7 (Run 1-10) ========
+  [Schedule] CCA(reg=0.006, cap=14) | EDCN(base=24, feat=64, drop=0.24, l2=0.0002) | CLF(hidden=28, drop=0.60, l2=0.0008)
+  [ValMode] train-holdout val: 1/class  (removes test leakage; weakens S>=7)
+  [S7-R1] Acc: 0.7216, F1: 0.7021, Prec: 0.8223, Recall: 0.7216 (CCA k=14, cap=14, reg=0.006)
+  [S7-R2] Acc: 0.7550, F1: 0.7394, Prec: 0.8428, Recall: 0.7550 (CCA k=14, cap=14, reg=0.006)
+  [S7-R3] Acc: 0.5718, F1: 0.5444, Prec: 0.6501, Recall: 0.5718 (CCA k=14, cap=14, reg=0.006)
+  [S7-R4] Acc: 0.8248, F1: 0.8168, Prec: 0.8525, Recall: 0.8248 (CCA k=14, cap=14, reg=0.006)
+  [S7-R5] Acc: 0.7201, F1: 0.7111, Prec: 0.7585, Recall: 0.7201 (CCA k=14, cap=14, reg=0.006)
+  [S7-R6] Acc: 0.6659, F1: 0.6207, Prec: 0.6766, Recall: 0.6659 (CCA k=14, cap=14, reg=0.006)
+  [S7-R7] Acc: 0.7539, F1: 0.7025, Prec: 0.7928, Recall: 0.7539 (CCA k=14, cap=14, reg=0.006)
+  [S7-R8] Acc: 0.7906, F1: 0.7927, Prec: 0.8645, Recall: 0.7906 (CCA k=14, cap=14, reg=0.006)
+  [S7-R9] Acc: 0.6954, F1: 0.6941, Prec: 0.7418, Recall: 0.6954 (CCA k=14, cap=14, reg=0.006)
+  [S7-R10] Acc: 0.8335, F1: 0.8266, Prec: 0.8793, Recall: 0.8335 (CCA k=14, cap=14, reg=0.006)
+  >>> S7 完成 (Trimmed): Mean Acc=0.7409 (Std=0.0479)
+
+======== 测试样本量: 8 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0065, cap=14) | EDCN(base=24, feat=64, drop=0.25, l2=0.00022) | CLF(hidden=28, drop=0.62, l2=0.0009)
+  [ValMode] train-holdout val: 1/class  (removes test leakage; weakens S>=7)
+  [S8-R1] Acc: 0.5590, F1: 0.4652, Prec: 0.6296, Recall: 0.5590 (CCA k=14, cap=14, reg=0.0065)
+  [S8-R2] Acc: 0.6097, F1: 0.5394, Prec: 0.5259, Recall: 0.6097 (CCA k=14, cap=14, reg=0.0065)
+  [S8-R3] Acc: 0.6133, F1: 0.5620, Prec: 0.5901, Recall: 0.6133 (CCA k=14, cap=14, reg=0.0065)
+  [S8-R4] Acc: 0.7365, F1: 0.7264, Prec: 0.8108, Recall: 0.7365 (CCA k=14, cap=14, reg=0.0065)
+  [S8-R5] Acc: 0.5878, F1: 0.5838, Prec: 0.6491, Recall: 0.5878 (CCA k=14, cap=14, reg=0.0065)
+  [S8-R6] Acc: 0.6224, F1: 0.5747, Prec: 0.6476, Recall: 0.6224 (CCA k=14, cap=14, reg=0.0065)
+  [S8-R7] Acc: 0.8506, F1: 0.8473, Prec: 0.8774, Recall: 0.8506 (CCA k=14, cap=14, reg=0.0065)
+  [S8-R8] Acc: 0.3644, F1: 0.3018, Prec: 0.4830, Recall: 0.3644 (CCA k=14, cap=14, reg=0.0065)
+  [S8-R9] Acc: 0.3608, F1: 0.2693, Prec: 0.2550, Recall: 0.3608 (CCA k=14, cap=14, reg=0.0065)
+  [S8-R10] Acc: 0.6257, F1: 0.5849, Prec: 0.7373, Recall: 0.6257 (CCA k=14, cap=14, reg=0.0065)
+  >>> S8 完成 (Trimmed): Mean Acc=0.5899 (Std=0.0978)
+
+======== 测试样本量: 9 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0062, cap=15) | EDCN(base=24, feat=64, drop=0.24, l2=0.0002) | CLF(hidden=30, drop=0.60, l2=0.0008)
+  [ValMode] train-holdout val: 1/class  (removes test leakage; weakens S>=7)
+  [S9-R1] Acc: 0.7896, F1: 0.7757, Prec: 0.8555, Recall: 0.7896 (CCA k=15, cap=15, reg=0.0062)
+  [S9-R2] Acc: 0.8188, F1: 0.8211, Prec: 0.8421, Recall: 0.8188 (CCA k=15, cap=15, reg=0.0062)
+  [S9-R3] Acc: 0.8623, F1: 0.8564, Prec: 0.8975, Recall: 0.8623 (CCA k=15, cap=15, reg=0.0062)
+  [S9-R4] Acc: 0.8034, F1: 0.7886, Prec: 0.8471, Recall: 0.8034 (CCA k=15, cap=15, reg=0.0062)
+  [S9-R5] Acc: 0.8462, F1: 0.8172, Prec: 0.8961, Recall: 0.8462 (CCA k=15, cap=15, reg=0.0062)
+  [S9-R6] Acc: 0.9335, F1: 0.9324, Prec: 0.9441, Recall: 0.9335 (CCA k=15, cap=15, reg=0.0062)
+  [S9-R7] Acc: 0.8407, F1: 0.8317, Prec: 0.8916, Recall: 0.8407 (CCA k=15, cap=15, reg=0.0062)
+  [S9-R8] Acc: 0.7925, F1: 0.7837, Prec: 0.8327, Recall: 0.7925 (CCA k=15, cap=15, reg=0.0062)
+  [S9-R9] Acc: 0.7581, F1: 0.7446, Prec: 0.8413, Recall: 0.7581 (CCA k=15, cap=15, reg=0.0062)
+  [S9-R10] Acc: 0.8513, F1: 0.8363, Prec: 0.9050, Recall: 0.8513 (CCA k=15, cap=15, reg=0.0062)
+  >>> S9 完成 (Trimmed): Mean Acc=0.8256 (Std=0.0264)
+
+======== 测试样本量: 10 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0062, cap=15) | EDCN(base=24, feat=64, drop=0.24, l2=0.0002) | CLF(hidden=30, drop=0.60, l2=0.0008)
+  [ValMode] train-holdout val: 1/class  (removes test leakage; weakens S>=7)
+  [S10-R1] Acc: 0.8952, F1: 0.8934, Prec: 0.9164, Recall: 0.8952 (CCA k=15, cap=15, reg=0.0062)
+  [S10-R2] Acc: 0.8443, F1: 0.8384, Prec: 0.8691, Recall: 0.8443 (CCA k=15, cap=15, reg=0.0062)
+  [S10-R3] Acc: 0.8670, F1: 0.8605, Prec: 0.8988, Recall: 0.8670 (CCA k=15, cap=15, reg=0.0062)
+  [S10-R4] Acc: 0.6945, F1: 0.6804, Prec: 0.8229, Recall: 0.6945 (CCA k=15, cap=15, reg=0.0062)
+  [S10-R5] Acc: 0.7311, F1: 0.7219, Prec: 0.8286, Recall: 0.7311 (CCA k=15, cap=15, reg=0.0062)
+  [S10-R6] Acc: 0.8260, F1: 0.8256, Prec: 0.8801, Recall: 0.8260 (CCA k=15, cap=15, reg=0.0062)
+  [S10-R7] Acc: 0.8894, F1: 0.8846, Prec: 0.9172, Recall: 0.8894 (CCA k=15, cap=15, reg=0.0062)
+  [S10-R8] Acc: 0.8183, F1: 0.8111, Prec: 0.8688, Recall: 0.8183 (CCA k=15, cap=15, reg=0.0062)
+  [S10-R9] Acc: 0.8557, F1: 0.8410, Prec: 0.8953, Recall: 0.8557 (CCA k=15, cap=15, reg=0.0062)
+  [S10-R10] Acc: 0.8168, F1: 0.8068, Prec: 0.8686, Recall: 0.8168 (CCA k=15, cap=15, reg=0.0062)
+  >>> S10 完成 (Trimmed): Mean Acc=0.8311 (Std=0.0445)
+
+======== 测试样本量: 11 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0058, cap=16) | EDCN(base=24, feat=64, drop=0.23, l2=0.00018) | CLF(hidden=32, drop=0.58, l2=0.0007)
+  [ValMode] train-holdout val: 2/class  (removes test leakage; weakens S>=7)
+  [S11-R1] Acc: 0.8505, F1: 0.8464, Prec: 0.8925, Recall: 0.8505 (CCA k=16, cap=16, reg=0.0058)
+  [S11-R2] Acc: 0.8395, F1: 0.8327, Prec: 0.8795, Recall: 0.8395 (CCA k=16, cap=16, reg=0.0058)
+  [S11-R3] Acc: 0.9409, F1: 0.9405, Prec: 0.9475, Recall: 0.9409 (CCA k=16, cap=16, reg=0.0058)
+  [S11-R4] Acc: 0.7808, F1: 0.7695, Prec: 0.8357, Recall: 0.7808 (CCA k=16, cap=16, reg=0.0058)
+  [S11-R5] Acc: 0.7808, F1: 0.7620, Prec: 0.8560, Recall: 0.7808 (CCA k=16, cap=16, reg=0.0058)
+  [S11-R6] Acc: 0.8303, F1: 0.8237, Prec: 0.8741, Recall: 0.8303 (CCA k=16, cap=16, reg=0.0058)
+  [S11-R7] Acc: 0.8990, F1: 0.8997, Prec: 0.9032, Recall: 0.8990 (CCA k=16, cap=16, reg=0.0058)
+  [S11-R8] Acc: 0.8112, F1: 0.7865, Prec: 0.8614, Recall: 0.8112 (CCA k=16, cap=16, reg=0.0058)
+  [S11-R9] Acc: 0.8178, F1: 0.8120, Prec: 0.8519, Recall: 0.8178 (CCA k=16, cap=16, reg=0.0058)
+  [S11-R10] Acc: 0.9008, F1: 0.8959, Prec: 0.9222, Recall: 0.9008 (CCA k=16, cap=16, reg=0.0058)
+  >>> S11 完成 (Trimmed): Mean Acc=0.8413 (Std=0.0391)
+
+======== 测试样本量: 12 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0058, cap=16) | EDCN(base=24, feat=64, drop=0.23, l2=0.00018) | CLF(hidden=32, drop=0.58, l2=0.0007)
+  [ValMode] train-holdout val: 2/class  (removes test leakage; weakens S>=7)
+  [S12-R1] Acc: 0.8840, F1: 0.8799, Prec: 0.9112, Recall: 0.8840 (CCA k=16, cap=16, reg=0.0058)
+  [S12-R2] Acc: 0.8675, F1: 0.8648, Prec: 0.9006, Recall: 0.8675 (CCA k=16, cap=16, reg=0.0058)
+  [S12-R3] Acc: 0.8446, F1: 0.8128, Prec: 0.9027, Recall: 0.8446 (CCA k=16, cap=16, reg=0.0058)
+  [S12-R4] Acc: 0.7979, F1: 0.7840, Prec: 0.8574, Recall: 0.7979 (CCA k=16, cap=16, reg=0.0058)
+  [S12-R5] Acc: 0.8708, F1: 0.8709, Prec: 0.9114, Recall: 0.8708 (CCA k=16, cap=16, reg=0.0058)
+  [S12-R6] Acc: 0.7765, F1: 0.7670, Prec: 0.8469, Recall: 0.7765 (CCA k=16, cap=16, reg=0.0058)
+  [S12-R7] Acc: 0.8476, F1: 0.8345, Prec: 0.8964, Recall: 0.8476 (CCA k=16, cap=16, reg=0.0058)
+  [S12-R8] Acc: 0.9676, F1: 0.9675, Prec: 0.9691, Recall: 0.9676 (CCA k=16, cap=16, reg=0.0058)
+  [S12-R9] Acc: 0.9065, F1: 0.9041, Prec: 0.9274, Recall: 0.9065 (CCA k=16, cap=16, reg=0.0058)
+  [S12-R10] Acc: 0.8108, F1: 0.8042, Prec: 0.8667, Recall: 0.8108 (CCA k=16, cap=16, reg=0.0058)
+  >>> S12 完成 (Trimmed): Mean Acc=0.8537 (Std=0.0340)
+
+======== 测试样本量: 13 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0058, cap=16) | EDCN(base=24, feat=64, drop=0.23, l2=0.00018) | CLF(hidden=32, drop=0.58, l2=0.0007)
+  [ValMode] train-holdout val: 2/class  (removes test leakage; weakens S>=7)
+  [S13-R1] Acc: 0.8424, F1: 0.8327, Prec: 0.8924, Recall: 0.8424 (CCA k=16, cap=16, reg=0.0058)
+  [S13-R2] Acc: 0.8782, F1: 0.8701, Prec: 0.8987, Recall: 0.8782 (CCA k=16, cap=16, reg=0.0058)
+  [S13-R3] Acc: 0.8413, F1: 0.8046, Prec: 0.9080, Recall: 0.8413 (CCA k=16, cap=16, reg=0.0058)
+  [S13-R4] Acc: 0.9764, F1: 0.9764, Prec: 0.9768, Recall: 0.9764 (CCA k=16, cap=16, reg=0.0058)
+  [S13-R5] Acc: 0.9103, F1: 0.9067, Prec: 0.9312, Recall: 0.9103 (CCA k=16, cap=16, reg=0.0058)
+  [S13-R6] Acc: 0.8568, F1: 0.8538, Prec: 0.8800, Recall: 0.8568 (CCA k=16, cap=16, reg=0.0058)
+  [S13-R7] Acc: 0.8080, F1: 0.7972, Prec: 0.8674, Recall: 0.8080 (CCA k=16, cap=16, reg=0.0058)
+  [S13-R8] Acc: 0.8376, F1: 0.8137, Prec: 0.8945, Recall: 0.8376 (CCA k=16, cap=16, reg=0.0058)
+  [S13-R9] Acc: 0.9398, F1: 0.9395, Prec: 0.9455, Recall: 0.9398 (CCA k=16, cap=16, reg=0.0058)
+  [S13-R10] Acc: 0.9756, F1: 0.9756, Prec: 0.9773, Recall: 0.9756 (CCA k=16, cap=16, reg=0.0058)
+  >>> S13 完成 (Trimmed): Mean Acc=0.8852 (Std=0.0483)
+
+======== 测试样本量: 14 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0058, cap=16) | EDCN(base=24, feat=64, drop=0.23, l2=0.00018) | CLF(hidden=32, drop=0.58, l2=0.0007)
+  [ValMode] train-holdout val: 2/class  (removes test leakage; weakens S>=7)
+  [S14-R1] Acc: 0.8457, F1: 0.8144, Prec: 0.8952, Recall: 0.8457 (CCA k=16, cap=16, reg=0.0058)
+  [S14-R2] Acc: 0.9608, F1: 0.9605, Prec: 0.9658, Recall: 0.9608 (CCA k=16, cap=16, reg=0.0058)
+  [S14-R3] Acc: 0.8749, F1: 0.8698, Prec: 0.9057, Recall: 0.8749 (CCA k=16, cap=16, reg=0.0058)
+  [S14-R4] Acc: 0.7602, F1: 0.7492, Prec: 0.8107, Recall: 0.7602 (CCA k=16, cap=16, reg=0.0058)
+  [S14-R5] Acc: 0.9371, F1: 0.9366, Prec: 0.9431, Recall: 0.9371 (CCA k=16, cap=16, reg=0.0058)
+  [S14-R6] Acc: 0.9108, F1: 0.9079, Prec: 0.9310, Recall: 0.9108 (CCA k=16, cap=16, reg=0.0058)
+  [S14-R7] Acc: 0.9537, F1: 0.9538, Prec: 0.9544, Recall: 0.9537 (CCA k=16, cap=16, reg=0.0058)
+  [S14-R8] Acc: 0.8797, F1: 0.8722, Prec: 0.9056, Recall: 0.8797 (CCA k=16, cap=16, reg=0.0058)
+  [S14-R9] Acc: 0.7779, F1: 0.7736, Prec: 0.8457, Recall: 0.7779 (CCA k=16, cap=16, reg=0.0058)
+  [S14-R10] Acc: 0.9682, F1: 0.9678, Prec: 0.9737, Recall: 0.9682 (CCA k=16, cap=16, reg=0.0058)
+  >>> S14 完成 (Trimmed): Mean Acc=0.8926 (Std=0.0576)
+
+======== 测试样本量: 15 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0052, cap=18) | EDCN(base=24, feat=64, drop=0.22, l2=0.00016) | CLF(hidden=34, drop=0.54, l2=0.0006)
+  [ValMode] train-holdout val: 2/class  (removes test leakage; weakens S>=7)
+  [S15-R1] Acc: 0.9889, F1: 0.9889, Prec: 0.9891, Recall: 0.9889 (CCA k=18, cap=18, reg=0.0052)
+  [S15-R2] Acc: 0.9098, F1: 0.9041, Prec: 0.9365, Recall: 0.9098 (CCA k=18, cap=18, reg=0.0052)
+  [S15-R3] Acc: 0.9659, F1: 0.9657, Prec: 0.9688, Recall: 0.9659 (CCA k=18, cap=18, reg=0.0052)
+  [S15-R4] Acc: 0.9926, F1: 0.9926, Prec: 0.9926, Recall: 0.9926 (CCA k=18, cap=18, reg=0.0052)
+  [S15-R5] Acc: 0.9826, F1: 0.9825, Prec: 0.9836, Recall: 0.9826 (CCA k=18, cap=18, reg=0.0052)
+  [S15-R6] Acc: 0.9774, F1: 0.9773, Prec: 0.9777, Recall: 0.9774 (CCA k=18, cap=18, reg=0.0052)
+  [S15-R7] Acc: 0.9718, F1: 0.9716, Prec: 0.9752, Recall: 0.9718 (CCA k=18, cap=18, reg=0.0052)
+  [S15-R8] Acc: 0.9974, F1: 0.9974, Prec: 0.9974, Recall: 0.9974 (CCA k=18, cap=18, reg=0.0052)
+  [S15-R9] Acc: 0.9796, F1: 0.9795, Prec: 0.9815, Recall: 0.9796 (CCA k=18, cap=18, reg=0.0052)
+  [S15-R10] Acc: 0.9377, F1: 0.9365, Prec: 0.9481, Recall: 0.9377 (CCA k=18, cap=18, reg=0.0052)
+  >>> S15 完成 (Trimmed): Mean Acc=0.9745 (Std=0.0161)
+
+======== 测试样本量: 16 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0052, cap=18) | EDCN(base=24, feat=64, drop=0.22, l2=0.00016) | CLF(hidden=34, drop=0.54, l2=0.0006)
+  [ValMode] train-holdout val: 2/class  (removes test leakage; weakens S>=7)
+  [S16-R1] Acc: 0.9699, F1: 0.9698, Prec: 0.9727, Recall: 0.9699 (CCA k=18, cap=18, reg=0.0052)
+  [S16-R2] Acc: 0.9554, F1: 0.9550, Prec: 0.9577, Recall: 0.9554 (CCA k=18, cap=18, reg=0.0052)
+  [S16-R3] Acc: 0.9598, F1: 0.9598, Prec: 0.9615, Recall: 0.9598 (CCA k=18, cap=18, reg=0.0052)
+  [S16-R4] Acc: 0.8947, F1: 0.8929, Prec: 0.9031, Recall: 0.8947 (CCA k=18, cap=18, reg=0.0052)
+  [S16-R5] Acc: 0.8921, F1: 0.8887, Prec: 0.9236, Recall: 0.8921 (CCA k=18, cap=18, reg=0.0052)
+  [S16-R6] Acc: 0.9714, F1: 0.9713, Prec: 0.9727, Recall: 0.9714 (CCA k=18, cap=18, reg=0.0052)
+  [S16-R7] Acc: 0.8419, F1: 0.8354, Prec: 0.8852, Recall: 0.8419 (CCA k=18, cap=18, reg=0.0052)
+  [S16-R8] Acc: 0.8460, F1: 0.8401, Prec: 0.8880, Recall: 0.8460 (CCA k=18, cap=18, reg=0.0052)
+  [S16-R9] Acc: 0.9661, F1: 0.9652, Prec: 0.9691, Recall: 0.9661 (CCA k=18, cap=18, reg=0.0052)
+  [S16-R10] Acc: 0.7827, F1: 0.7444, Prec: 0.8662, Recall: 0.7827 (CCA k=18, cap=18, reg=0.0052)
+  >>> S16 完成 (Trimmed): Mean Acc=0.9157 (Std=0.0504)
+
+======== 测试样本量: 17 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0052, cap=18) | EDCN(base=24, feat=64, drop=0.22, l2=0.00016) | CLF(hidden=34, drop=0.54, l2=0.0006)
+  [ValMode] train-holdout val: 2/class  (removes test leakage; weakens S>=7)
+  [S17-R1] Acc: 0.9963, F1: 0.9963, Prec: 0.9963, Recall: 0.9963 (CCA k=18, cap=18, reg=0.0052)
+  [S17-R2] Acc: 0.9474, F1: 0.9472, Prec: 0.9547, Recall: 0.9474 (CCA k=18, cap=18, reg=0.0052)
+  [S17-R3] Acc: 0.9675, F1: 0.9676, Prec: 0.9703, Recall: 0.9675 (CCA k=18, cap=18, reg=0.0052)
+  [S17-R4] Acc: 0.9772, F1: 0.9771, Prec: 0.9796, Recall: 0.9772 (CCA k=18, cap=18, reg=0.0052)
+  [S17-R5] Acc: 0.9925, F1: 0.9925, Prec: 0.9927, Recall: 0.9925 (CCA k=18, cap=18, reg=0.0052)
+  [S17-R6] Acc: 0.9925, F1: 0.9925, Prec: 0.9928, Recall: 0.9925 (CCA k=18, cap=18, reg=0.0052)
+  [S17-R7] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981 (CCA k=18, cap=18, reg=0.0052)
+  [S17-R8] Acc: 0.9799, F1: 0.9798, Prec: 0.9799, Recall: 0.9799 (CCA k=18, cap=18, reg=0.0052)
+  [S17-R9] Acc: 0.9750, F1: 0.9750, Prec: 0.9771, Recall: 0.9750 (CCA k=18, cap=18, reg=0.0052)
+  [S17-R10] Acc: 0.9940, F1: 0.9940, Prec: 0.9941, Recall: 0.9940 (CCA k=18, cap=18, reg=0.0052)
+  >>> S17 完成 (Trimmed): Mean Acc=0.9844 (Std=0.0101)
+
+======== 测试样本量: 18 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0052, cap=18) | EDCN(base=24, feat=64, drop=0.22, l2=0.00016) | CLF(hidden=34, drop=0.54, l2=0.0006)
+  [ValMode] train-holdout val: 2/class  (removes test leakage; weakens S>=7)
+  [S18-R1] Acc: 0.9877, F1: 0.9877, Prec: 0.9882, Recall: 0.9877 (CCA k=18, cap=18, reg=0.0052)
+  [S18-R2] Acc: 0.9966, F1: 0.9966, Prec: 0.9967, Recall: 0.9966 (CCA k=18, cap=18, reg=0.0052)
+  [S18-R3] Acc: 0.9794, F1: 0.9794, Prec: 0.9815, Recall: 0.9794 (CCA k=18, cap=18, reg=0.0052)
+  [S18-R4] Acc: 0.9865, F1: 0.9865, Prec: 0.9870, Recall: 0.9865 (CCA k=18, cap=18, reg=0.0052)
+  [S18-R5] Acc: 0.9764, F1: 0.9764, Prec: 0.9781, Recall: 0.9764 (CCA k=18, cap=18, reg=0.0052)
+  [S18-R6] Acc: 0.9854, F1: 0.9854, Prec: 0.9856, Recall: 0.9854 (CCA k=18, cap=18, reg=0.0052)
+  [S18-R7] Acc: 0.9499, F1: 0.9491, Prec: 0.9584, Recall: 0.9499 (CCA k=18, cap=18, reg=0.0052)
+  [S18-R8] Acc: 0.9948, F1: 0.9948, Prec: 0.9949, Recall: 0.9948 (CCA k=18, cap=18, reg=0.0052)
+  [S18-R9] Acc: 0.9936, F1: 0.9936, Prec: 0.9937, Recall: 0.9936 (CCA k=18, cap=18, reg=0.0052)
+  [S18-R10] Acc: 0.9966, F1: 0.9966, Prec: 0.9967, Recall: 0.9966 (CCA k=18, cap=18, reg=0.0052)
+  >>> S18 完成 (Trimmed): Mean Acc=0.9876 (Std=0.0068)
+
+======== 测试样本量: 19 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0052, cap=18) | EDCN(base=24, feat=64, drop=0.22, l2=0.00016) | CLF(hidden=34, drop=0.54, l2=0.0006)
+  [ValMode] train-holdout val: 2/class  (removes test leakage; weakens S>=7)
+  [S19-R1] Acc: 0.9989, F1: 0.9989, Prec: 0.9989, Recall: 0.9989 (CCA k=18, cap=18, reg=0.0052)
+  [S19-R2] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981 (CCA k=18, cap=18, reg=0.0052)
+  [S19-R3] Acc: 0.9918, F1: 0.9917, Prec: 0.9921, Recall: 0.9918 (CCA k=18, cap=18, reg=0.0052)
+  [S19-R4] Acc: 0.9936, F1: 0.9936, Prec: 0.9938, Recall: 0.9936 (CCA k=18, cap=18, reg=0.0052)
+  [S19-R5] Acc: 0.9891, F1: 0.9891, Prec: 0.9895, Recall: 0.9891 (CCA k=18, cap=18, reg=0.0052)
+  [S19-R6] Acc: 0.9955, F1: 0.9955, Prec: 0.9956, Recall: 0.9955 (CCA k=18, cap=18, reg=0.0052)
+  [S19-R7] Acc: 0.9869, F1: 0.9869, Prec: 0.9872, Recall: 0.9869 (CCA k=18, cap=18, reg=0.0052)
+  [S19-R8] Acc: 0.9963, F1: 0.9963, Prec: 0.9963, Recall: 0.9963 (CCA k=18, cap=18, reg=0.0052)
+  [S19-R9] Acc: 0.8838, F1: 0.8796, Prec: 0.9101, Recall: 0.8838 (CCA k=18, cap=18, reg=0.0052)
+  [S19-R10] Acc: 0.9959, F1: 0.9959, Prec: 0.9959, Recall: 0.9959 (CCA k=18, cap=18, reg=0.0052)
+  >>> S19 完成 (Trimmed): Mean Acc=0.9934 (Std=0.0036)
+
+======== 测试样本量: 20 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0052, cap=18) | EDCN(base=24, feat=64, drop=0.22, l2=0.00016) | CLF(hidden=34, drop=0.54, l2=0.0006)
+  [ValMode] train-holdout val: 2/class  (removes test leakage; weakens S>=7)
+  [S20-R1] Acc: 0.9658, F1: 0.9656, Prec: 0.9688, Recall: 0.9658 (CCA k=18, cap=18, reg=0.0052)
+  [S20-R2] Acc: 1.0000, F1: 1.0000, Prec: 1.0000, Recall: 1.0000 (CCA k=18, cap=18, reg=0.0052)
+  [S20-R3] Acc: 0.9703, F1: 0.9702, Prec: 0.9722, Recall: 0.9703 (CCA k=18, cap=18, reg=0.0052)
+  [S20-R4] Acc: 0.9925, F1: 0.9925, Prec: 0.9927, Recall: 0.9925 (CCA k=18, cap=18, reg=0.0052)
+  [S20-R5] Acc: 0.9639, F1: 0.9635, Prec: 0.9697, Recall: 0.9639 (CCA k=18, cap=18, reg=0.0052)
+  [S20-R6] Acc: 0.9838, F1: 0.9838, Prec: 0.9855, Recall: 0.9838 (CCA k=18, cap=18, reg=0.0052)
+  [S20-R7] Acc: 0.9929, F1: 0.9929, Prec: 0.9931, Recall: 0.9929 (CCA k=18, cap=18, reg=0.0052)
+  [S20-R8] Acc: 0.9575, F1: 0.9570, Prec: 0.9645, Recall: 0.9575 (CCA k=18, cap=18, reg=0.0052)
+  [S20-R9] Acc: 0.9876, F1: 0.9876, Prec: 0.9881, Recall: 0.9876 (CCA k=18, cap=18, reg=0.0052)
+  [S20-R10] Acc: 0.9789, F1: 0.9787, Prec: 0.9796, Recall: 0.9789 (CCA k=18, cap=18, reg=0.0052)
+  >>> S20 完成 (Trimmed): Mean Acc=0.9795 (Std=0.0109)
+
+======== 测试样本量: 21 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0048, cap=20) | EDCN(base=24, feat=64, drop=0.21, l2=0.00015) | CLF(hidden=36, drop=0.52, l2=0.0005)
+  [ValMode] train-holdout val: 3/class  (removes test leakage; weakens S>=7)
+  [S21-R1] Acc: 0.9917, F1: 0.9917, Prec: 0.9919, Recall: 0.9917 (CCA k=20, cap=20, reg=0.0048)
+  [S21-R2] Acc: 0.9868, F1: 0.9868, Prec: 0.9872, Recall: 0.9868 (CCA k=20, cap=20, reg=0.0048)
+  [S21-R3] Acc: 0.9804, F1: 0.9804, Prec: 0.9812, Recall: 0.9804 (CCA k=20, cap=20, reg=0.0048)
+  [S21-R4] Acc: 0.9951, F1: 0.9951, Prec: 0.9951, Recall: 0.9951 (CCA k=20, cap=20, reg=0.0048)
+  [S21-R5] Acc: 0.9925, F1: 0.9925, Prec: 0.9926, Recall: 0.9925 (CCA k=20, cap=20, reg=0.0048)
+  [S21-R6] Acc: 0.9992, F1: 0.9992, Prec: 0.9992, Recall: 0.9992 (CCA k=20, cap=20, reg=0.0048)
+  [S21-R7] Acc: 0.9966, F1: 0.9966, Prec: 0.9966, Recall: 0.9966 (CCA k=20, cap=20, reg=0.0048)
+  [S21-R8] Acc: 0.9913, F1: 0.9913, Prec: 0.9917, Recall: 0.9913 (CCA k=20, cap=20, reg=0.0048)
+  [S21-R9] Acc: 0.9827, F1: 0.9826, Prec: 0.9835, Recall: 0.9827 (CCA k=20, cap=20, reg=0.0048)
+  [S21-R10] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981 (CCA k=20, cap=20, reg=0.0048)
+  >>> S21 完成 (Trimmed): Mean Acc=0.9918 (Std=0.0048)
+
+======== 测试样本量: 22 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0048, cap=20) | EDCN(base=24, feat=64, drop=0.21, l2=0.00015) | CLF(hidden=36, drop=0.52, l2=0.0005)
+  [ValMode] train-holdout val: 3/class  (removes test leakage; weakens S>=7)
+  [S22-R1] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981 (CCA k=20, cap=20, reg=0.0048)
+  [S22-R2] Acc: 0.9955, F1: 0.9955, Prec: 0.9956, Recall: 0.9955 (CCA k=20, cap=20, reg=0.0048)
+  [S22-R3] Acc: 0.9970, F1: 0.9970, Prec: 0.9970, Recall: 0.9970 (CCA k=20, cap=20, reg=0.0048)
+  [S22-R4] Acc: 0.9932, F1: 0.9932, Prec: 0.9934, Recall: 0.9932 (CCA k=20, cap=20, reg=0.0048)
+  [S22-R5] Acc: 0.9989, F1: 0.9989, Prec: 0.9989, Recall: 0.9989 (CCA k=20, cap=20, reg=0.0048)
+  [S22-R6] Acc: 0.9868, F1: 0.9868, Prec: 0.9874, Recall: 0.9868 (CCA k=20, cap=20, reg=0.0048)
+  [S22-R7] Acc: 0.9974, F1: 0.9974, Prec: 0.9974, Recall: 0.9974 (CCA k=20, cap=20, reg=0.0048)
+  [S22-R8] Acc: 0.9860, F1: 0.9860, Prec: 0.9862, Recall: 0.9860 (CCA k=20, cap=20, reg=0.0048)
+  [S22-R9] Acc: 0.9989, F1: 0.9989, Prec: 0.9989, Recall: 0.9989 (CCA k=20, cap=20, reg=0.0048)
+  [S22-R10] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981 (CCA k=20, cap=20, reg=0.0048)
+  >>> S22 完成 (Trimmed): Mean Acc=0.9956 (Std=0.0037)
+
+======== 测试样本量: 23 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0048, cap=20) | EDCN(base=24, feat=64, drop=0.21, l2=0.00015) | CLF(hidden=36, drop=0.52, l2=0.0005)
+  [ValMode] train-holdout val: 3/class  (removes test leakage; weakens S>=7)
+  [S23-R1] Acc: 0.9939, F1: 0.9939, Prec: 0.9942, Recall: 0.9939 (CCA k=20, cap=20, reg=0.0048)
+  [S23-R2] Acc: 0.9989, F1: 0.9989, Prec: 0.9989, Recall: 0.9989 (CCA k=20, cap=20, reg=0.0048)
+  [S23-R3] Acc: 0.9917, F1: 0.9917, Prec: 0.9919, Recall: 0.9917 (CCA k=20, cap=20, reg=0.0048)
+  [S23-R4] Acc: 0.9962, F1: 0.9962, Prec: 0.9963, Recall: 0.9962 (CCA k=20, cap=20, reg=0.0048)
+  [S23-R5] Acc: 0.9905, F1: 0.9905, Prec: 0.9905, Recall: 0.9905 (CCA k=20, cap=20, reg=0.0048)
+  [S23-R6] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S23-R7] Acc: 0.9955, F1: 0.9955, Prec: 0.9956, Recall: 0.9955 (CCA k=20, cap=20, reg=0.0048)
+  [S23-R8] Acc: 0.9943, F1: 0.9943, Prec: 0.9945, Recall: 0.9943 (CCA k=20, cap=20, reg=0.0048)
+  [S23-R9] Acc: 0.9989, F1: 0.9989, Prec: 0.9989, Recall: 0.9989 (CCA k=20, cap=20, reg=0.0048)
+  [S23-R10] Acc: 0.9894, F1: 0.9894, Prec: 0.9900, Recall: 0.9894 (CCA k=20, cap=20, reg=0.0048)
+  >>> S23 完成 (Trimmed): Mean Acc=0.9950 (Std=0.0028)
+
+======== 测试样本量: 24 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0048, cap=20) | EDCN(base=24, feat=64, drop=0.21, l2=0.00015) | CLF(hidden=36, drop=0.52, l2=0.0005)
+  [ValMode] train-holdout val: 3/class  (removes test leakage; weakens S>=7)
+  [S24-R1] Acc: 0.9989, F1: 0.9989, Prec: 0.9989, Recall: 0.9989 (CCA k=20, cap=20, reg=0.0048)
+  [S24-R2] Acc: 0.9985, F1: 0.9985, Prec: 0.9985, Recall: 0.9985 (CCA k=20, cap=20, reg=0.0048)
+  [S24-R3] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981 (CCA k=20, cap=20, reg=0.0048)
+  [S24-R4] Acc: 0.9977, F1: 0.9977, Prec: 0.9977, Recall: 0.9977 (CCA k=20, cap=20, reg=0.0048)
+  [S24-R5] Acc: 0.9909, F1: 0.9909, Prec: 0.9912, Recall: 0.9909 (CCA k=20, cap=20, reg=0.0048)
+  [S24-R6] Acc: 0.9989, F1: 0.9989, Prec: 0.9989, Recall: 0.9989 (CCA k=20, cap=20, reg=0.0048)
+  [S24-R7] Acc: 0.9970, F1: 0.9970, Prec: 0.9970, Recall: 0.9970 (CCA k=20, cap=20, reg=0.0048)
+  [S24-R8] Acc: 0.9939, F1: 0.9939, Prec: 0.9941, Recall: 0.9939 (CCA k=20, cap=20, reg=0.0048)
+  [S24-R9] Acc: 0.9970, F1: 0.9970, Prec: 0.9970, Recall: 0.9970 (CCA k=20, cap=20, reg=0.0048)
+  [S24-R10] Acc: 0.9939, F1: 0.9939, Prec: 0.9941, Recall: 0.9939 (CCA k=20, cap=20, reg=0.0048)
+  >>> S24 完成 (Trimmed): Mean Acc=0.9969 (Std=0.0018)
+
+======== 测试样本量: 25 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0048, cap=20) | EDCN(base=24, feat=64, drop=0.21, l2=0.00015) | CLF(hidden=36, drop=0.52, l2=0.0005)
+  [ValMode] train-holdout val: 3/class  (removes test leakage; weakens S>=7)
+  [S25-R1] Acc: 0.9989, F1: 0.9989, Prec: 0.9989, Recall: 0.9989 (CCA k=20, cap=20, reg=0.0048)
+  [S25-R2] Acc: 0.9848, F1: 0.9847, Prec: 0.9859, Recall: 0.9848 (CCA k=20, cap=20, reg=0.0048)
+  [S25-R3] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S25-R4] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981 (CCA k=20, cap=20, reg=0.0048)
+  [S25-R5] Acc: 0.9992, F1: 0.9992, Prec: 0.9992, Recall: 0.9992 (CCA k=20, cap=20, reg=0.0048)
+  [S25-R6] Acc: 0.9954, F1: 0.9954, Prec: 0.9955, Recall: 0.9954 (CCA k=20, cap=20, reg=0.0048)
+  [S25-R7] Acc: 1.0000, F1: 1.0000, Prec: 1.0000, Recall: 1.0000 (CCA k=20, cap=20, reg=0.0048)
+  [S25-R8] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S25-R9] Acc: 0.9992, F1: 0.9992, Prec: 0.9992, Recall: 0.9992 (CCA k=20, cap=20, reg=0.0048)
+  [S25-R10] Acc: 0.9989, F1: 0.9989, Prec: 0.9989, Recall: 0.9989 (CCA k=20, cap=20, reg=0.0048)
+  >>> S25 完成 (Trimmed): Mean Acc=0.9986 (Std=0.0013)
+
+======== 测试样本量: 26 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0048, cap=20) | EDCN(base=24, feat=64, drop=0.21, l2=0.00015) | CLF(hidden=36, drop=0.52, l2=0.0005)
+  [ValMode] train-holdout val: 3/class  (removes test leakage; weakens S>=7)
+  [S26-R1] Acc: 0.9962, F1: 0.9962, Prec: 0.9962, Recall: 0.9962 (CCA k=20, cap=20, reg=0.0048)
+  [S26-R2] Acc: 0.9992, F1: 0.9992, Prec: 0.9992, Recall: 0.9992 (CCA k=20, cap=20, reg=0.0048)
+  [S26-R3] Acc: 0.9912, F1: 0.9912, Prec: 0.9916, Recall: 0.9912 (CCA k=20, cap=20, reg=0.0048)
+  [S26-R4] Acc: 0.9618, F1: 0.9618, Prec: 0.9638, Recall: 0.9618 (CCA k=20, cap=20, reg=0.0048)
+  [S26-R5] Acc: 0.9985, F1: 0.9985, Prec: 0.9985, Recall: 0.9985 (CCA k=20, cap=20, reg=0.0048)
+  [S26-R6] Acc: 1.0000, F1: 1.0000, Prec: 1.0000, Recall: 1.0000 (CCA k=20, cap=20, reg=0.0048)
+  [S26-R7] Acc: 0.9958, F1: 0.9958, Prec: 0.9959, Recall: 0.9958 (CCA k=20, cap=20, reg=0.0048)
+  [S26-R8] Acc: 1.0000, F1: 1.0000, Prec: 1.0000, Recall: 1.0000 (CCA k=20, cap=20, reg=0.0048)
+  [S26-R9] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S26-R10] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981 (CCA k=20, cap=20, reg=0.0048)
+  >>> S26 完成 (Trimmed): Mean Acc=0.9973 (Std=0.0027)
+
+======== 测试样本量: 27 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0048, cap=20) | EDCN(base=24, feat=64, drop=0.21, l2=0.00015) | CLF(hidden=36, drop=0.52, l2=0.0005)
+  [ValMode] train-holdout val: 3/class  (removes test leakage; weakens S>=7)
+  [S27-R1] Acc: 0.9958, F1: 0.9958, Prec: 0.9959, Recall: 0.9958 (CCA k=20, cap=20, reg=0.0048)
+  [S27-R2] Acc: 0.9985, F1: 0.9985, Prec: 0.9985, Recall: 0.9985 (CCA k=20, cap=20, reg=0.0048)
+  [S27-R3] Acc: 0.9985, F1: 0.9985, Prec: 0.9985, Recall: 0.9985 (CCA k=20, cap=20, reg=0.0048)
+  [S27-R4] Acc: 0.9985, F1: 0.9985, Prec: 0.9985, Recall: 0.9985 (CCA k=20, cap=20, reg=0.0048)
+  [S27-R5] Acc: 0.9992, F1: 0.9992, Prec: 0.9992, Recall: 0.9992 (CCA k=20, cap=20, reg=0.0048)
+  [S27-R6] Acc: 0.9962, F1: 0.9962, Prec: 0.9963, Recall: 0.9962 (CCA k=20, cap=20, reg=0.0048)
+  [S27-R7] Acc: 1.0000, F1: 1.0000, Prec: 1.0000, Recall: 1.0000 (CCA k=20, cap=20, reg=0.0048)
+  [S27-R8] Acc: 0.9966, F1: 0.9966, Prec: 0.9966, Recall: 0.9966 (CCA k=20, cap=20, reg=0.0048)
+  [S27-R9] Acc: 0.9977, F1: 0.9977, Prec: 0.9977, Recall: 0.9977 (CCA k=20, cap=20, reg=0.0048)
+  [S27-R10] Acc: 0.9992, F1: 0.9992, Prec: 0.9992, Recall: 0.9992 (CCA k=20, cap=20, reg=0.0048)
+  >>> S27 完成 (Trimmed): Mean Acc=0.9980 (Std=0.0011)
+
+======== 测试样本量: 28 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0048, cap=20) | EDCN(base=24, feat=64, drop=0.21, l2=0.00015) | CLF(hidden=36, drop=0.52, l2=0.0005)
+  [ValMode] train-holdout val: 3/class  (removes test leakage; weakens S>=7)
+  [S28-R1] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981 (CCA k=20, cap=20, reg=0.0048)
+  [S28-R2] Acc: 0.9977, F1: 0.9977, Prec: 0.9977, Recall: 0.9977 (CCA k=20, cap=20, reg=0.0048)
+  [S28-R3] Acc: 0.9962, F1: 0.9962, Prec: 0.9962, Recall: 0.9962 (CCA k=20, cap=20, reg=0.0048)
+  [S28-R4] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S28-R5] Acc: 0.9992, F1: 0.9992, Prec: 0.9992, Recall: 0.9992 (CCA k=20, cap=20, reg=0.0048)
+  [S28-R6] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S28-R7] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S28-R8] Acc: 0.9985, F1: 0.9985, Prec: 0.9985, Recall: 0.9985 (CCA k=20, cap=20, reg=0.0048)
+  [S28-R9] Acc: 0.9988, F1: 0.9988, Prec: 0.9988, Recall: 0.9988 (CCA k=20, cap=20, reg=0.0048)
+  [S28-R10] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  >>> S28 完成 (Trimmed): Mean Acc=0.9989 (Std=0.0007)
+
+======== 测试样本量: 29 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0048, cap=20) | EDCN(base=24, feat=64, drop=0.21, l2=0.00015) | CLF(hidden=36, drop=0.52, l2=0.0005)
+  [ValMode] train-holdout val: 3/class  (removes test leakage; weakens S>=7)
+  [S29-R1] Acc: 1.0000, F1: 1.0000, Prec: 1.0000, Recall: 1.0000 (CCA k=20, cap=20, reg=0.0048)
+  [S29-R2] Acc: 0.9988, F1: 0.9988, Prec: 0.9988, Recall: 0.9988 (CCA k=20, cap=20, reg=0.0048)
+  [S29-R3] Acc: 0.9992, F1: 0.9992, Prec: 0.9992, Recall: 0.9992 (CCA k=20, cap=20, reg=0.0048)
+  [S29-R4] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S29-R5] Acc: 0.9992, F1: 0.9992, Prec: 0.9992, Recall: 0.9992 (CCA k=20, cap=20, reg=0.0048)
+  [S29-R6] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S29-R7] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S29-R8] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S29-R9] Acc: 0.9988, F1: 0.9988, Prec: 0.9988, Recall: 0.9988 (CCA k=20, cap=20, reg=0.0048)
+  [S29-R10] Acc: 0.9954, F1: 0.9954, Prec: 0.9955, Recall: 0.9954 (CCA k=20, cap=20, reg=0.0048)
+  >>> S29 完成 (Trimmed): Mean Acc=0.9993 (Std=0.0003)
+
+======== 测试样本量: 30 (Run 1-10) ========
+  [Schedule] CCA(reg=0.0048, cap=20) | EDCN(base=24, feat=64, drop=0.21, l2=0.00015) | CLF(hidden=36, drop=0.52, l2=0.0005)
+  [ValMode] train-holdout val: 3/class  (removes test leakage; weakens S>=7)
+  [S30-R1] Acc: 0.9981, F1: 0.9981, Prec: 0.9981, Recall: 0.9981 (CCA k=20, cap=20, reg=0.0048)
+  [S30-R2] Acc: 0.9884, F1: 0.9884, Prec: 0.9892, Recall: 0.9884 (CCA k=20, cap=20, reg=0.0048)
+  [S30-R3] Acc: 0.9969, F1: 0.9969, Prec: 0.9970, Recall: 0.9969 (CCA k=20, cap=20, reg=0.0048)
+  [S30-R4] Acc: 1.0000, F1: 1.0000, Prec: 1.0000, Recall: 1.0000 (CCA k=20, cap=20, reg=0.0048)
+  [S30-R5] Acc: 0.9992, F1: 0.9992, Prec: 0.9992, Recall: 0.9992 (CCA k=20, cap=20, reg=0.0048)
+  [S30-R6] Acc: 0.9985, F1: 0.9985, Prec: 0.9985, Recall: 0.9985 (CCA k=20, cap=20, reg=0.0048)
+  [S30-R7] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S30-R8] Acc: 0.9988, F1: 0.9988, Prec: 0.9988, Recall: 0.9988 (CCA k=20, cap=20, reg=0.0048)
+  [S30-R9] Acc: 0.9996, F1: 0.9996, Prec: 0.9996, Recall: 0.9996 (CCA k=20, cap=20, reg=0.0048)
+  [S30-R10] Acc: 0.9985, F1: 0.9985, Prec: 0.9985, Recall: 0.9985 (CCA k=20, cap=20, reg=0.0048)
+  >>> S30 完成 (Trimmed): Mean Acc=0.9986 (Std=0.0008)
+
+全部完成！结果已保存在: D:\机械故障诊断实验\CFFN_Comparison_Experiment
+日志文件: D:\机械故障诊断实验\CFFN_Comparison_Experiment\experiment_log_CFFN.txt
+best_parameters: D:\机械故障诊断实验\CFFN_Comparison_Experiment\best_parameters.txt

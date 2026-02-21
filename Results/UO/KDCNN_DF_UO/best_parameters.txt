@@ -1,0 +1,11 @@
+KDCNN-DF fixed hyperparameters (baseline, no Optuna)
+==============================================================================
+
+Paper: An Integrated Framework for Bearing Fault Diagnosis: CNN Model Compression Through Knowledge Distillation
+Key idea: CWT scalogram -> Teacher CNN -> KD-trained Student_35 (KDCNN) -> DF classifier
+
+[Training protocol aligned to MHCNN]
+  Sample range: 5..30
+  Repeats per N: 10
+  epochs=80, batch_size=16, lr=0.0013866, optimizer=Adamax
+

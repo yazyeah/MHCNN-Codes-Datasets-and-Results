@@ -1,0 +1,2006 @@
+========== KDCNN-DF (Baseline) Load Shift | Vib(.mat)+Current(.tdms) ==========
+VIB_MAT_DIR_0NM: D:\渥太华数据\vibration\vibration
+VIB_MAT_DIR_2NM: D:\渥太华数据\vibration\vibration
+VIB_MAT_DIR_4NM: D:\渥太华数据\vibration\vibration
+CUR_TDMS_DIR   : D:\渥太华数据\current
+OUTPUT_DIR     : D:\机械故障诊断实验\KAIST\KDCNN_DF_Comparison_KAIST_3
+Base noise: 0dB | Robust envs=['NoNoise', 0, -2, -4, -6, -8, -10]
+[FIX] post-zscore(after noise)=False  (should be False for meaningful SNR sweep)
+[KD] alpha=0.45 | T=2.5 | teacher_epochs=35 | student_epochs=40
+[DF] MGS_M=8 windows=[(4, 2), (2, 1)] | estimators=300 | max_layers=6
+[EVAL] repeats per SNR=5
+[LOG] Writing terminal output to: D:\机械故障诊断实验\KAIST\KDCNN_DF_Comparison_KAIST_3\log.txt
+
+>>> Loading Vibration(.mat)+Current(.tdms) ...
+Load 0Nm:
+  Class NC-0 | 0Nm_Normal   : 400 segments
+  Class IF-1 | 0Nm_BPFI_03  : 400 segments
+  Class IF-2 | 0Nm_BPFI_10  : 400 segments
+  Class OF-1 | 0Nm_BPFO_03  : 400 segments
+  Class OF-2 | 0Nm_BPFO_10  : 400 segments
+Load 2Nm:
+  Class NC-0 | 2Nm_Normal   : 400 segments
+  Class IF-1 | 2Nm_BPFI_03  : 400 segments
+  Class IF-2 | 2Nm_BPFI_10  : 400 segments
+  Class OF-1 | 2Nm_BPFO_03  : 400 segments
+  Class OF-2 | 2Nm_BPFO_10  : 400 segments
+Load 4Nm:
+  Class NC-0 | 4Nm_Normal   : 400 segments
+  Class IF-1 | 4Nm_BPFI_03  : 400 segments
+  Class IF-2 | 4Nm_BPFI_10  : 400 segments
+  Class OF-1 | 4Nm_BPFO_03  : 400 segments
+  Class OF-2 | 4Nm_BPFO_10  : 400 segments
+Data loaded.
+
+>>> Building/Loading BASE(0dB) CWT caches (all loads, all segments) ...
+[CWT-CACHE] Done. time=1.56s
+
+>>> Stage 2: Full experiment (Train 0Nm@BASE(0dB) | Test 2Nm&4Nm@BASE(0dB)) ...
+
+>>> KDCNN-DF Model Summaries (Teacher / Student_53):
+============================================================
+Model: "TeacherCNN"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ img_in (InputLayer)         [(None, 64, 64, 2)]       0         
+                                                                 
+ conv2d (Conv2D)             (None, 64, 64, 32)        1632      
+                                                                 
+ batch_normalization (BatchN  (None, 64, 64, 32)       128       
+ ormalization)                                                   
+                                                                 
+ max_pooling2d (MaxPooling2D  (None, 32, 32, 32)       0         
+ )                                                               
+                                                                 
+ conv2d_1 (Conv2D)           (None, 32, 32, 32)        9248      
+                                                                 
+ max_pooling2d_1 (MaxPooling  (None, 16, 16, 32)       0         
+ 2D)                                                             
+                                                                 
+ conv2d_2 (Conv2D)           (None, 16, 16, 64)        18496     
+                                                                 
+ max_pooling2d_2 (MaxPooling  (None, 8, 8, 64)         0         
+ 2D)                                                             
+                                                                 
+ conv2d_3 (Conv2D)           (None, 8, 8, 64)          36928     
+                                                                 
+ max_pooling2d_3 (MaxPooling  (None, 4, 4, 64)         0         
+ 2D)                                                             
+                                                                 
+ flatten (Flatten)           (None, 1024)              0         
+                                                                 
+ dense (Dense)               (None, 128)               131200    
+                                                                 
+ teacher_fc2 (Dense)         (None, 128)               16512     
+                                                                 
+ teacher_logits (Dense)      (None, 5)                 645       
+                                                                 
+ teacher_softmax (Softmax)   (None, 5)                 0         
+                                                                 
+=================================================================
+Total params: 214,789
+Trainable params: 214,725
+Non-trainable params: 64
+_________________________________________________________________
+Model: "StudentCNN"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ img_in (InputLayer)         [(None, 64, 64, 2)]       0         
+                                                                 
+ conv2d_4 (Conv2D)           (None, 64, 64, 8)         408       
+                                                                 
+ max_pooling2d_4 (MaxPooling  (None, 16, 16, 8)        0         
+ 2D)                                                             
+                                                                 
+ conv2d_5 (Conv2D)           (None, 16, 16, 8)         584       
+                                                                 
+ max_pooling2d_5 (MaxPooling  (None, 4, 4, 8)          0         
+ 2D)                                                             
+                                                                 
+ flatten_1 (Flatten)         (None, 128)               0         
+                                                                 
+ student_fc1 (Dense)         (None, 64)                8256      
+                                                                 
+ student_logits (Dense)      (None, 5)                 325       
+                                                                 
+ student_softmax (Softmax)   (None, 5)                 0         
+                                                                 
+=================================================================
+Total params: 9,573
+Trainable params: 9,573
+Non-trainable params: 0
+_________________________________________________________________
+============================================================
+
+[OK] Saved: D:\机械故障诊断实验\KAIST\KDCNN_DF_Comparison_KAIST_3\best_parameters.txt
+
+======== Train(0Nm) N=5 (Run 1-10) ========
+  [N5-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6680
+    [DF] layer=2/6 val_acc=0.6760
+    [DF] layer=3/6 val_acc=0.6680
+    [DF] layer=4/6 val_acc=0.6720
+    [DF] early stop at layer 4 (best=2, acc=0.6760)
+  [N5-R1] Train=9.72s | 2Nm Acc=0.7210 F1=0.7170 | 4Nm Acc=0.6810 F1=0.6729
+  [N5-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3960
+    [DF] layer=2/6 val_acc=0.4160
+    [DF] layer=3/6 val_acc=0.3920
+    [DF] layer=4/6 val_acc=0.3840
+    [DF] early stop at layer 4 (best=2, acc=0.4160)
+  [N5-R2] Train=4.08s | 2Nm Acc=0.4060 F1=0.4033 | 4Nm Acc=0.4085 F1=0.4042
+  [N5-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4320
+    [DF] layer=2/6 val_acc=0.4360
+    [DF] layer=3/6 val_acc=0.4120
+    [DF] layer=4/6 val_acc=0.4320
+    [DF] early stop at layer 4 (best=2, acc=0.4360)
+  [N5-R3] Train=3.44s | 2Nm Acc=0.4530 F1=0.4376 | 4Nm Acc=0.4660 F1=0.4463
+  [N5-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4920
+    [DF] layer=2/6 val_acc=0.4640
+    [DF] layer=3/6 val_acc=0.4760
+    [DF] early stop at layer 3 (best=1, acc=0.4920)
+  [N5-R4] Train=4.29s | 2Nm Acc=0.4510 F1=0.4538 | 4Nm Acc=0.4030 F1=0.4036
+  [N5-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3760
+    [DF] layer=2/6 val_acc=0.3880
+    [DF] layer=3/6 val_acc=0.4080
+    [DF] layer=4/6 val_acc=0.3840
+    [DF] layer=5/6 val_acc=0.3920
+    [DF] early stop at layer 5 (best=3, acc=0.4080)
+  [N5-R5] Train=3.67s | 2Nm Acc=0.4490 F1=0.4251 | 4Nm Acc=0.4235 F1=0.3981
+  [N5-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5480
+    [DF] layer=2/6 val_acc=0.5520
+    [DF] layer=3/6 val_acc=0.5600
+    [DF] layer=4/6 val_acc=0.5680
+    [DF] layer=5/6 val_acc=0.5760
+    [DF] layer=6/6 val_acc=0.5600
+  [N5-R6] Train=5.33s | 2Nm Acc=0.5625 F1=0.5478 | 4Nm Acc=0.5635 F1=0.5404
+  [N5-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3240
+    [DF] layer=2/6 val_acc=0.3200
+    [DF] layer=3/6 val_acc=0.3200
+    [DF] early stop at layer 3 (best=1, acc=0.3240)
+  [N5-R7] Train=3.33s | 2Nm Acc=0.3280 F1=0.3162 | 4Nm Acc=0.2940 F1=0.2897
+  [N5-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6200
+    [DF] layer=2/6 val_acc=0.6240
+    [DF] layer=3/6 val_acc=0.6200
+    [DF] layer=4/6 val_acc=0.6160
+    [DF] early stop at layer 4 (best=2, acc=0.6240)
+  [N5-R8] Train=5.34s | 2Nm Acc=0.7065 F1=0.7085 | 4Nm Acc=0.6840 F1=0.6784
+  [N5-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5080
+    [DF] layer=2/6 val_acc=0.4960
+    [DF] layer=3/6 val_acc=0.5040
+    [DF] early stop at layer 3 (best=1, acc=0.5080)
+  [N5-R9] Train=6.90s | 2Nm Acc=0.5330 F1=0.5350 | 4Nm Acc=0.5500 F1=0.5414
+  [N5-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4320
+    [DF] layer=2/6 val_acc=0.4520
+    [DF] layer=3/6 val_acc=0.4560
+    [DF] layer=4/6 val_acc=0.4280
+    [DF] layer=5/6 val_acc=0.4240
+    [DF] early stop at layer 5 (best=3, acc=0.4560)
+  [N5-R10] Train=2.94s | 2Nm Acc=0.4745 F1=0.4746 | 4Nm Acc=0.4775 F1=0.4754
+  >>> Trimmed N=5: 2Nm Acc=0.5044±0.0896 F1=0.4982±0.0926 | 4Nm Acc=0.4966±0.0898 F1=0.4853±0.0894
+
+======== Train(0Nm) N=6 (Run 1-10) ========
+  [N6-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5400
+    [DF] layer=2/6 val_acc=0.5240
+    [DF] layer=3/6 val_acc=0.5360
+    [DF] early stop at layer 3 (best=1, acc=0.5400)
+  [N6-R1] Train=4.00s | 2Nm Acc=0.5200 F1=0.5082 | 4Nm Acc=0.4810 F1=0.4694
+  [N6-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3000
+    [DF] layer=2/6 val_acc=0.3120
+    [DF] layer=3/6 val_acc=0.3080
+    [DF] layer=4/6 val_acc=0.3040
+    [DF] early stop at layer 4 (best=2, acc=0.3120)
+  [N6-R2] Train=4.19s | 2Nm Acc=0.3400 F1=0.3352 | 4Nm Acc=0.3370 F1=0.3319
+  [N6-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5080
+    [DF] layer=2/6 val_acc=0.5040
+    [DF] layer=3/6 val_acc=0.5280
+    [DF] layer=4/6 val_acc=0.5120
+    [DF] layer=5/6 val_acc=0.5120
+    [DF] early stop at layer 5 (best=3, acc=0.5280)
+  [N6-R3] Train=5.18s | 2Nm Acc=0.5610 F1=0.5709 | 4Nm Acc=0.5645 F1=0.5760
+  [N6-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4960
+    [DF] layer=2/6 val_acc=0.5040
+    [DF] layer=3/6 val_acc=0.5000
+    [DF] layer=4/6 val_acc=0.5000
+    [DF] early stop at layer 4 (best=2, acc=0.5040)
+  [N6-R4] Train=3.01s | 2Nm Acc=0.4850 F1=0.4802 | 4Nm Acc=0.4250 F1=0.4232
+  [N6-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6120
+    [DF] layer=2/6 val_acc=0.6080
+    [DF] layer=3/6 val_acc=0.6240
+    [DF] layer=4/6 val_acc=0.6200
+    [DF] layer=5/6 val_acc=0.6000
+    [DF] early stop at layer 5 (best=3, acc=0.6240)
+  [N6-R5] Train=4.93s | 2Nm Acc=0.6100 F1=0.6096 | 4Nm Acc=0.5595 F1=0.5554
+  [N6-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5240
+    [DF] layer=2/6 val_acc=0.5200
+    [DF] layer=3/6 val_acc=0.5280
+    [DF] layer=4/6 val_acc=0.5360
+    [DF] layer=5/6 val_acc=0.5320
+    [DF] layer=6/6 val_acc=0.5160
+    [DF] early stop at layer 6 (best=4, acc=0.5360)
+  [N6-R6] Train=4.75s | 2Nm Acc=0.5675 F1=0.5447 | 4Nm Acc=0.5835 F1=0.5606
+  [N6-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3080
+    [DF] layer=2/6 val_acc=0.2880
+    [DF] layer=3/6 val_acc=0.3280
+    [DF] layer=4/6 val_acc=0.2960
+    [DF] layer=5/6 val_acc=0.3360
+    [DF] layer=6/6 val_acc=0.3200
+  [N6-R7] Train=3.17s | 2Nm Acc=0.3165 F1=0.3011 | 4Nm Acc=0.3330 F1=0.3180
+  [N6-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6440
+    [DF] layer=2/6 val_acc=0.6640
+    [DF] layer=3/6 val_acc=0.6600
+    [DF] layer=4/6 val_acc=0.6600
+    [DF] early stop at layer 4 (best=2, acc=0.6640)
+  [N6-R8] Train=5.07s | 2Nm Acc=0.6355 F1=0.6312 | 4Nm Acc=0.6450 F1=0.6446
+  [N6-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5560
+    [DF] layer=2/6 val_acc=0.5720
+    [DF] layer=3/6 val_acc=0.5440
+    [DF] layer=4/6 val_acc=0.5560
+    [DF] early stop at layer 4 (best=2, acc=0.5720)
+  [N6-R9] Train=4.78s | 2Nm Acc=0.6360 F1=0.6224 | 4Nm Acc=0.6250 F1=0.6008
+  [N6-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4680
+    [DF] layer=2/6 val_acc=0.4800
+    [DF] layer=3/6 val_acc=0.4600
+    [DF] layer=4/6 val_acc=0.4640
+    [DF] early stop at layer 4 (best=2, acc=0.4800)
+  [N6-R10] Train=4.59s | 2Nm Acc=0.5035 F1=0.5060 | 4Nm Acc=0.4620 F1=0.4713
+  >>> Trimmed N=6: 2Nm Acc=0.5278±0.0857 F1=0.5222±0.0850 | 4Nm Acc=0.5047±0.0895 F1=0.4986±0.0856
+
+======== Train(0Nm) N=7 (Run 1-10) ========
+  [N7-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3440
+    [DF] layer=2/6 val_acc=0.3800
+    [DF] layer=3/6 val_acc=0.3680
+    [DF] layer=4/6 val_acc=0.3440
+    [DF] early stop at layer 4 (best=2, acc=0.3800)
+  [N7-R1] Train=3.31s | 2Nm Acc=0.3540 F1=0.3429 | 4Nm Acc=0.3020 F1=0.2970
+  [N7-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5400
+    [DF] layer=2/6 val_acc=0.5720
+    [DF] layer=3/6 val_acc=0.5680
+    [DF] layer=4/6 val_acc=0.5440
+    [DF] early stop at layer 4 (best=2, acc=0.5720)
+  [N7-R2] Train=3.72s | 2Nm Acc=0.6180 F1=0.6225 | 4Nm Acc=0.6340 F1=0.6358
+  [N7-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3920
+    [DF] layer=2/6 val_acc=0.4120
+    [DF] layer=3/6 val_acc=0.4160
+    [DF] layer=4/6 val_acc=0.4240
+    [DF] layer=5/6 val_acc=0.4080
+    [DF] layer=6/6 val_acc=0.4560
+  [N7-R3] Train=3.54s | 2Nm Acc=0.3995 F1=0.3979 | 4Nm Acc=0.3570 F1=0.3540
+  [N7-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.2960
+    [DF] layer=2/6 val_acc=0.2800
+    [DF] layer=3/6 val_acc=0.2880
+    [DF] early stop at layer 3 (best=1, acc=0.2960)
+  [N7-R4] Train=3.71s | 2Nm Acc=0.2955 F1=0.2999 | 4Nm Acc=0.2785 F1=0.2807
+  [N7-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3680
+    [DF] layer=2/6 val_acc=0.3760
+    [DF] layer=3/6 val_acc=0.3680
+    [DF] layer=4/6 val_acc=0.3760
+    [DF] early stop at layer 4 (best=2, acc=0.3760)
+  [N7-R5] Train=2.97s | 2Nm Acc=0.3390 F1=0.3271 | 4Nm Acc=0.3395 F1=0.3288
+  [N7-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5080
+    [DF] layer=2/6 val_acc=0.4840
+    [DF] layer=3/6 val_acc=0.4840
+    [DF] early stop at layer 3 (best=1, acc=0.5080)
+  [N7-R6] Train=3.35s | 2Nm Acc=0.4515 F1=0.4539 | 4Nm Acc=0.4270 F1=0.4258
+  [N7-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3840
+    [DF] layer=2/6 val_acc=0.3800
+    [DF] layer=3/6 val_acc=0.3560
+    [DF] early stop at layer 3 (best=1, acc=0.3840)
+  [N7-R7] Train=3.47s | 2Nm Acc=0.3725 F1=0.3751 | 4Nm Acc=0.3495 F1=0.3461
+  [N7-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6080
+    [DF] layer=2/6 val_acc=0.6080
+    [DF] layer=3/6 val_acc=0.5880
+    [DF] early stop at layer 3 (best=1, acc=0.6080)
+  [N7-R8] Train=3.29s | 2Nm Acc=0.5860 F1=0.5857 | 4Nm Acc=0.5675 F1=0.5644
+  [N7-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4040
+    [DF] layer=2/6 val_acc=0.4280
+    [DF] layer=3/6 val_acc=0.4320
+    [DF] layer=4/6 val_acc=0.4320
+    [DF] layer=5/6 val_acc=0.4360
+    [DF] layer=6/6 val_acc=0.4280
+  [N7-R9] Train=3.38s | 2Nm Acc=0.4290 F1=0.4237 | 4Nm Acc=0.4635 F1=0.4559
+  [N7-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.2800
+    [DF] layer=2/6 val_acc=0.2760
+    [DF] layer=3/6 val_acc=0.2760
+    [DF] early stop at layer 3 (best=1, acc=0.2800)
+  [N7-R10] Train=3.60s | 2Nm Acc=0.2845 F1=0.2870 | 4Nm Acc=0.2530 F1=0.2495
+  >>> Trimmed N=7: 2Nm Acc=0.4034±0.0833 F1=0.4008±0.0845 | 4Nm Acc=0.3856±0.0891 F1=0.3816±0.0888
+
+======== Train(0Nm) N=8 (Run 1-10) ========
+  [N8-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3120
+    [DF] layer=2/6 val_acc=0.3080
+    [DF] layer=3/6 val_acc=0.2960
+    [DF] early stop at layer 3 (best=1, acc=0.3120)
+  [N8-R1] Train=3.25s | 2Nm Acc=0.2885 F1=0.2888 | 4Nm Acc=0.2950 F1=0.2945
+  [N8-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4760
+    [DF] layer=2/6 val_acc=0.4760
+    [DF] layer=3/6 val_acc=0.4800
+    [DF] layer=4/6 val_acc=0.4960
+    [DF] layer=5/6 val_acc=0.5040
+    [DF] layer=6/6 val_acc=0.5000
+  [N8-R2] Train=3.38s | 2Nm Acc=0.5030 F1=0.4976 | 4Nm Acc=0.5030 F1=0.4905
+  [N8-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3840
+    [DF] layer=2/6 val_acc=0.3880
+    [DF] layer=3/6 val_acc=0.3880
+    [DF] layer=4/6 val_acc=0.3840
+    [DF] early stop at layer 4 (best=2, acc=0.3880)
+  [N8-R3] Train=3.07s | 2Nm Acc=0.4170 F1=0.4010 | 4Nm Acc=0.4455 F1=0.4234
+  [N8-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3160
+    [DF] layer=2/6 val_acc=0.3160
+    [DF] layer=3/6 val_acc=0.3120
+    [DF] early stop at layer 3 (best=1, acc=0.3160)
+  [N8-R4] Train=3.76s | 2Nm Acc=0.2375 F1=0.2337 | 4Nm Acc=0.2490 F1=0.2451
+  [N8-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3560
+    [DF] layer=2/6 val_acc=0.3400
+    [DF] layer=3/6 val_acc=0.3600
+    [DF] layer=4/6 val_acc=0.3440
+    [DF] layer=5/6 val_acc=0.3640
+    [DF] layer=6/6 val_acc=0.3320
+  [N8-R5] Train=3.44s | 2Nm Acc=0.3265 F1=0.3258 | 4Nm Acc=0.2855 F1=0.2806
+  [N8-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3240
+    [DF] layer=2/6 val_acc=0.3040
+    [DF] layer=3/6 val_acc=0.3080
+    [DF] early stop at layer 3 (best=1, acc=0.3240)
+  [N8-R6] Train=3.54s | 2Nm Acc=0.4185 F1=0.4190 | 4Nm Acc=0.4095 F1=0.4030
+  [N8-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3840
+    [DF] layer=2/6 val_acc=0.4200
+    [DF] layer=3/6 val_acc=0.4080
+    [DF] layer=4/6 val_acc=0.4200
+    [DF] early stop at layer 4 (best=2, acc=0.4200)
+  [N8-R7] Train=3.31s | 2Nm Acc=0.4235 F1=0.4116 | 4Nm Acc=0.4030 F1=0.3947
+  [N8-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.2760
+    [DF] layer=2/6 val_acc=0.2920
+    [DF] layer=3/6 val_acc=0.2680
+    [DF] layer=4/6 val_acc=0.2920
+    [DF] early stop at layer 4 (best=2, acc=0.2920)
+  [N8-R8] Train=3.32s | 2Nm Acc=0.3005 F1=0.3001 | 4Nm Acc=0.2965 F1=0.2983
+  [N8-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5560
+    [DF] layer=2/6 val_acc=0.5360
+    [DF] layer=3/6 val_acc=0.5400
+    [DF] early stop at layer 3 (best=1, acc=0.5560)
+  [N8-R9] Train=4.79s | 2Nm Acc=0.5680 F1=0.5650 | 4Nm Acc=0.5685 F1=0.5696
+  [N8-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.2200
+    [DF] layer=2/6 val_acc=0.2120
+    [DF] layer=3/6 val_acc=0.2240
+    [DF] layer=4/6 val_acc=0.2160
+    [DF] layer=5/6 val_acc=0.2160
+    [DF] early stop at layer 5 (best=3, acc=0.2240)
+  [N8-R10] Train=2.82s | 2Nm Acc=0.2340 F1=0.2328 | 4Nm Acc=0.2185 F1=0.2149
+  >>> Trimmed N=8: 2Nm Acc=0.3644±0.0835 F1=0.3597±0.0810 | 4Nm Acc=0.3609±0.0853 F1=0.3538±0.0802
+
+======== Train(0Nm) N=9 (Run 1-10) ========
+  [N9-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4640
+    [DF] layer=2/6 val_acc=0.4640
+    [DF] layer=3/6 val_acc=0.4600
+    [DF] early stop at layer 3 (best=1, acc=0.4640)
+  [N9-R1] Train=4.04s | 2Nm Acc=0.4280 F1=0.4260 | 4Nm Acc=0.4290 F1=0.4215
+  [N9-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7120
+    [DF] layer=2/6 val_acc=0.7160
+    [DF] layer=3/6 val_acc=0.7160
+    [DF] layer=4/6 val_acc=0.7000
+    [DF] early stop at layer 4 (best=2, acc=0.7160)
+  [N9-R2] Train=6.57s | 2Nm Acc=0.7345 F1=0.7266 | 4Nm Acc=0.6955 F1=0.6903
+  [N9-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5800
+    [DF] layer=2/6 val_acc=0.5720
+    [DF] layer=3/6 val_acc=0.5600
+    [DF] early stop at layer 3 (best=1, acc=0.5800)
+  [N9-R3] Train=2.88s | 2Nm Acc=0.6330 F1=0.6241 | 4Nm Acc=0.6305 F1=0.6145
+  [N9-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6960
+    [DF] layer=2/6 val_acc=0.7040
+    [DF] layer=3/6 val_acc=0.6960
+    [DF] layer=4/6 val_acc=0.6920
+    [DF] early stop at layer 4 (best=2, acc=0.7040)
+  [N9-R4] Train=5.25s | 2Nm Acc=0.7095 F1=0.6991 | 4Nm Acc=0.6850 F1=0.6780
+  [N9-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6440
+    [DF] layer=2/6 val_acc=0.6400
+    [DF] layer=3/6 val_acc=0.6360
+    [DF] early stop at layer 3 (best=1, acc=0.6440)
+  [N9-R5] Train=5.18s | 2Nm Acc=0.5960 F1=0.5985 | 4Nm Acc=0.5655 F1=0.5673
+  [N9-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7120
+    [DF] layer=2/6 val_acc=0.7200
+    [DF] layer=3/6 val_acc=0.7160
+    [DF] layer=4/6 val_acc=0.7120
+    [DF] early stop at layer 4 (best=2, acc=0.7200)
+  [N9-R6] Train=4.72s | 2Nm Acc=0.7415 F1=0.7340 | 4Nm Acc=0.7095 F1=0.6998
+  [N9-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3720
+    [DF] layer=2/6 val_acc=0.3760
+    [DF] layer=3/6 val_acc=0.3600
+    [DF] layer=4/6 val_acc=0.3960
+    [DF] layer=5/6 val_acc=0.3840
+    [DF] layer=6/6 val_acc=0.3800
+    [DF] early stop at layer 6 (best=4, acc=0.3960)
+  [N9-R7] Train=3.50s | 2Nm Acc=0.3765 F1=0.3675 | 4Nm Acc=0.3120 F1=0.2963
+  [N9-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6760
+    [DF] layer=2/6 val_acc=0.6680
+    [DF] layer=3/6 val_acc=0.6920
+    [DF] layer=4/6 val_acc=0.6720
+    [DF] layer=5/6 val_acc=0.6640
+    [DF] early stop at layer 5 (best=3, acc=0.6920)
+  [N9-R8] Train=5.47s | 2Nm Acc=0.6850 F1=0.6778 | 4Nm Acc=0.6360 F1=0.6250
+  [N9-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9040
+    [DF] layer=2/6 val_acc=0.9040
+    [DF] layer=3/6 val_acc=0.8920
+    [DF] early stop at layer 3 (best=1, acc=0.9040)
+  [N9-R9] Train=4.90s | 2Nm Acc=0.8830 F1=0.8830 | 4Nm Acc=0.7605 F1=0.7347
+  [N9-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4840
+    [DF] layer=2/6 val_acc=0.4960
+    [DF] layer=3/6 val_acc=0.4560
+    [DF] layer=4/6 val_acc=0.4480
+    [DF] early stop at layer 4 (best=2, acc=0.4960)
+  [N9-R10] Train=3.19s | 2Nm Acc=0.4565 F1=0.4448 | 4Nm Acc=0.3730 F1=0.3711
+  >>> Trimmed N=9: 2Nm Acc=0.6230±0.1142 F1=0.6164±0.1133 | 4Nm Acc=0.5905±0.1182 F1=0.5834±0.1163
+
+======== Train(0Nm) N=10 (Run 1-10) ========
+  [N10-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5520
+    [DF] layer=2/6 val_acc=0.5400
+    [DF] layer=3/6 val_acc=0.5280
+    [DF] early stop at layer 3 (best=1, acc=0.5520)
+  [N10-R1] Train=3.58s | 2Nm Acc=0.6455 F1=0.6522 | 4Nm Acc=0.5850 F1=0.5949
+  [N10-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6120
+    [DF] layer=2/6 val_acc=0.6200
+    [DF] layer=3/6 val_acc=0.6120
+    [DF] layer=4/6 val_acc=0.6280
+    [DF] layer=5/6 val_acc=0.6240
+    [DF] layer=6/6 val_acc=0.6320
+  [N10-R2] Train=5.36s | 2Nm Acc=0.6600 F1=0.6557 | 4Nm Acc=0.6200 F1=0.6135
+  [N10-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7440
+    [DF] layer=2/6 val_acc=0.7520
+    [DF] layer=3/6 val_acc=0.7600
+    [DF] layer=4/6 val_acc=0.7600
+    [DF] layer=5/6 val_acc=0.7520
+    [DF] early stop at layer 5 (best=3, acc=0.7600)
+  [N10-R3] Train=6.05s | 2Nm Acc=0.7915 F1=0.7921 | 4Nm Acc=0.7355 F1=0.7324
+  [N10-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.2400
+    [DF] layer=2/6 val_acc=0.2360
+    [DF] layer=3/6 val_acc=0.2440
+    [DF] layer=4/6 val_acc=0.2440
+    [DF] layer=5/6 val_acc=0.2200
+    [DF] early stop at layer 5 (best=3, acc=0.2440)
+  [N10-R4] Train=3.49s | 2Nm Acc=0.2655 F1=0.2553 | 4Nm Acc=0.2490 F1=0.2386
+  [N10-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4320
+    [DF] layer=2/6 val_acc=0.4440
+    [DF] layer=3/6 val_acc=0.4160
+    [DF] layer=4/6 val_acc=0.4320
+    [DF] early stop at layer 4 (best=2, acc=0.4440)
+  [N10-R5] Train=3.72s | 2Nm Acc=0.4125 F1=0.4189 | 4Nm Acc=0.4130 F1=0.4090
+  [N10-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4800
+    [DF] layer=2/6 val_acc=0.4960
+    [DF] layer=3/6 val_acc=0.4960
+    [DF] layer=4/6 val_acc=0.5040
+    [DF] layer=5/6 val_acc=0.5160
+    [DF] layer=6/6 val_acc=0.5120
+  [N10-R6] Train=4.83s | 2Nm Acc=0.5090 F1=0.5165 | 4Nm Acc=0.4535 F1=0.4628
+  [N10-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6400
+    [DF] layer=2/6 val_acc=0.6280
+    [DF] layer=3/6 val_acc=0.5840
+    [DF] early stop at layer 3 (best=1, acc=0.6400)
+  [N10-R7] Train=4.25s | 2Nm Acc=0.6745 F1=0.6707 | 4Nm Acc=0.6205 F1=0.6190
+  [N10-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7200
+    [DF] layer=2/6 val_acc=0.7400
+    [DF] layer=3/6 val_acc=0.7400
+    [DF] layer=4/6 val_acc=0.7320
+    [DF] early stop at layer 4 (best=2, acc=0.7400)
+  [N10-R8] Train=4.49s | 2Nm Acc=0.7690 F1=0.7684 | 4Nm Acc=0.7365 F1=0.7334
+  [N10-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7920
+    [DF] layer=2/6 val_acc=0.8120
+    [DF] layer=3/6 val_acc=0.8000
+    [DF] layer=4/6 val_acc=0.8120
+    [DF] early stop at layer 4 (best=2, acc=0.8120)
+  [N10-R9] Train=4.83s | 2Nm Acc=0.7955 F1=0.7937 | 4Nm Acc=0.7300 F1=0.7274
+  [N10-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7480
+    [DF] layer=2/6 val_acc=0.7520
+    [DF] layer=3/6 val_acc=0.7320
+    [DF] layer=4/6 val_acc=0.7320
+    [DF] early stop at layer 4 (best=2, acc=0.7520)
+  [N10-R10] Train=4.94s | 2Nm Acc=0.7755 F1=0.7758 | 4Nm Acc=0.7540 F1=0.7545
+  >>> Trimmed N=10: 2Nm Acc=0.6547±0.1259 F1=0.6563±0.1232 | 4Nm Acc=0.6118±0.1174 F1=0.6116±0.1153
+
+======== Train(0Nm) N=11 (Run 1-10) ========
+  [N11-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7360
+    [DF] layer=2/6 val_acc=0.7440
+    [DF] layer=3/6 val_acc=0.7400
+    [DF] layer=4/6 val_acc=0.7320
+    [DF] early stop at layer 4 (best=2, acc=0.7440)
+  [N11-R1] Train=4.34s | 2Nm Acc=0.7515 F1=0.7478 | 4Nm Acc=0.7150 F1=0.7091
+  [N11-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7000
+    [DF] layer=2/6 val_acc=0.6920
+    [DF] layer=3/6 val_acc=0.6760
+    [DF] early stop at layer 3 (best=1, acc=0.7000)
+  [N11-R2] Train=3.98s | 2Nm Acc=0.6750 F1=0.6704 | 4Nm Acc=0.6465 F1=0.6415
+  [N11-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5600
+    [DF] layer=2/6 val_acc=0.5400
+    [DF] layer=3/6 val_acc=0.5480
+    [DF] early stop at layer 3 (best=1, acc=0.5600)
+  [N11-R3] Train=4.76s | 2Nm Acc=0.5075 F1=0.5060 | 4Nm Acc=0.4770 F1=0.4697
+  [N11-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8160
+    [DF] layer=2/6 val_acc=0.8280
+    [DF] layer=3/6 val_acc=0.8360
+    [DF] layer=4/6 val_acc=0.8240
+    [DF] layer=5/6 val_acc=0.8160
+    [DF] early stop at layer 5 (best=3, acc=0.8360)
+  [N11-R4] Train=4.86s | 2Nm Acc=0.8275 F1=0.8251 | 4Nm Acc=0.7935 F1=0.7864
+  [N11-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7280
+    [DF] layer=2/6 val_acc=0.7320
+    [DF] layer=3/6 val_acc=0.7240
+    [DF] layer=4/6 val_acc=0.7400
+    [DF] layer=5/6 val_acc=0.7360
+    [DF] layer=6/6 val_acc=0.7360
+    [DF] early stop at layer 6 (best=4, acc=0.7400)
+  [N11-R5] Train=4.27s | 2Nm Acc=0.7750 F1=0.7713 | 4Nm Acc=0.7070 F1=0.6916
+  [N11-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6520
+    [DF] layer=2/6 val_acc=0.6640
+    [DF] layer=3/6 val_acc=0.6680
+    [DF] layer=4/6 val_acc=0.6600
+    [DF] layer=5/6 val_acc=0.6560
+    [DF] early stop at layer 5 (best=3, acc=0.6680)
+  [N11-R6] Train=5.40s | 2Nm Acc=0.6470 F1=0.6484 | 4Nm Acc=0.6125 F1=0.6094
+  [N11-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7720
+    [DF] layer=2/6 val_acc=0.7720
+    [DF] layer=3/6 val_acc=0.7560
+    [DF] early stop at layer 3 (best=1, acc=0.7720)
+  [N11-R7] Train=5.02s | 2Nm Acc=0.7405 F1=0.7445 | 4Nm Acc=0.6840 F1=0.6794
+  [N11-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7000
+    [DF] layer=2/6 val_acc=0.7160
+    [DF] layer=3/6 val_acc=0.7080
+    [DF] layer=4/6 val_acc=0.7080
+    [DF] early stop at layer 4 (best=2, acc=0.7160)
+  [N11-R8] Train=4.87s | 2Nm Acc=0.7520 F1=0.7527 | 4Nm Acc=0.7180 F1=0.7166
+  [N11-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7200
+    [DF] layer=2/6 val_acc=0.7040
+    [DF] layer=3/6 val_acc=0.7120
+    [DF] early stop at layer 3 (best=1, acc=0.7200)
+  [N11-R9] Train=4.90s | 2Nm Acc=0.7460 F1=0.7466 | 4Nm Acc=0.6760 F1=0.6758
+  [N11-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5840
+    [DF] layer=2/6 val_acc=0.5840
+    [DF] layer=3/6 val_acc=0.5800
+    [DF] early stop at layer 3 (best=1, acc=0.5840)
+  [N11-R10] Train=3.56s | 2Nm Acc=0.4830 F1=0.4794 | 4Nm Acc=0.4305 F1=0.4256
+  >>> Trimmed N=11: 2Nm Acc=0.6993±0.0831 F1=0.6984±0.0833 | 4Nm Acc=0.6545±0.0751 F1=0.6491±0.0753
+
+======== Train(0Nm) N=12 (Run 1-10) ========
+  [N12-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6840
+    [DF] layer=2/6 val_acc=0.7040
+    [DF] layer=3/6 val_acc=0.6760
+    [DF] layer=4/6 val_acc=0.6960
+    [DF] early stop at layer 4 (best=2, acc=0.7040)
+  [N12-R1] Train=4.64s | 2Nm Acc=0.6945 F1=0.6950 | 4Nm Acc=0.6910 F1=0.6888
+  [N12-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6200
+    [DF] layer=2/6 val_acc=0.6120
+    [DF] layer=3/6 val_acc=0.5960
+    [DF] early stop at layer 3 (best=1, acc=0.6200)
+  [N12-R2] Train=3.00s | 2Nm Acc=0.6120 F1=0.6103 | 4Nm Acc=0.5340 F1=0.5338
+  [N12-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8400
+    [DF] layer=2/6 val_acc=0.8360
+    [DF] layer=3/6 val_acc=0.8440
+    [DF] layer=4/6 val_acc=0.8360
+    [DF] layer=5/6 val_acc=0.8320
+    [DF] early stop at layer 5 (best=3, acc=0.8440)
+  [N12-R3] Train=5.16s | 2Nm Acc=0.8255 F1=0.8183 | 4Nm Acc=0.7665 F1=0.7625
+  [N12-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6760
+    [DF] layer=2/6 val_acc=0.6800
+    [DF] layer=3/6 val_acc=0.6840
+    [DF] layer=4/6 val_acc=0.6880
+    [DF] layer=5/6 val_acc=0.6840
+    [DF] layer=6/6 val_acc=0.6760
+    [DF] early stop at layer 6 (best=4, acc=0.6880)
+  [N12-R4] Train=5.00s | 2Nm Acc=0.7025 F1=0.6976 | 4Nm Acc=0.6360 F1=0.6335
+  [N12-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8120
+    [DF] layer=2/6 val_acc=0.8040
+    [DF] layer=3/6 val_acc=0.8080
+    [DF] early stop at layer 3 (best=1, acc=0.8120)
+  [N12-R5] Train=4.90s | 2Nm Acc=0.8040 F1=0.8044 | 4Nm Acc=0.7625 F1=0.7544
+  [N12-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8080
+    [DF] layer=2/6 val_acc=0.8120
+    [DF] layer=3/6 val_acc=0.8120
+    [DF] layer=4/6 val_acc=0.8080
+    [DF] early stop at layer 4 (best=2, acc=0.8120)
+  [N12-R6] Train=5.15s | 2Nm Acc=0.8250 F1=0.8223 | 4Nm Acc=0.7665 F1=0.7589
+  [N12-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7280
+    [DF] layer=2/6 val_acc=0.7320
+    [DF] layer=3/6 val_acc=0.7080
+    [DF] layer=4/6 val_acc=0.7240
+    [DF] early stop at layer 4 (best=2, acc=0.7320)
+  [N12-R7] Train=4.74s | 2Nm Acc=0.7680 F1=0.7634 | 4Nm Acc=0.7060 F1=0.6954
+  [N12-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5800
+    [DF] layer=2/6 val_acc=0.5680
+    [DF] layer=3/6 val_acc=0.5760
+    [DF] early stop at layer 3 (best=1, acc=0.5800)
+  [N12-R8] Train=3.66s | 2Nm Acc=0.6110 F1=0.6056 | 4Nm Acc=0.6165 F1=0.6100
+  [N12-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5640
+    [DF] layer=2/6 val_acc=0.5560
+    [DF] layer=3/6 val_acc=0.5480
+    [DF] early stop at layer 3 (best=1, acc=0.5640)
+  [N12-R9] Train=4.09s | 2Nm Acc=0.5710 F1=0.5786 | 4Nm Acc=0.5460 F1=0.5510
+  [N12-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8440
+    [DF] layer=2/6 val_acc=0.8600
+    [DF] layer=3/6 val_acc=0.8440
+    [DF] layer=4/6 val_acc=0.8440
+    [DF] early stop at layer 4 (best=2, acc=0.8600)
+  [N12-R10] Train=5.18s | 2Nm Acc=0.8140 F1=0.8142 | 4Nm Acc=0.7525 F1=0.7491
+  >>> Trimmed N=12: 2Nm Acc=0.7289±0.0815 F1=0.7261±0.0818 | 4Nm Acc=0.6846±0.0742 F1=0.6801±0.0712
+
+======== Train(0Nm) N=13 (Run 1-10) ========
+  [N13-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3640
+    [DF] layer=2/6 val_acc=0.3600
+    [DF] layer=3/6 val_acc=0.3600
+    [DF] early stop at layer 3 (best=1, acc=0.3640)
+  [N13-R1] Train=2.87s | 2Nm Acc=0.3580 F1=0.3412 | 4Nm Acc=0.3370 F1=0.3189
+  [N13-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5400
+    [DF] layer=2/6 val_acc=0.5320
+    [DF] layer=3/6 val_acc=0.5440
+    [DF] layer=4/6 val_acc=0.5200
+    [DF] layer=5/6 val_acc=0.5320
+    [DF] early stop at layer 5 (best=3, acc=0.5440)
+  [N13-R2] Train=3.67s | 2Nm Acc=0.5265 F1=0.5220 | 4Nm Acc=0.5245 F1=0.5184
+  [N13-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5440
+    [DF] layer=2/6 val_acc=0.5360
+    [DF] layer=3/6 val_acc=0.5200
+    [DF] early stop at layer 3 (best=1, acc=0.5440)
+  [N13-R3] Train=3.60s | 2Nm Acc=0.5625 F1=0.5677 | 4Nm Acc=0.5385 F1=0.5364
+  [N13-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4840
+    [DF] layer=2/6 val_acc=0.4440
+    [DF] layer=3/6 val_acc=0.4680
+    [DF] early stop at layer 3 (best=1, acc=0.4840)
+  [N13-R4] Train=4.61s | 2Nm Acc=0.4495 F1=0.4307 | 4Nm Acc=0.4345 F1=0.4159
+  [N13-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5640
+    [DF] layer=2/6 val_acc=0.6080
+    [DF] layer=3/6 val_acc=0.6200
+    [DF] layer=4/6 val_acc=0.6200
+    [DF] layer=5/6 val_acc=0.6120
+    [DF] early stop at layer 5 (best=3, acc=0.6200)
+  [N13-R5] Train=3.34s | 2Nm Acc=0.5585 F1=0.5502 | 4Nm Acc=0.5230 F1=0.5163
+  [N13-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3840
+    [DF] layer=2/6 val_acc=0.3720
+    [DF] layer=3/6 val_acc=0.3640
+    [DF] early stop at layer 3 (best=1, acc=0.3840)
+  [N13-R6] Train=3.03s | 2Nm Acc=0.4345 F1=0.4271 | 4Nm Acc=0.4165 F1=0.4026
+  [N13-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4120
+    [DF] layer=2/6 val_acc=0.3840
+    [DF] layer=3/6 val_acc=0.4440
+    [DF] layer=4/6 val_acc=0.4240
+    [DF] layer=5/6 val_acc=0.3800
+    [DF] early stop at layer 5 (best=3, acc=0.4440)
+  [N13-R7] Train=2.89s | 2Nm Acc=0.4495 F1=0.4341 | 4Nm Acc=0.4295 F1=0.4165
+  [N13-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3160
+    [DF] layer=2/6 val_acc=0.3160
+    [DF] layer=3/6 val_acc=0.3120
+    [DF] early stop at layer 3 (best=1, acc=0.3160)
+  [N13-R8] Train=3.18s | 2Nm Acc=0.2645 F1=0.2557 | 4Nm Acc=0.2360 F1=0.2298
+  [N13-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5640
+    [DF] layer=2/6 val_acc=0.5720
+    [DF] layer=3/6 val_acc=0.5840
+    [DF] layer=4/6 val_acc=0.5400
+    [DF] layer=5/6 val_acc=0.5720
+    [DF] early stop at layer 5 (best=3, acc=0.5840)
+  [N13-R9] Train=3.05s | 2Nm Acc=0.5495 F1=0.5336 | 4Nm Acc=0.5005 F1=0.4929
+  [N13-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5520
+    [DF] layer=2/6 val_acc=0.5680
+    [DF] layer=3/6 val_acc=0.5680
+    [DF] layer=4/6 val_acc=0.5400
+    [DF] early stop at layer 4 (best=2, acc=0.5680)
+  [N13-R10] Train=3.68s | 2Nm Acc=0.5260 F1=0.5292 | 4Nm Acc=0.5115 F1=0.5191
+  >>> Trimmed N=13: 2Nm Acc=0.4815±0.0653 F1=0.4710±0.0689 | 4Nm Acc=0.4596±0.0623 F1=0.4501±0.0684
+
+======== Train(0Nm) N=14 (Run 1-10) ========
+  [N14-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8760
+    [DF] layer=2/6 val_acc=0.8760
+    [DF] layer=3/6 val_acc=0.8760
+    [DF] early stop at layer 3 (best=1, acc=0.8760)
+  [N14-R1] Train=5.25s | 2Nm Acc=0.8750 F1=0.8727 | 4Nm Acc=0.7720 F1=0.7437
+  [N14-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8480
+    [DF] layer=2/6 val_acc=0.8320
+    [DF] layer=3/6 val_acc=0.8360
+    [DF] early stop at layer 3 (best=1, acc=0.8480)
+  [N14-R2] Train=4.12s | 2Nm Acc=0.8225 F1=0.8210 | 4Nm Acc=0.7740 F1=0.7697
+  [N14-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7200
+    [DF] layer=2/6 val_acc=0.7000
+    [DF] layer=3/6 val_acc=0.7040
+    [DF] early stop at layer 3 (best=1, acc=0.7200)
+  [N14-R3] Train=4.72s | 2Nm Acc=0.7565 F1=0.7419 | 4Nm Acc=0.7180 F1=0.7073
+  [N14-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8040
+    [DF] layer=2/6 val_acc=0.8000
+    [DF] layer=3/6 val_acc=0.8040
+    [DF] early stop at layer 3 (best=1, acc=0.8040)
+  [N14-R4] Train=5.39s | 2Nm Acc=0.8145 F1=0.8151 | 4Nm Acc=0.7705 F1=0.7599
+  [N14-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7480
+    [DF] layer=2/6 val_acc=0.7480
+    [DF] layer=3/6 val_acc=0.7600
+    [DF] layer=4/6 val_acc=0.7480
+    [DF] layer=5/6 val_acc=0.7520
+    [DF] early stop at layer 5 (best=3, acc=0.7600)
+  [N14-R5] Train=5.33s | 2Nm Acc=0.8005 F1=0.7943 | 4Nm Acc=0.7495 F1=0.7432
+  [N14-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7040
+    [DF] layer=2/6 val_acc=0.7040
+    [DF] layer=3/6 val_acc=0.7120
+    [DF] layer=4/6 val_acc=0.7080
+    [DF] layer=5/6 val_acc=0.7080
+    [DF] early stop at layer 5 (best=3, acc=0.7120)
+  [N14-R6] Train=5.26s | 2Nm Acc=0.8015 F1=0.8028 | 4Nm Acc=0.7515 F1=0.7362
+  [N14-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5000
+    [DF] layer=2/6 val_acc=0.4840
+    [DF] layer=3/6 val_acc=0.4680
+    [DF] early stop at layer 3 (best=1, acc=0.5000)
+  [N14-R7] Train=4.35s | 2Nm Acc=0.4420 F1=0.4241 | 4Nm Acc=0.4375 F1=0.4155
+  [N14-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5480
+    [DF] layer=2/6 val_acc=0.5480
+    [DF] layer=3/6 val_acc=0.5600
+    [DF] layer=4/6 val_acc=0.5600
+    [DF] layer=5/6 val_acc=0.5560
+    [DF] early stop at layer 5 (best=3, acc=0.5600)
+  [N14-R8] Train=3.84s | 2Nm Acc=0.5710 F1=0.5685 | 4Nm Acc=0.5885 F1=0.5786
+  [N14-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7160
+    [DF] layer=2/6 val_acc=0.7240
+    [DF] layer=3/6 val_acc=0.7280
+    [DF] layer=4/6 val_acc=0.7160
+    [DF] layer=5/6 val_acc=0.7200
+    [DF] early stop at layer 5 (best=3, acc=0.7280)
+  [N14-R9] Train=4.53s | 2Nm Acc=0.7445 F1=0.7426 | 4Nm Acc=0.7075 F1=0.6972
+  [N14-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6440
+    [DF] layer=2/6 val_acc=0.6440
+    [DF] layer=3/6 val_acc=0.6280
+    [DF] early stop at layer 3 (best=1, acc=0.6440)
+  [N14-R10] Train=4.47s | 2Nm Acc=0.6205 F1=0.6131 | 4Nm Acc=0.6110 F1=0.5983
+  >>> Trimmed N=14: 2Nm Acc=0.7414±0.0887 F1=0.7374±0.0898 | 4Nm Acc=0.7086±0.0665 F1=0.6956±0.0649
+
+======== Train(0Nm) N=15 (Run 1-10) ========
+  [N15-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5400
+    [DF] layer=2/6 val_acc=0.5400
+    [DF] layer=3/6 val_acc=0.5400
+    [DF] early stop at layer 3 (best=1, acc=0.5400)
+  [N15-R1] Train=3.11s | 2Nm Acc=0.5750 F1=0.5697 | 4Nm Acc=0.5435 F1=0.5421
+  [N15-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7320
+    [DF] layer=2/6 val_acc=0.7280
+    [DF] layer=3/6 val_acc=0.7160
+    [DF] early stop at layer 3 (best=1, acc=0.7320)
+  [N15-R2] Train=5.50s | 2Nm Acc=0.7390 F1=0.7371 | 4Nm Acc=0.6785 F1=0.6713
+  [N15-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3200
+    [DF] layer=2/6 val_acc=0.2880
+    [DF] layer=3/6 val_acc=0.3280
+    [DF] layer=4/6 val_acc=0.3240
+    [DF] layer=5/6 val_acc=0.2960
+    [DF] early stop at layer 5 (best=3, acc=0.3280)
+  [N15-R3] Train=3.23s | 2Nm Acc=0.3080 F1=0.3044 | 4Nm Acc=0.2915 F1=0.2895
+  [N15-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7800
+    [DF] layer=2/6 val_acc=0.7840
+    [DF] layer=3/6 val_acc=0.7880
+    [DF] layer=4/6 val_acc=0.8040
+    [DF] layer=5/6 val_acc=0.7960
+    [DF] layer=6/6 val_acc=0.7960
+    [DF] early stop at layer 6 (best=4, acc=0.8040)
+  [N15-R4] Train=4.72s | 2Nm Acc=0.8090 F1=0.8027 | 4Nm Acc=0.7465 F1=0.7379
+  [N15-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7520
+    [DF] layer=2/6 val_acc=0.7440
+    [DF] layer=3/6 val_acc=0.7360
+    [DF] early stop at layer 3 (best=1, acc=0.7520)
+  [N15-R5] Train=4.89s | 2Nm Acc=0.7295 F1=0.7290 | 4Nm Acc=0.6725 F1=0.6685
+  [N15-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8600
+    [DF] layer=2/6 val_acc=0.8480
+    [DF] layer=3/6 val_acc=0.8440
+    [DF] early stop at layer 3 (best=1, acc=0.8600)
+  [N15-R6] Train=5.02s | 2Nm Acc=0.8620 F1=0.8565 | 4Nm Acc=0.8125 F1=0.8071
+  [N15-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8280
+    [DF] layer=2/6 val_acc=0.8240
+    [DF] layer=3/6 val_acc=0.8160
+    [DF] early stop at layer 3 (best=1, acc=0.8280)
+  [N15-R7] Train=5.03s | 2Nm Acc=0.8670 F1=0.8667 | 4Nm Acc=0.7960 F1=0.7892
+  [N15-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8200
+    [DF] layer=2/6 val_acc=0.8200
+    [DF] layer=3/6 val_acc=0.8080
+    [DF] early stop at layer 3 (best=1, acc=0.8200)
+  [N15-R8] Train=5.19s | 2Nm Acc=0.8300 F1=0.8288 | 4Nm Acc=0.7515 F1=0.7304
+  [N15-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7600
+    [DF] layer=2/6 val_acc=0.7520
+    [DF] layer=3/6 val_acc=0.7520
+    [DF] early stop at layer 3 (best=1, acc=0.7600)
+  [N15-R9] Train=4.93s | 2Nm Acc=0.7995 F1=0.7986 | 4Nm Acc=0.7520 F1=0.7518
+  [N15-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8280
+    [DF] layer=2/6 val_acc=0.8200
+    [DF] layer=3/6 val_acc=0.8240
+    [DF] early stop at layer 3 (best=1, acc=0.8280)
+  [N15-R10] Train=4.60s | 2Nm Acc=0.7905 F1=0.7881 | 4Nm Acc=0.7440 F1=0.7371
+  >>> Trimmed N=15: 2Nm Acc=0.7668±0.0832 F1=0.7638±0.0835 | 4Nm Acc=0.7106±0.0737 F1=0.7035±0.0716
+
+======== Train(0Nm) N=16 (Run 1-10) ========
+  [N16-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8120
+    [DF] layer=2/6 val_acc=0.8160
+    [DF] layer=3/6 val_acc=0.8080
+    [DF] layer=4/6 val_acc=0.8120
+    [DF] early stop at layer 4 (best=2, acc=0.8160)
+  [N16-R1] Train=4.67s | 2Nm Acc=0.8450 F1=0.8434 | 4Nm Acc=0.7305 F1=0.7074
+  [N16-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7840
+    [DF] layer=2/6 val_acc=0.7880
+    [DF] layer=3/6 val_acc=0.7840
+    [DF] layer=4/6 val_acc=0.7720
+    [DF] early stop at layer 4 (best=2, acc=0.7880)
+  [N16-R2] Train=5.55s | 2Nm Acc=0.7955 F1=0.7924 | 4Nm Acc=0.7395 F1=0.7171
+  [N16-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9240
+    [DF] layer=2/6 val_acc=0.9200
+    [DF] layer=3/6 val_acc=0.9200
+    [DF] early stop at layer 3 (best=1, acc=0.9240)
+  [N16-R3] Train=5.08s | 2Nm Acc=0.9120 F1=0.9117 | 4Nm Acc=0.8115 F1=0.7987
+  [N16-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7000
+    [DF] layer=2/6 val_acc=0.6960
+    [DF] layer=3/6 val_acc=0.7160
+    [DF] layer=4/6 val_acc=0.7280
+    [DF] layer=5/6 val_acc=0.7160
+    [DF] layer=6/6 val_acc=0.7040
+    [DF] early stop at layer 6 (best=4, acc=0.7280)
+  [N16-R4] Train=4.41s | 2Nm Acc=0.7355 F1=0.7312 | 4Nm Acc=0.7100 F1=0.7005
+  [N16-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8600
+    [DF] layer=2/6 val_acc=0.8760
+    [DF] layer=3/6 val_acc=0.8880
+    [DF] layer=4/6 val_acc=0.8880
+    [DF] layer=5/6 val_acc=0.8840
+    [DF] early stop at layer 5 (best=3, acc=0.8880)
+  [N16-R5] Train=5.34s | 2Nm Acc=0.8675 F1=0.8668 | 4Nm Acc=0.7760 F1=0.7716
+  [N16-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8440
+    [DF] layer=2/6 val_acc=0.8320
+    [DF] layer=3/6 val_acc=0.8400
+    [DF] early stop at layer 3 (best=1, acc=0.8440)
+  [N16-R6] Train=5.00s | 2Nm Acc=0.8350 F1=0.8289 | 4Nm Acc=0.7530 F1=0.7442
+  [N16-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8840
+    [DF] layer=2/6 val_acc=0.8880
+    [DF] layer=3/6 val_acc=0.8800
+    [DF] layer=4/6 val_acc=0.8840
+    [DF] early stop at layer 4 (best=2, acc=0.8880)
+  [N16-R7] Train=4.99s | 2Nm Acc=0.8745 F1=0.8733 | 4Nm Acc=0.8190 F1=0.8137
+  [N16-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7400
+    [DF] layer=2/6 val_acc=0.7480
+    [DF] layer=3/6 val_acc=0.7640
+    [DF] layer=4/6 val_acc=0.7480
+    [DF] layer=5/6 val_acc=0.7360
+    [DF] early stop at layer 5 (best=3, acc=0.7640)
+  [N16-R8] Train=5.43s | 2Nm Acc=0.7930 F1=0.7867 | 4Nm Acc=0.7305 F1=0.7181
+  [N16-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7200
+    [DF] layer=2/6 val_acc=0.7120
+    [DF] layer=3/6 val_acc=0.7040
+    [DF] early stop at layer 3 (best=1, acc=0.7200)
+  [N16-R9] Train=4.58s | 2Nm Acc=0.7170 F1=0.7123 | 4Nm Acc=0.6885 F1=0.6885
+  [N16-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8560
+    [DF] layer=2/6 val_acc=0.8760
+    [DF] layer=3/6 val_acc=0.8640
+    [DF] layer=4/6 val_acc=0.8640
+    [DF] early stop at layer 4 (best=2, acc=0.8760)
+  [N16-R10] Train=4.70s | 2Nm Acc=0.8455 F1=0.8427 | 4Nm Acc=0.7960 F1=0.7878
+  >>> Trimmed N=16: 2Nm Acc=0.8239±0.0434 F1=0.8207±0.0446 | 4Nm Acc=0.7559±0.0331 F1=0.7432±0.0359
+
+======== Train(0Nm) N=17 (Run 1-10) ========
+  [N17-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4640
+    [DF] layer=2/6 val_acc=0.4800
+    [DF] layer=3/6 val_acc=0.4720
+    [DF] layer=4/6 val_acc=0.4680
+    [DF] early stop at layer 4 (best=2, acc=0.4800)
+  [N17-R1] Train=3.96s | 2Nm Acc=0.5245 F1=0.4955 | 4Nm Acc=0.5395 F1=0.5094
+  [N17-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5160
+    [DF] layer=2/6 val_acc=0.5400
+    [DF] layer=3/6 val_acc=0.5280
+    [DF] layer=4/6 val_acc=0.5080
+    [DF] early stop at layer 4 (best=2, acc=0.5400)
+  [N17-R2] Train=3.33s | 2Nm Acc=0.5260 F1=0.5143 | 4Nm Acc=0.5110 F1=0.5012
+  [N17-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7640
+    [DF] layer=2/6 val_acc=0.7760
+    [DF] layer=3/6 val_acc=0.7720
+    [DF] layer=4/6 val_acc=0.7840
+    [DF] layer=5/6 val_acc=0.7680
+    [DF] layer=6/6 val_acc=0.7680
+    [DF] early stop at layer 6 (best=4, acc=0.7840)
+  [N17-R3] Train=4.88s | 2Nm Acc=0.8345 F1=0.8326 | 4Nm Acc=0.7505 F1=0.7460
+  [N17-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8400
+    [DF] layer=2/6 val_acc=0.8440
+    [DF] layer=3/6 val_acc=0.8440
+    [DF] layer=4/6 val_acc=0.8480
+    [DF] layer=5/6 val_acc=0.8440
+    [DF] layer=6/6 val_acc=0.8360
+    [DF] early stop at layer 6 (best=4, acc=0.8480)
+  [N17-R4] Train=4.85s | 2Nm Acc=0.8270 F1=0.8251 | 4Nm Acc=0.7845 F1=0.7705
+  [N17-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8600
+    [DF] layer=2/6 val_acc=0.8680
+    [DF] layer=3/6 val_acc=0.8600
+    [DF] layer=4/6 val_acc=0.8560
+    [DF] early stop at layer 4 (best=2, acc=0.8680)
+  [N17-R5] Train=5.38s | 2Nm Acc=0.8685 F1=0.8675 | 4Nm Acc=0.8100 F1=0.7997
+  [N17-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8760
+    [DF] layer=2/6 val_acc=0.8720
+    [DF] layer=3/6 val_acc=0.8680
+    [DF] early stop at layer 3 (best=1, acc=0.8760)
+  [N17-R6] Train=4.25s | 2Nm Acc=0.8610 F1=0.8597 | 4Nm Acc=0.7820 F1=0.7593
+  [N17-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7840
+    [DF] layer=2/6 val_acc=0.7840
+    [DF] layer=3/6 val_acc=0.7720
+    [DF] early stop at layer 3 (best=1, acc=0.7840)
+  [N17-R7] Train=5.35s | 2Nm Acc=0.7795 F1=0.7755 | 4Nm Acc=0.7425 F1=0.7317
+  [N17-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9000
+    [DF] layer=2/6 val_acc=0.9000
+    [DF] layer=3/6 val_acc=0.8920
+    [DF] early stop at layer 3 (best=1, acc=0.9000)
+  [N17-R8] Train=5.61s | 2Nm Acc=0.9035 F1=0.9025 | 4Nm Acc=0.8070 F1=0.7956
+  [N17-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8320
+    [DF] layer=2/6 val_acc=0.8360
+    [DF] layer=3/6 val_acc=0.8320
+    [DF] layer=4/6 val_acc=0.8240
+    [DF] early stop at layer 4 (best=2, acc=0.8360)
+  [N17-R9] Train=5.33s | 2Nm Acc=0.8450 F1=0.8418 | 4Nm Acc=0.7800 F1=0.7731
+  [N17-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7120
+    [DF] layer=2/6 val_acc=0.7040
+    [DF] layer=3/6 val_acc=0.7040
+    [DF] early stop at layer 3 (best=1, acc=0.7120)
+  [N17-R10] Train=4.41s | 2Nm Acc=0.7660 F1=0.7652 | 4Nm Acc=0.7170 F1=0.7126
+  >>> Trimmed N=17: 2Nm Acc=0.7884±0.1048 F1=0.7852±0.1080 | 4Nm Acc=0.7379±0.0796 F1=0.7248±0.0849
+
+======== Train(0Nm) N=18 (Run 1-10) ========
+  [N18-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4480
+    [DF] layer=2/6 val_acc=0.4680
+    [DF] layer=3/6 val_acc=0.4560
+    [DF] layer=4/6 val_acc=0.4680
+    [DF] early stop at layer 4 (best=2, acc=0.4680)
+  [N18-R1] Train=3.13s | 2Nm Acc=0.4265 F1=0.4174 | 4Nm Acc=0.4285 F1=0.4175
+  [N18-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7960
+    [DF] layer=2/6 val_acc=0.7840
+    [DF] layer=3/6 val_acc=0.7840
+    [DF] early stop at layer 3 (best=1, acc=0.7960)
+  [N18-R2] Train=5.41s | 2Nm Acc=0.7915 F1=0.7928 | 4Nm Acc=0.7385 F1=0.7305
+  [N18-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8760
+    [DF] layer=2/6 val_acc=0.8800
+    [DF] layer=3/6 val_acc=0.8640
+    [DF] layer=4/6 val_acc=0.8680
+    [DF] early stop at layer 4 (best=2, acc=0.8800)
+  [N18-R3] Train=5.08s | 2Nm Acc=0.8590 F1=0.8610 | 4Nm Acc=0.7975 F1=0.7947
+  [N18-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8080
+    [DF] layer=2/6 val_acc=0.8080
+    [DF] layer=3/6 val_acc=0.7960
+    [DF] early stop at layer 3 (best=1, acc=0.8080)
+  [N18-R4] Train=5.15s | 2Nm Acc=0.8185 F1=0.8178 | 4Nm Acc=0.7855 F1=0.7810
+  [N18-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8200
+    [DF] layer=2/6 val_acc=0.8280
+    [DF] layer=3/6 val_acc=0.8320
+    [DF] layer=4/6 val_acc=0.8160
+    [DF] layer=5/6 val_acc=0.8200
+    [DF] early stop at layer 5 (best=3, acc=0.8320)
+  [N18-R5] Train=4.94s | 2Nm Acc=0.8120 F1=0.8100 | 4Nm Acc=0.7895 F1=0.7873
+  [N18-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8000
+    [DF] layer=2/6 val_acc=0.8000
+    [DF] layer=3/6 val_acc=0.7920
+    [DF] early stop at layer 3 (best=1, acc=0.8000)
+  [N18-R6] Train=4.88s | 2Nm Acc=0.8180 F1=0.8176 | 4Nm Acc=0.7570 F1=0.7434
+  [N18-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3600
+    [DF] layer=2/6 val_acc=0.3720
+    [DF] layer=3/6 val_acc=0.3720
+    [DF] layer=4/6 val_acc=0.3720
+    [DF] early stop at layer 4 (best=2, acc=0.3720)
+  [N18-R7] Train=3.91s | 2Nm Acc=0.3815 F1=0.3812 | 4Nm Acc=0.3840 F1=0.3850
+  [N18-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5800
+    [DF] layer=2/6 val_acc=0.6000
+    [DF] layer=3/6 val_acc=0.5960
+    [DF] layer=4/6 val_acc=0.5800
+    [DF] early stop at layer 4 (best=2, acc=0.6000)
+  [N18-R8] Train=3.22s | 2Nm Acc=0.6175 F1=0.6108 | 4Nm Acc=0.5825 F1=0.5773
+  [N18-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8680
+    [DF] layer=2/6 val_acc=0.8600
+    [DF] layer=3/6 val_acc=0.8480
+    [DF] early stop at layer 3 (best=1, acc=0.8680)
+  [N18-R9] Train=5.57s | 2Nm Acc=0.8610 F1=0.8599 | 4Nm Acc=0.7885 F1=0.7820
+  [N18-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5280
+    [DF] layer=2/6 val_acc=0.5240
+    [DF] layer=3/6 val_acc=0.5200
+    [DF] early stop at layer 3 (best=1, acc=0.5280)
+  [N18-R10] Train=4.15s | 2Nm Acc=0.5780 F1=0.5800 | 4Nm Acc=0.5680 F1=0.5677
+  >>> Trimmed N=18: 2Nm Acc=0.7151±0.1453 F1=0.7133±0.1478 | 4Nm Acc=0.6797±0.1273 F1=0.6734±0.1277
+
+======== Train(0Nm) N=19 (Run 1-10) ========
+  [N19-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8960
+    [DF] layer=2/6 val_acc=0.8920
+    [DF] layer=3/6 val_acc=0.8880
+    [DF] early stop at layer 3 (best=1, acc=0.8960)
+  [N19-R1] Train=4.72s | 2Nm Acc=0.9070 F1=0.9076 | 4Nm Acc=0.8360 F1=0.8293
+  [N19-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8400
+    [DF] layer=2/6 val_acc=0.8520
+    [DF] layer=3/6 val_acc=0.8440
+    [DF] layer=4/6 val_acc=0.8480
+    [DF] early stop at layer 4 (best=2, acc=0.8520)
+  [N19-R2] Train=5.11s | 2Nm Acc=0.8370 F1=0.8370 | 4Nm Acc=0.7555 F1=0.7391
+  [N19-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7680
+    [DF] layer=2/6 val_acc=0.7680
+    [DF] layer=3/6 val_acc=0.7600
+    [DF] early stop at layer 3 (best=1, acc=0.7680)
+  [N19-R3] Train=4.55s | 2Nm Acc=0.8140 F1=0.8051 | 4Nm Acc=0.7690 F1=0.7605
+  [N19-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8160
+    [DF] layer=2/6 val_acc=0.8200
+    [DF] layer=3/6 val_acc=0.8240
+    [DF] layer=4/6 val_acc=0.8120
+    [DF] layer=5/6 val_acc=0.8400
+    [DF] layer=6/6 val_acc=0.8320
+  [N19-R4] Train=4.63s | 2Nm Acc=0.7960 F1=0.7954 | 4Nm Acc=0.7615 F1=0.7564
+  [N19-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8600
+    [DF] layer=2/6 val_acc=0.8640
+    [DF] layer=3/6 val_acc=0.8880
+    [DF] layer=4/6 val_acc=0.8840
+    [DF] layer=5/6 val_acc=0.8840
+    [DF] early stop at layer 5 (best=3, acc=0.8880)
+  [N19-R5] Train=4.84s | 2Nm Acc=0.8840 F1=0.8823 | 4Nm Acc=0.8520 F1=0.8484
+  [N19-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8080
+    [DF] layer=2/6 val_acc=0.8000
+    [DF] layer=3/6 val_acc=0.8000
+    [DF] early stop at layer 3 (best=1, acc=0.8080)
+  [N19-R6] Train=4.63s | 2Nm Acc=0.7820 F1=0.7806 | 4Nm Acc=0.7340 F1=0.7319
+  [N19-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7560
+    [DF] layer=2/6 val_acc=0.7560
+    [DF] layer=3/6 val_acc=0.7680
+    [DF] layer=4/6 val_acc=0.7520
+    [DF] layer=5/6 val_acc=0.7640
+    [DF] early stop at layer 5 (best=3, acc=0.7680)
+  [N19-R7] Train=5.54s | 2Nm Acc=0.7865 F1=0.7880 | 4Nm Acc=0.7550 F1=0.7548
+  [N19-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9480
+    [DF] layer=2/6 val_acc=0.9400
+    [DF] layer=3/6 val_acc=0.9400
+    [DF] early stop at layer 3 (best=1, acc=0.9480)
+  [N19-R8] Train=4.87s | 2Nm Acc=0.9215 F1=0.9211 | 4Nm Acc=0.8245 F1=0.8103
+  [N19-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8320
+    [DF] layer=2/6 val_acc=0.8280
+    [DF] layer=3/6 val_acc=0.8240
+    [DF] early stop at layer 3 (best=1, acc=0.8320)
+  [N19-R9] Train=4.99s | 2Nm Acc=0.8530 F1=0.8526 | 4Nm Acc=0.7625 F1=0.7373
+  [N19-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8440
+    [DF] layer=2/6 val_acc=0.8480
+    [DF] layer=3/6 val_acc=0.8520
+    [DF] layer=4/6 val_acc=0.8440
+    [DF] layer=5/6 val_acc=0.8480
+    [DF] early stop at layer 5 (best=3, acc=0.8520)
+  [N19-R10] Train=5.28s | 2Nm Acc=0.8420 F1=0.8402 | 4Nm Acc=0.7655 F1=0.7473
+  >>> Trimmed N=19: 2Nm Acc=0.8399±0.0389 F1=0.8385±0.0394 | 4Nm Acc=0.7787±0.0302 F1=0.7669±0.0318
+
+======== Train(0Nm) N=20 (Run 1-10) ========
+  [N20-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8400
+    [DF] layer=2/6 val_acc=0.8280
+    [DF] layer=3/6 val_acc=0.8240
+    [DF] early stop at layer 3 (best=1, acc=0.8400)
+  [N20-R1] Train=6.61s | 2Nm Acc=0.8510 F1=0.8503 | 4Nm Acc=0.7900 F1=0.7768
+  [N20-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8600
+    [DF] layer=2/6 val_acc=0.8680
+    [DF] layer=3/6 val_acc=0.8480
+    [DF] layer=4/6 val_acc=0.8600
+    [DF] early stop at layer 4 (best=2, acc=0.8680)
+  [N20-R2] Train=4.63s | 2Nm Acc=0.8845 F1=0.8853 | 4Nm Acc=0.8125 F1=0.8056
+  [N20-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8120
+    [DF] layer=2/6 val_acc=0.8040
+    [DF] layer=3/6 val_acc=0.8160
+    [DF] layer=4/6 val_acc=0.8040
+    [DF] layer=5/6 val_acc=0.8040
+    [DF] early stop at layer 5 (best=3, acc=0.8160)
+  [N20-R3] Train=6.35s | 2Nm Acc=0.8185 F1=0.8098 | 4Nm Acc=0.7270 F1=0.7108
+  [N20-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8520
+    [DF] layer=2/6 val_acc=0.8520
+    [DF] layer=3/6 val_acc=0.8400
+    [DF] early stop at layer 3 (best=1, acc=0.8520)
+  [N20-R4] Train=4.45s | 2Nm Acc=0.8670 F1=0.8656 | 4Nm Acc=0.7715 F1=0.7584
+  [N20-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8520
+    [DF] layer=2/6 val_acc=0.8560
+    [DF] layer=3/6 val_acc=0.8600
+    [DF] layer=4/6 val_acc=0.8640
+    [DF] layer=5/6 val_acc=0.8560
+    [DF] layer=6/6 val_acc=0.8560
+    [DF] early stop at layer 6 (best=4, acc=0.8640)
+  [N20-R5] Train=4.57s | 2Nm Acc=0.8625 F1=0.8612 | 4Nm Acc=0.7735 F1=0.7677
+  [N20-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8080
+    [DF] layer=2/6 val_acc=0.8040
+    [DF] layer=3/6 val_acc=0.7960
+    [DF] early stop at layer 3 (best=1, acc=0.8080)
+  [N20-R6] Train=4.92s | 2Nm Acc=0.7860 F1=0.7841 | 4Nm Acc=0.7410 F1=0.7353
+  [N20-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8520
+    [DF] layer=2/6 val_acc=0.8480
+    [DF] layer=3/6 val_acc=0.8360
+    [DF] early stop at layer 3 (best=1, acc=0.8520)
+  [N20-R7] Train=4.64s | 2Nm Acc=0.8670 F1=0.8638 | 4Nm Acc=0.7840 F1=0.7786
+  [N20-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8840
+    [DF] layer=2/6 val_acc=0.8760
+    [DF] layer=3/6 val_acc=0.8800
+    [DF] early stop at layer 3 (best=1, acc=0.8840)
+  [N20-R8] Train=5.12s | 2Nm Acc=0.9120 F1=0.9119 | 4Nm Acc=0.8385 F1=0.8304
+  [N20-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5160
+    [DF] layer=2/6 val_acc=0.5280
+    [DF] layer=3/6 val_acc=0.5560
+    [DF] layer=4/6 val_acc=0.5440
+    [DF] layer=5/6 val_acc=0.5480
+    [DF] early stop at layer 5 (best=3, acc=0.5560)
+  [N20-R9] Train=2.56s | 2Nm Acc=0.5670 F1=0.5637 | 4Nm Acc=0.5515 F1=0.5473
+  [N20-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6840
+    [DF] layer=2/6 val_acc=0.6640
+    [DF] layer=3/6 val_acc=0.6880
+    [DF] layer=4/6 val_acc=0.6840
+    [DF] layer=5/6 val_acc=0.7080
+    [DF] layer=6/6 val_acc=0.7080
+  [N20-R10] Train=3.56s | 2Nm Acc=0.7435 F1=0.7363 | 4Nm Acc=0.6785 F1=0.6688
+  >>> Trimmed N=20: 2Nm Acc=0.8350±0.0455 F1=0.8321±0.0476 | 4Nm Acc=0.7598±0.0397 F1=0.7502±0.0409
+
+======== Train(0Nm) N=21 (Run 1-10) ========
+  [N21-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8600
+    [DF] layer=2/6 val_acc=0.8640
+    [DF] layer=3/6 val_acc=0.8600
+    [DF] layer=4/6 val_acc=0.8520
+    [DF] early stop at layer 4 (best=2, acc=0.8640)
+  [N21-R1] Train=4.75s | 2Nm Acc=0.8645 F1=0.8627 | 4Nm Acc=0.8170 F1=0.8094
+  [N21-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8600
+    [DF] layer=2/6 val_acc=0.8440
+    [DF] layer=3/6 val_acc=0.8440
+    [DF] early stop at layer 3 (best=1, acc=0.8600)
+  [N21-R2] Train=5.46s | 2Nm Acc=0.8475 F1=0.8463 | 4Nm Acc=0.7800 F1=0.7551
+  [N21-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7360
+    [DF] layer=2/6 val_acc=0.7240
+    [DF] layer=3/6 val_acc=0.7200
+    [DF] early stop at layer 3 (best=1, acc=0.7360)
+  [N21-R3] Train=4.35s | 2Nm Acc=0.7385 F1=0.7357 | 4Nm Acc=0.7060 F1=0.6927
+  [N21-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8480
+    [DF] layer=2/6 val_acc=0.8520
+    [DF] layer=3/6 val_acc=0.8480
+    [DF] layer=4/6 val_acc=0.8520
+    [DF] early stop at layer 4 (best=2, acc=0.8520)
+  [N21-R4] Train=4.73s | 2Nm Acc=0.8785 F1=0.8769 | 4Nm Acc=0.8025 F1=0.7953
+  [N21-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.2600
+    [DF] layer=2/6 val_acc=0.2560
+    [DF] layer=3/6 val_acc=0.2520
+    [DF] early stop at layer 3 (best=1, acc=0.2600)
+  [N21-R5] Train=4.43s | 2Nm Acc=0.2370 F1=0.2379 | 4Nm Acc=0.2435 F1=0.2426
+  [N21-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8240
+    [DF] layer=2/6 val_acc=0.8280
+    [DF] layer=3/6 val_acc=0.8240
+    [DF] layer=4/6 val_acc=0.8240
+    [DF] early stop at layer 4 (best=2, acc=0.8280)
+  [N21-R6] Train=4.90s | 2Nm Acc=0.8635 F1=0.8652 | 4Nm Acc=0.7990 F1=0.7970
+  [N21-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8280
+    [DF] layer=2/6 val_acc=0.8160
+    [DF] layer=3/6 val_acc=0.8120
+    [DF] early stop at layer 3 (best=1, acc=0.8280)
+  [N21-R7] Train=4.32s | 2Nm Acc=0.8755 F1=0.8758 | 4Nm Acc=0.8100 F1=0.8050
+  [N21-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5800
+    [DF] layer=2/6 val_acc=0.6200
+    [DF] layer=3/6 val_acc=0.6040
+    [DF] layer=4/6 val_acc=0.6200
+    [DF] early stop at layer 4 (best=2, acc=0.6200)
+  [N21-R8] Train=5.37s | 2Nm Acc=0.6025 F1=0.6006 | 4Nm Acc=0.5700 F1=0.5690
+  [N21-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6720
+    [DF] layer=2/6 val_acc=0.6680
+    [DF] layer=3/6 val_acc=0.6680
+    [DF] early stop at layer 3 (best=1, acc=0.6720)
+  [N21-R9] Train=4.70s | 2Nm Acc=0.7245 F1=0.7220 | 4Nm Acc=0.6515 F1=0.6320
+  [N21-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7160
+    [DF] layer=2/6 val_acc=0.7000
+    [DF] layer=3/6 val_acc=0.7160
+    [DF] early stop at layer 3 (best=1, acc=0.7160)
+  [N21-R10] Train=3.72s | 2Nm Acc=0.7685 F1=0.7616 | 4Nm Acc=0.7135 F1=0.7037
+  >>> Trimmed N=21: 2Nm Acc=0.7856±0.0894 F1=0.7837±0.0904 | 4Nm Acc=0.7291±0.0803 F1=0.7187±0.0803
+
+======== Train(0Nm) N=22 (Run 1-10) ========
+  [N22-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9040
+    [DF] layer=2/6 val_acc=0.9040
+    [DF] layer=3/6 val_acc=0.9120
+    [DF] layer=4/6 val_acc=0.9120
+    [DF] layer=5/6 val_acc=0.9120
+    [DF] early stop at layer 5 (best=3, acc=0.9120)
+  [N22-R1] Train=5.01s | 2Nm Acc=0.9095 F1=0.9088 | 4Nm Acc=0.8340 F1=0.8242
+  [N22-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7720
+    [DF] layer=2/6 val_acc=0.7800
+    [DF] layer=3/6 val_acc=0.7840
+    [DF] layer=4/6 val_acc=0.7880
+    [DF] layer=5/6 val_acc=0.7960
+    [DF] layer=6/6 val_acc=0.7800
+  [N22-R2] Train=5.46s | 2Nm Acc=0.7985 F1=0.7979 | 4Nm Acc=0.7480 F1=0.7432
+  [N22-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8760
+    [DF] layer=2/6 val_acc=0.8800
+    [DF] layer=3/6 val_acc=0.8760
+    [DF] layer=4/6 val_acc=0.8800
+    [DF] early stop at layer 4 (best=2, acc=0.8800)
+  [N22-R3] Train=5.13s | 2Nm Acc=0.8750 F1=0.8740 | 4Nm Acc=0.8120 F1=0.8067
+  [N22-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9000
+    [DF] layer=2/6 val_acc=0.8960
+    [DF] layer=3/6 val_acc=0.9000
+    [DF] early stop at layer 3 (best=1, acc=0.9000)
+  [N22-R4] Train=4.74s | 2Nm Acc=0.8960 F1=0.8958 | 4Nm Acc=0.8115 F1=0.7963
+  [N22-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8920
+    [DF] layer=2/6 val_acc=0.8960
+    [DF] layer=3/6 val_acc=0.8960
+    [DF] layer=4/6 val_acc=0.8920
+    [DF] early stop at layer 4 (best=2, acc=0.8960)
+  [N22-R5] Train=6.47s | 2Nm Acc=0.8895 F1=0.8896 | 4Nm Acc=0.8135 F1=0.8064
+  [N22-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8960
+    [DF] layer=2/6 val_acc=0.8920
+    [DF] layer=3/6 val_acc=0.8880
+    [DF] early stop at layer 3 (best=1, acc=0.8960)
+  [N22-R6] Train=4.88s | 2Nm Acc=0.9040 F1=0.9038 | 4Nm Acc=0.8065 F1=0.7903
+  [N22-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7840
+    [DF] layer=2/6 val_acc=0.7920
+    [DF] layer=3/6 val_acc=0.7960
+    [DF] layer=4/6 val_acc=0.7800
+    [DF] layer=5/6 val_acc=0.7960
+    [DF] early stop at layer 5 (best=3, acc=0.7960)
+  [N22-R7] Train=3.87s | 2Nm Acc=0.8270 F1=0.8263 | 4Nm Acc=0.7935 F1=0.7919
+  [N22-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7480
+    [DF] layer=2/6 val_acc=0.7520
+    [DF] layer=3/6 val_acc=0.7520
+    [DF] layer=4/6 val_acc=0.7520
+    [DF] early stop at layer 4 (best=2, acc=0.7520)
+  [N22-R8] Train=4.58s | 2Nm Acc=0.7790 F1=0.7746 | 4Nm Acc=0.7245 F1=0.7195
+  [N22-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8280
+    [DF] layer=2/6 val_acc=0.8240
+    [DF] layer=3/6 val_acc=0.8240
+    [DF] early stop at layer 3 (best=1, acc=0.8280)
+  [N22-R9] Train=4.91s | 2Nm Acc=0.8750 F1=0.8736 | 4Nm Acc=0.8265 F1=0.8249
+  [N22-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7840
+    [DF] layer=2/6 val_acc=0.7640
+    [DF] layer=3/6 val_acc=0.7480
+    [DF] early stop at layer 3 (best=1, acc=0.7840)
+  [N22-R10] Train=5.33s | 2Nm Acc=0.7670 F1=0.7646 | 4Nm Acc=0.7285 F1=0.7273
+  >>> Trimmed N=22: 2Nm Acc=0.8555±0.0445 F1=0.8545±0.0454 | 4Nm Acc=0.7925±0.0328 F1=0.7858±0.0311
+
+======== Train(0Nm) N=23 (Run 1-10) ========
+  [N23-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8480
+    [DF] layer=2/6 val_acc=0.8440
+    [DF] layer=3/6 val_acc=0.8480
+    [DF] early stop at layer 3 (best=1, acc=0.8480)
+  [N23-R1] Train=4.47s | 2Nm Acc=0.8460 F1=0.8450 | 4Nm Acc=0.7840 F1=0.7733
+  [N23-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8360
+    [DF] layer=2/6 val_acc=0.8360
+    [DF] layer=3/6 val_acc=0.8480
+    [DF] layer=4/6 val_acc=0.8400
+    [DF] layer=5/6 val_acc=0.8400
+    [DF] early stop at layer 5 (best=3, acc=0.8480)
+  [N23-R2] Train=7.20s | 2Nm Acc=0.8530 F1=0.8503 | 4Nm Acc=0.7830 F1=0.7781
+  [N23-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7880
+    [DF] layer=2/6 val_acc=0.8000
+    [DF] layer=3/6 val_acc=0.7920
+    [DF] layer=4/6 val_acc=0.7880
+    [DF] early stop at layer 4 (best=2, acc=0.8000)
+  [N23-R3] Train=5.55s | 2Nm Acc=0.8570 F1=0.8555 | 4Nm Acc=0.8090 F1=0.8037
+  [N23-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4400
+    [DF] layer=2/6 val_acc=0.4560
+    [DF] layer=3/6 val_acc=0.4680
+    [DF] layer=4/6 val_acc=0.4440
+    [DF] layer=5/6 val_acc=0.4520
+    [DF] early stop at layer 5 (best=3, acc=0.4680)
+  [N23-R4] Train=3.57s | 2Nm Acc=0.4155 F1=0.4075 | 4Nm Acc=0.4285 F1=0.4182
+  [N23-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8920
+    [DF] layer=2/6 val_acc=0.8920
+    [DF] layer=3/6 val_acc=0.8880
+    [DF] early stop at layer 3 (best=1, acc=0.8920)
+  [N23-R5] Train=5.30s | 2Nm Acc=0.9155 F1=0.9153 | 4Nm Acc=0.8250 F1=0.8155
+  [N23-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5200
+    [DF] layer=2/6 val_acc=0.4920
+    [DF] layer=3/6 val_acc=0.4920
+    [DF] early stop at layer 3 (best=1, acc=0.5200)
+  [N23-R6] Train=3.57s | 2Nm Acc=0.5225 F1=0.5141 | 4Nm Acc=0.5270 F1=0.5203
+  [N23-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9200
+    [DF] layer=2/6 val_acc=0.9160
+    [DF] layer=3/6 val_acc=0.9160
+    [DF] early stop at layer 3 (best=1, acc=0.9200)
+  [N23-R7] Train=5.59s | 2Nm Acc=0.8995 F1=0.8993 | 4Nm Acc=0.8130 F1=0.8029
+  [N23-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8600
+    [DF] layer=2/6 val_acc=0.8560
+    [DF] layer=3/6 val_acc=0.8560
+    [DF] early stop at layer 3 (best=1, acc=0.8600)
+  [N23-R8] Train=4.69s | 2Nm Acc=0.8785 F1=0.8756 | 4Nm Acc=0.8240 F1=0.8183
+  [N23-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8200
+    [DF] layer=2/6 val_acc=0.8120
+    [DF] layer=3/6 val_acc=0.8080
+    [DF] early stop at layer 3 (best=1, acc=0.8200)
+  [N23-R9] Train=4.62s | 2Nm Acc=0.8475 F1=0.8454 | 4Nm Acc=0.7485 F1=0.7479
+  [N23-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4200
+    [DF] layer=2/6 val_acc=0.4200
+    [DF] layer=3/6 val_acc=0.3920
+    [DF] early stop at layer 3 (best=1, acc=0.4200)
+  [N23-R10] Train=4.01s | 2Nm Acc=0.4340 F1=0.4321 | 4Nm Acc=0.4015 F1=0.4011
+  >>> Trimmed N=23: 2Nm Acc=0.7672±0.1691 F1=0.7647±0.1704 | 4Nm Acc=0.7146±0.1406 F1=0.7075±0.1413
+
+======== Train(0Nm) N=24 (Run 1-10) ========
+  [N24-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8880
+    [DF] layer=2/6 val_acc=0.8880
+    [DF] layer=3/6 val_acc=0.8840
+    [DF] early stop at layer 3 (best=1, acc=0.8880)
+  [N24-R1] Train=4.98s | 2Nm Acc=0.8930 F1=0.8919 | 4Nm Acc=0.7845 F1=0.7609
+  [N24-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8640
+    [DF] layer=2/6 val_acc=0.8680
+    [DF] layer=3/6 val_acc=0.8640
+    [DF] layer=4/6 val_acc=0.8600
+    [DF] early stop at layer 4 (best=2, acc=0.8680)
+  [N24-R2] Train=5.32s | 2Nm Acc=0.8420 F1=0.8379 | 4Nm Acc=0.7785 F1=0.7730
+  [N24-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.5320
+    [DF] layer=2/6 val_acc=0.5240
+    [DF] layer=3/6 val_acc=0.5080
+    [DF] early stop at layer 3 (best=1, acc=0.5320)
+  [N24-R3] Train=3.44s | 2Nm Acc=0.4550 F1=0.4525 | 4Nm Acc=0.4205 F1=0.4164
+  [N24-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8520
+    [DF] layer=2/6 val_acc=0.8560
+    [DF] layer=3/6 val_acc=0.8480
+    [DF] layer=4/6 val_acc=0.8520
+    [DF] early stop at layer 4 (best=2, acc=0.8560)
+  [N24-R4] Train=5.28s | 2Nm Acc=0.8540 F1=0.8525 | 4Nm Acc=0.7950 F1=0.7815
+  [N24-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9080
+    [DF] layer=2/6 val_acc=0.9080
+    [DF] layer=3/6 val_acc=0.9120
+    [DF] layer=4/6 val_acc=0.9120
+    [DF] layer=5/6 val_acc=0.9160
+    [DF] layer=6/6 val_acc=0.9160
+  [N24-R5] Train=5.33s | 2Nm Acc=0.9115 F1=0.9112 | 4Nm Acc=0.8410 F1=0.8379
+  [N24-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7560
+    [DF] layer=2/6 val_acc=0.7480
+    [DF] layer=3/6 val_acc=0.7720
+    [DF] layer=4/6 val_acc=0.7720
+    [DF] layer=5/6 val_acc=0.7560
+    [DF] early stop at layer 5 (best=3, acc=0.7720)
+  [N24-R6] Train=5.64s | 2Nm Acc=0.8310 F1=0.8287 | 4Nm Acc=0.7515 F1=0.7375
+  [N24-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8800
+    [DF] layer=2/6 val_acc=0.8800
+    [DF] layer=3/6 val_acc=0.8800
+    [DF] early stop at layer 3 (best=1, acc=0.8800)
+  [N24-R7] Train=6.14s | 2Nm Acc=0.8895 F1=0.8890 | 4Nm Acc=0.8195 F1=0.8067
+  [N24-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8960
+    [DF] layer=2/6 val_acc=0.8920
+    [DF] layer=3/6 val_acc=0.8920
+    [DF] early stop at layer 3 (best=1, acc=0.8960)
+  [N24-R8] Train=4.28s | 2Nm Acc=0.9120 F1=0.9122 | 4Nm Acc=0.8035 F1=0.7908
+  [N24-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8840
+    [DF] layer=2/6 val_acc=0.8760
+    [DF] layer=3/6 val_acc=0.8720
+    [DF] early stop at layer 3 (best=1, acc=0.8840)
+  [N24-R9] Train=5.11s | 2Nm Acc=0.8800 F1=0.8802 | 4Nm Acc=0.8000 F1=0.7879
+  [N24-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8680
+    [DF] layer=2/6 val_acc=0.8720
+    [DF] layer=3/6 val_acc=0.8720
+    [DF] layer=4/6 val_acc=0.8720
+    [DF] early stop at layer 4 (best=2, acc=0.8720)
+  [N24-R10] Train=5.00s | 2Nm Acc=0.8935 F1=0.8935 | 4Nm Acc=0.7820 F1=0.7616
+  >>> Trimmed N=24: 2Nm Acc=0.8743±0.0267 F1=0.8731±0.0278 | 4Nm Acc=0.7893±0.0190 F1=0.7750±0.0201
+
+======== Train(0Nm) N=25 (Run 1-10) ========
+  [N25-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8400
+    [DF] layer=2/6 val_acc=0.8480
+    [DF] layer=3/6 val_acc=0.8440
+    [DF] layer=4/6 val_acc=0.8440
+    [DF] early stop at layer 4 (best=2, acc=0.8480)
+  [N25-R1] Train=4.69s | 2Nm Acc=0.8650 F1=0.8658 | 4Nm Acc=0.7650 F1=0.7416
+  [N25-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8880
+    [DF] layer=2/6 val_acc=0.8880
+    [DF] layer=3/6 val_acc=0.8880
+    [DF] early stop at layer 3 (best=1, acc=0.8880)
+  [N25-R2] Train=3.78s | 2Nm Acc=0.9070 F1=0.9074 | 4Nm Acc=0.8355 F1=0.8291
+  [N25-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.2080
+    [DF] layer=2/6 val_acc=0.2320
+    [DF] layer=3/6 val_acc=0.2320
+    [DF] layer=4/6 val_acc=0.2200
+    [DF] early stop at layer 4 (best=2, acc=0.2320)
+  [N25-R3] Train=3.45s | 2Nm Acc=0.2500 F1=0.2493 | 4Nm Acc=0.2720 F1=0.2675
+  [N25-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9200
+    [DF] layer=2/6 val_acc=0.9160
+    [DF] layer=3/6 val_acc=0.9160
+    [DF] early stop at layer 3 (best=1, acc=0.9200)
+  [N25-R4] Train=4.72s | 2Nm Acc=0.9265 F1=0.9262 | 4Nm Acc=0.8230 F1=0.8093
+  [N25-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4680
+    [DF] layer=2/6 val_acc=0.4480
+    [DF] layer=3/6 val_acc=0.4840
+    [DF] layer=4/6 val_acc=0.4760
+    [DF] layer=5/6 val_acc=0.4600
+    [DF] early stop at layer 5 (best=3, acc=0.4840)
+  [N25-R5] Train=3.93s | 2Nm Acc=0.4910 F1=0.4735 | 4Nm Acc=0.4340 F1=0.4151
+  [N25-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8920
+    [DF] layer=2/6 val_acc=0.8920
+    [DF] layer=3/6 val_acc=0.8920
+    [DF] early stop at layer 3 (best=1, acc=0.8920)
+  [N25-R6] Train=5.21s | 2Nm Acc=0.9080 F1=0.9084 | 4Nm Acc=0.8695 F1=0.8668
+  [N25-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8680
+    [DF] layer=2/6 val_acc=0.8720
+    [DF] layer=3/6 val_acc=0.8680
+    [DF] layer=4/6 val_acc=0.8720
+    [DF] early stop at layer 4 (best=2, acc=0.8720)
+  [N25-R7] Train=6.05s | 2Nm Acc=0.9000 F1=0.9001 | 4Nm Acc=0.8175 F1=0.8097
+  [N25-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8320
+    [DF] layer=2/6 val_acc=0.8160
+    [DF] layer=3/6 val_acc=0.8240
+    [DF] early stop at layer 3 (best=1, acc=0.8320)
+  [N25-R8] Train=5.18s | 2Nm Acc=0.8450 F1=0.8443 | 4Nm Acc=0.7885 F1=0.7755
+  [N25-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9400
+    [DF] layer=2/6 val_acc=0.9400
+    [DF] layer=3/6 val_acc=0.9360
+    [DF] early stop at layer 3 (best=1, acc=0.9400)
+  [N25-R9] Train=4.64s | 2Nm Acc=0.9325 F1=0.9322 | 4Nm Acc=0.8335 F1=0.8202
+  [N25-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8160
+    [DF] layer=2/6 val_acc=0.8240
+    [DF] layer=3/6 val_acc=0.8240
+    [DF] layer=4/6 val_acc=0.8240
+    [DF] early stop at layer 4 (best=2, acc=0.8240)
+  [N25-R10] Train=5.52s | 2Nm Acc=0.8150 F1=0.8134 | 4Nm Acc=0.7665 F1=0.7478
+  >>> Trimmed N=25: 2Nm Acc=0.8322±0.1336 F1=0.8299±0.1393 | 4Nm Acc=0.7579±0.1252 F1=0.7435±0.1279
+
+======== Train(0Nm) N=26 (Run 1-10) ========
+  [N26-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4720
+    [DF] layer=2/6 val_acc=0.5000
+    [DF] layer=3/6 val_acc=0.4960
+    [DF] layer=4/6 val_acc=0.4880
+    [DF] early stop at layer 4 (best=2, acc=0.5000)
+  [N26-R1] Train=3.13s | 2Nm Acc=0.4745 F1=0.4703 | 4Nm Acc=0.4680 F1=0.4629
+  [N26-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8680
+    [DF] layer=2/6 val_acc=0.8680
+    [DF] layer=3/6 val_acc=0.8720
+    [DF] layer=4/6 val_acc=0.8720
+    [DF] layer=5/6 val_acc=0.8720
+    [DF] early stop at layer 5 (best=3, acc=0.8720)
+  [N26-R2] Train=4.89s | 2Nm Acc=0.8815 F1=0.8792 | 4Nm Acc=0.8120 F1=0.8019
+  [N26-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8320
+    [DF] layer=2/6 val_acc=0.8360
+    [DF] layer=3/6 val_acc=0.8320
+    [DF] layer=4/6 val_acc=0.8280
+    [DF] early stop at layer 4 (best=2, acc=0.8360)
+  [N26-R3] Train=5.30s | 2Nm Acc=0.8505 F1=0.8506 | 4Nm Acc=0.7545 F1=0.7412
+  [N26-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4080
+    [DF] layer=2/6 val_acc=0.4240
+    [DF] layer=3/6 val_acc=0.4320
+    [DF] layer=4/6 val_acc=0.4240
+    [DF] layer=5/6 val_acc=0.4320
+    [DF] early stop at layer 5 (best=3, acc=0.4320)
+  [N26-R4] Train=4.44s | 2Nm Acc=0.4070 F1=0.3924 | 4Nm Acc=0.4165 F1=0.3959
+  [N26-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6040
+    [DF] layer=2/6 val_acc=0.6000
+    [DF] layer=3/6 val_acc=0.5960
+    [DF] early stop at layer 3 (best=1, acc=0.6040)
+  [N26-R5] Train=3.62s | 2Nm Acc=0.5765 F1=0.5720 | 4Nm Acc=0.5105 F1=0.5127
+  [N26-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7680
+    [DF] layer=2/6 val_acc=0.7600
+    [DF] layer=3/6 val_acc=0.7640
+    [DF] early stop at layer 3 (best=1, acc=0.7680)
+  [N26-R6] Train=3.99s | 2Nm Acc=0.7690 F1=0.7678 | 4Nm Acc=0.6980 F1=0.6910
+  [N26-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8640
+    [DF] layer=2/6 val_acc=0.8640
+    [DF] layer=3/6 val_acc=0.8680
+    [DF] layer=4/6 val_acc=0.8680
+    [DF] layer=5/6 val_acc=0.8720
+    [DF] layer=6/6 val_acc=0.8680
+  [N26-R7] Train=5.65s | 2Nm Acc=0.9065 F1=0.9061 | 4Nm Acc=0.8310 F1=0.8238
+  [N26-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8440
+    [DF] layer=2/6 val_acc=0.8440
+    [DF] layer=3/6 val_acc=0.8400
+    [DF] early stop at layer 3 (best=1, acc=0.8440)
+  [N26-R8] Train=5.68s | 2Nm Acc=0.8675 F1=0.8668 | 4Nm Acc=0.8045 F1=0.7991
+  [N26-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8920
+    [DF] layer=2/6 val_acc=0.8920
+    [DF] layer=3/6 val_acc=0.8840
+    [DF] early stop at layer 3 (best=1, acc=0.8920)
+  [N26-R9] Train=5.74s | 2Nm Acc=0.9220 F1=0.9218 | 4Nm Acc=0.8235 F1=0.8126
+  [N26-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3880
+    [DF] layer=2/6 val_acc=0.4080
+    [DF] layer=3/6 val_acc=0.3880
+    [DF] layer=4/6 val_acc=0.4040
+    [DF] early stop at layer 4 (best=2, acc=0.4080)
+  [N26-R10] Train=3.38s | 2Nm Acc=0.4200 F1=0.4105 | 4Nm Acc=0.3675 F1=0.3570
+  >>> Trimmed N=26: 2Nm Acc=0.7182±0.1847 F1=0.7154±0.1873 | 4Nm Acc=0.6609±0.1580 F1=0.6521±0.1582
+
+======== Train(0Nm) N=27 (Run 1-10) ========
+  [N27-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8640
+    [DF] layer=2/6 val_acc=0.8640
+    [DF] layer=3/6 val_acc=0.8640
+    [DF] early stop at layer 3 (best=1, acc=0.8640)
+  [N27-R1] Train=5.23s | 2Nm Acc=0.8750 F1=0.8751 | 4Nm Acc=0.7825 F1=0.7704
+  [N27-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8800
+    [DF] layer=2/6 val_acc=0.8840
+    [DF] layer=3/6 val_acc=0.8800
+    [DF] layer=4/6 val_acc=0.8880
+    [DF] layer=5/6 val_acc=0.8880
+    [DF] layer=6/6 val_acc=0.8880
+    [DF] early stop at layer 6 (best=4, acc=0.8880)
+  [N27-R2] Train=4.21s | 2Nm Acc=0.8885 F1=0.8890 | 4Nm Acc=0.8435 F1=0.8405
+  [N27-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7000
+    [DF] layer=2/6 val_acc=0.7040
+    [DF] layer=3/6 val_acc=0.7080
+    [DF] layer=4/6 val_acc=0.7120
+    [DF] layer=5/6 val_acc=0.7080
+    [DF] layer=6/6 val_acc=0.7120
+    [DF] early stop at layer 6 (best=4, acc=0.7120)
+  [N27-R3] Train=4.97s | 2Nm Acc=0.7585 F1=0.7561 | 4Nm Acc=0.6865 F1=0.6718
+  [N27-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8240
+    [DF] layer=2/6 val_acc=0.8320
+    [DF] layer=3/6 val_acc=0.8360
+    [DF] layer=4/6 val_acc=0.8280
+    [DF] layer=5/6 val_acc=0.8200
+    [DF] early stop at layer 5 (best=3, acc=0.8360)
+  [N27-R4] Train=4.32s | 2Nm Acc=0.8355 F1=0.8332 | 4Nm Acc=0.7505 F1=0.7269
+  [N27-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9200
+    [DF] layer=2/6 val_acc=0.9200
+    [DF] layer=3/6 val_acc=0.9240
+    [DF] layer=4/6 val_acc=0.9160
+    [DF] layer=5/6 val_acc=0.9200
+    [DF] early stop at layer 5 (best=3, acc=0.9240)
+  [N27-R5] Train=6.82s | 2Nm Acc=0.9180 F1=0.9179 | 4Nm Acc=0.8245 F1=0.8159
+  [N27-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9000
+    [DF] layer=2/6 val_acc=0.9000
+    [DF] layer=3/6 val_acc=0.9040
+    [DF] layer=4/6 val_acc=0.9000
+    [DF] layer=5/6 val_acc=0.8960
+    [DF] early stop at layer 5 (best=3, acc=0.9040)
+  [N27-R6] Train=5.43s | 2Nm Acc=0.9150 F1=0.9150 | 4Nm Acc=0.8580 F1=0.8559
+  [N27-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8280
+    [DF] layer=2/6 val_acc=0.8240
+    [DF] layer=3/6 val_acc=0.8200
+    [DF] early stop at layer 3 (best=1, acc=0.8280)
+  [N27-R7] Train=6.11s | 2Nm Acc=0.8505 F1=0.8497 | 4Nm Acc=0.7900 F1=0.7787
+  [N27-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9200
+    [DF] layer=2/6 val_acc=0.9240
+    [DF] layer=3/6 val_acc=0.9240
+    [DF] layer=4/6 val_acc=0.9280
+    [DF] layer=5/6 val_acc=0.9280
+    [DF] layer=6/6 val_acc=0.9280
+    [DF] early stop at layer 6 (best=4, acc=0.9280)
+  [N27-R8] Train=5.56s | 2Nm Acc=0.9195 F1=0.9197 | 4Nm Acc=0.7970 F1=0.7845
+  [N27-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.7840
+    [DF] layer=2/6 val_acc=0.7840
+    [DF] layer=3/6 val_acc=0.7800
+    [DF] early stop at layer 3 (best=1, acc=0.7840)
+  [N27-R9] Train=5.34s | 2Nm Acc=0.7920 F1=0.7927 | 4Nm Acc=0.7375 F1=0.7287
+  [N27-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9080
+    [DF] layer=2/6 val_acc=0.9080
+    [DF] layer=3/6 val_acc=0.9080
+    [DF] early stop at layer 3 (best=1, acc=0.9080)
+  [N27-R10] Train=5.28s | 2Nm Acc=0.8955 F1=0.8950 | 4Nm Acc=0.8220 F1=0.8106
+  >>> Trimmed N=27: 2Nm Acc=0.8712±0.0403 F1=0.8709±0.0404 | 4Nm Acc=0.7934±0.0343 F1=0.7820±0.0378
+
+======== Train(0Nm) N=28 (Run 1-10) ========
+  [N28-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8840
+    [DF] layer=2/6 val_acc=0.8800
+    [DF] layer=3/6 val_acc=0.8800
+    [DF] early stop at layer 3 (best=1, acc=0.8840)
+  [N28-R1] Train=6.09s | 2Nm Acc=0.9105 F1=0.9109 | 4Nm Acc=0.8355 F1=0.8323
+  [N28-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9480
+    [DF] layer=2/6 val_acc=0.9520
+    [DF] layer=3/6 val_acc=0.9520
+    [DF] layer=4/6 val_acc=0.9520
+    [DF] early stop at layer 4 (best=2, acc=0.9520)
+  [N28-R2] Train=5.27s | 2Nm Acc=0.9400 F1=0.9399 | 4Nm Acc=0.8965 F1=0.8948
+  [N28-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8920
+    [DF] layer=2/6 val_acc=0.8880
+    [DF] layer=3/6 val_acc=0.8920
+    [DF] early stop at layer 3 (best=1, acc=0.8920)
+  [N28-R3] Train=7.40s | 2Nm Acc=0.9145 F1=0.9145 | 4Nm Acc=0.8320 F1=0.8220
+  [N28-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4760
+    [DF] layer=2/6 val_acc=0.4680
+    [DF] layer=3/6 val_acc=0.5000
+    [DF] layer=4/6 val_acc=0.4720
+    [DF] layer=5/6 val_acc=0.4680
+    [DF] early stop at layer 5 (best=3, acc=0.5000)
+  [N28-R4] Train=3.81s | 2Nm Acc=0.4295 F1=0.4223 | 4Nm Acc=0.4120 F1=0.4070
+  [N28-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3840
+    [DF] layer=2/6 val_acc=0.3840
+    [DF] layer=3/6 val_acc=0.3640
+    [DF] early stop at layer 3 (best=1, acc=0.3840)
+  [N28-R5] Train=3.32s | 2Nm Acc=0.3760 F1=0.3606 | 4Nm Acc=0.3515 F1=0.3357
+  [N28-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9200
+    [DF] layer=2/6 val_acc=0.9160
+    [DF] layer=3/6 val_acc=0.9160
+    [DF] early stop at layer 3 (best=1, acc=0.9200)
+  [N28-R6] Train=6.73s | 2Nm Acc=0.9145 F1=0.9143 | 4Nm Acc=0.8290 F1=0.8178
+  [N28-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9280
+    [DF] layer=2/6 val_acc=0.9040
+    [DF] layer=3/6 val_acc=0.9160
+    [DF] early stop at layer 3 (best=1, acc=0.9280)
+  [N28-R7] Train=6.82s | 2Nm Acc=0.9225 F1=0.9226 | 4Nm Acc=0.8385 F1=0.8366
+  [N28-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9120
+    [DF] layer=2/6 val_acc=0.9120
+    [DF] layer=3/6 val_acc=0.9160
+    [DF] layer=4/6 val_acc=0.9120
+    [DF] layer=5/6 val_acc=0.9160
+    [DF] early stop at layer 5 (best=3, acc=0.9160)
+  [N28-R8] Train=4.73s | 2Nm Acc=0.8855 F1=0.8850 | 4Nm Acc=0.8055 F1=0.7923
+  [N28-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8480
+    [DF] layer=2/6 val_acc=0.8440
+    [DF] layer=3/6 val_acc=0.8400
+    [DF] early stop at layer 3 (best=1, acc=0.8480)
+  [N28-R9] Train=5.34s | 2Nm Acc=0.8680 F1=0.8670 | 4Nm Acc=0.8035 F1=0.7902
+  [N28-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8720
+    [DF] layer=2/6 val_acc=0.8720
+    [DF] layer=3/6 val_acc=0.8760
+    [DF] layer=4/6 val_acc=0.8720
+    [DF] layer=5/6 val_acc=0.8720
+    [DF] early stop at layer 5 (best=3, acc=0.8760)
+  [N28-R10] Train=6.50s | 2Nm Acc=0.8990 F1=0.8991 | 4Nm Acc=0.8120 F1=0.8012
+  >>> Trimmed N=28: 2Nm Acc=0.8430±0.1572 F1=0.8420±0.1595 | 4Nm Acc=0.7710±0.1363 F1=0.7624±0.1353
+
+======== Train(0Nm) N=29 (Run 1-10) ========
+  [N29-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8760
+    [DF] layer=2/6 val_acc=0.8760
+    [DF] layer=3/6 val_acc=0.8680
+    [DF] early stop at layer 3 (best=1, acc=0.8760)
+  [N29-R1] Train=4.18s | 2Nm Acc=0.8770 F1=0.8764 | 4Nm Acc=0.8000 F1=0.7850
+  [N29-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.3560
+    [DF] layer=2/6 val_acc=0.3480
+    [DF] layer=3/6 val_acc=0.3760
+    [DF] layer=4/6 val_acc=0.3400
+    [DF] layer=5/6 val_acc=0.3560
+    [DF] early stop at layer 5 (best=3, acc=0.3760)
+  [N29-R2] Train=4.65s | 2Nm Acc=0.3425 F1=0.3385 | 4Nm Acc=0.3180 F1=0.3086
+  [N29-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9400
+    [DF] layer=2/6 val_acc=0.9440
+    [DF] layer=3/6 val_acc=0.9440
+    [DF] layer=4/6 val_acc=0.9440
+    [DF] early stop at layer 4 (best=2, acc=0.9440)
+  [N29-R3] Train=7.21s | 2Nm Acc=0.9485 F1=0.9482 | 4Nm Acc=0.8565 F1=0.8494
+  [N29-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8720
+    [DF] layer=2/6 val_acc=0.8760
+    [DF] layer=3/6 val_acc=0.8760
+    [DF] layer=4/6 val_acc=0.8680
+    [DF] early stop at layer 4 (best=2, acc=0.8760)
+  [N29-R4] Train=7.67s | 2Nm Acc=0.9095 F1=0.9091 | 4Nm Acc=0.8110 F1=0.8024
+  [N29-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8720
+    [DF] layer=2/6 val_acc=0.8800
+    [DF] layer=3/6 val_acc=0.8760
+    [DF] layer=4/6 val_acc=0.8760
+    [DF] early stop at layer 4 (best=2, acc=0.8800)
+  [N29-R5] Train=5.21s | 2Nm Acc=0.8815 F1=0.8807 | 4Nm Acc=0.7820 F1=0.7692
+  [N29-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8680
+    [DF] layer=2/6 val_acc=0.8640
+    [DF] layer=3/6 val_acc=0.8640
+    [DF] early stop at layer 3 (best=1, acc=0.8680)
+  [N29-R6] Train=5.99s | 2Nm Acc=0.8805 F1=0.8796 | 4Nm Acc=0.7830 F1=0.7589
+  [N29-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8440
+    [DF] layer=2/6 val_acc=0.8440
+    [DF] layer=3/6 val_acc=0.8440
+    [DF] early stop at layer 3 (best=1, acc=0.8440)
+  [N29-R7] Train=7.08s | 2Nm Acc=0.8655 F1=0.8635 | 4Nm Acc=0.7970 F1=0.7932
+  [N29-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.6760
+    [DF] layer=2/6 val_acc=0.6760
+    [DF] layer=3/6 val_acc=0.6680
+    [DF] early stop at layer 3 (best=1, acc=0.6760)
+  [N29-R8] Train=4.08s | 2Nm Acc=0.7220 F1=0.7197 | 4Nm Acc=0.6600 F1=0.6564
+  [N29-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9160
+    [DF] layer=2/6 val_acc=0.9160
+    [DF] layer=3/6 val_acc=0.9160
+    [DF] early stop at layer 3 (best=1, acc=0.9160)
+  [N29-R9] Train=5.66s | 2Nm Acc=0.8820 F1=0.8812 | 4Nm Acc=0.8000 F1=0.7842
+  [N29-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8800
+    [DF] layer=2/6 val_acc=0.8800
+    [DF] layer=3/6 val_acc=0.8720
+    [DF] early stop at layer 3 (best=1, acc=0.8800)
+  [N29-R10] Train=5.00s | 2Nm Acc=0.9120 F1=0.9105 | 4Nm Acc=0.8235 F1=0.8122
+  >>> Trimmed N=29: 2Nm Acc=0.8662±0.0565 F1=0.8651±0.0570 | 4Nm Acc=0.7821±0.0479 F1=0.7702±0.0459
+
+======== Train(0Nm) N=30 (Run 1-10) ========
+  [N30-R1] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9440
+    [DF] layer=2/6 val_acc=0.9440
+    [DF] layer=3/6 val_acc=0.9440
+    [DF] early stop at layer 3 (best=1, acc=0.9440)
+  [N30-R1] Train=5.36s | 2Nm Acc=0.9365 F1=0.9366 | 4Nm Acc=0.8810 F1=0.8801
+  [N30-R2] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9200
+    [DF] layer=2/6 val_acc=0.9200
+    [DF] layer=3/6 val_acc=0.9240
+    [DF] layer=4/6 val_acc=0.9240
+    [DF] layer=5/6 val_acc=0.9240
+    [DF] early stop at layer 5 (best=3, acc=0.9240)
+  [N30-R2] Train=5.31s | 2Nm Acc=0.9440 F1=0.9438 | 4Nm Acc=0.8850 F1=0.8808
+  [N30-R3] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9200
+    [DF] layer=2/6 val_acc=0.9200
+    [DF] layer=3/6 val_acc=0.9160
+    [DF] early stop at layer 3 (best=1, acc=0.9200)
+  [N30-R3] Train=4.86s | 2Nm Acc=0.9305 F1=0.9301 | 4Nm Acc=0.8350 F1=0.8307
+  [N30-R4] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8520
+    [DF] layer=2/6 val_acc=0.8560
+    [DF] layer=3/6 val_acc=0.8520
+    [DF] layer=4/6 val_acc=0.8520
+    [DF] early stop at layer 4 (best=2, acc=0.8560)
+  [N30-R4] Train=4.98s | 2Nm Acc=0.8915 F1=0.8914 | 4Nm Acc=0.8120 F1=0.8032
+  [N30-R5] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9120
+    [DF] layer=2/6 val_acc=0.9160
+    [DF] layer=3/6 val_acc=0.9080
+    [DF] layer=4/6 val_acc=0.9080
+    [DF] early stop at layer 4 (best=2, acc=0.9160)
+  [N30-R5] Train=5.34s | 2Nm Acc=0.9130 F1=0.9129 | 4Nm Acc=0.8260 F1=0.8153
+  [N30-R6] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.8600
+    [DF] layer=2/6 val_acc=0.8640
+    [DF] layer=3/6 val_acc=0.8560
+    [DF] layer=4/6 val_acc=0.8600
+    [DF] early stop at layer 4 (best=2, acc=0.8640)
+  [N30-R6] Train=5.02s | 2Nm Acc=0.8565 F1=0.8555 | 4Nm Acc=0.7750 F1=0.7558
+  [N30-R7] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9000
+    [DF] layer=2/6 val_acc=0.9000
+    [DF] layer=3/6 val_acc=0.8960
+    [DF] early stop at layer 3 (best=1, acc=0.9000)
+  [N30-R7] Train=5.34s | 2Nm Acc=0.8730 F1=0.8722 | 4Nm Acc=0.7675 F1=0.7421
+  [N30-R8] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.9080
+    [DF] layer=2/6 val_acc=0.9040
+    [DF] layer=3/6 val_acc=0.9080
+    [DF] early stop at layer 3 (best=1, acc=0.9080)
+  [N30-R8] Train=7.05s | 2Nm Acc=0.8800 F1=0.8805 | 4Nm Acc=0.7840 F1=0.7766
+  [N30-R9] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4720
+    [DF] layer=2/6 val_acc=0.4960
+    [DF] layer=3/6 val_acc=0.5040
+    [DF] layer=4/6 val_acc=0.4960
+    [DF] layer=5/6 val_acc=0.5080
+    [DF] layer=6/6 val_acc=0.4880
+  [N30-R9] Train=3.89s | 2Nm Acc=0.5265 F1=0.5210 | 4Nm Acc=0.5000 F1=0.4979
+  [N30-R10] Training DF (cascade) ...
+    [DF] layer=1/6 val_acc=0.4000
+    [DF] layer=2/6 val_acc=0.3880
+    [DF] layer=3/6 val_acc=0.3960
+    [DF] early stop at layer 3 (best=1, acc=0.4000)
+  [N30-R10] Train=4.66s | 2Nm Acc=0.4015 F1=0.3873 | 4Nm Acc=0.3700 F1=0.3564
+  >>> Trimmed N=30: 2Nm Acc=0.8509±0.1254 F1=0.8500±0.1271 | 4Nm Acc=0.7726±0.1087 F1=0.7627±0.1082
+[OK] Saved summary CSVs to: D:\机械故障诊断实验\KAIST\KDCNN_DF_Comparison_KAIST_3
+[Time] Stage2(FullExp) = 1h23m59.10s
+
+>>> Stage 3: Noise robustness study (FAIR, SameModel, mean±std over noise draws) ...
+[Step3-FAIR] Training DF (cascade) for NoiseStudy_model ...
+    [DF] layer=1/6 val_acc=0.8640
+    [DF] layer=2/6 val_acc=0.8600
+    [DF] layer=3/6 val_acc=0.8600
+    [DF] early stop at layer 3 (best=1, acc=0.8640)
+[Step3-FAIR] NoiseStudy_model trained ONCE. time=8.85s
+[Step3-FAIR] SNR=NoNoise | 2Nm Acc=0.2000±0.0000 F1=0.1147±0.0000 | 4Nm Acc=0.2000±0.0000 F1=0.1090±0.0000 | repeats=1
+[Step3-FAIR] SNR=0 | 2Nm Acc=0.8693±0.0057 F1=0.8676±0.0055 | 4Nm Acc=0.8213±0.0076 F1=0.8134±0.0092 | repeats=5
+    [Sanity] empirical SNR≈-0.02 dB (vib sample)
+[Step3-FAIR] SNR=-2 | 2Nm Acc=0.7191±0.0087 F1=0.7047±0.0102 | 4Nm Acc=0.7119±0.0081 F1=0.7004±0.0081 | repeats=5
+    [Sanity] empirical SNR≈-2.02 dB (vib sample)
+[Step3-FAIR] SNR=-4 | 2Nm Acc=0.4362±0.0058 F1=0.3848±0.0070 | 4Nm Acc=0.3915±0.0080 F1=0.3489±0.0103 | repeats=5
+    [Sanity] empirical SNR≈-4.02 dB (vib sample)
+[Step3-FAIR] SNR=-6 | 2Nm Acc=0.2723±0.0022 F1=0.1828±0.0040 | 4Nm Acc=0.2249±0.0027 F1=0.1157±0.0049 | repeats=5
+    [Sanity] empirical SNR≈-6.02 dB (vib sample)
+[Step3-FAIR] SNR=-8 | 2Nm Acc=0.2095±0.0004 F1=0.0856±0.0009 | 4Nm Acc=0.2024±0.0005 F1=0.0717±0.0010 | repeats=5
+    [Sanity] empirical SNR≈-8.02 dB (vib sample)
+[Step3-FAIR] SNR=-10 | 2Nm Acc=0.2004±0.0004 F1=0.0675±0.0008 | 4Nm Acc=0.2002±0.0002 F1=0.0671±0.0005 | repeats=5
+    [Sanity] empirical SNR≈-10.02 dB (vib sample)
+[Step3-FAIR] Saved: D:\机械故障诊断实验\KAIST\KDCNN_DF_Comparison_KAIST_3\NoiseStudy_LoadShift_FAIR_SameModel\Noise_Robustness_LoadShift_SameModel_FAIR.csv
+[Time] Stage3(NoiseStudy) = 36m54.68s
+[Time] TOTAL = 2h01m02.55s
+[Time] Saved: D:\机械故障诊断实验\KAIST\KDCNN_DF_Comparison_KAIST_3\Time_Summary.txt
+
+ALL DONE. Outputs saved to: D:\机械故障诊断实验\KAIST\KDCNN_DF_Comparison_KAIST_3
+[LOG] Saved: D:\机械故障诊断实验\KAIST\KDCNN_DF_Comparison_KAIST_3\log.txt

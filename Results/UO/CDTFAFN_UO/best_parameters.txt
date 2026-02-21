@@ -1,0 +1,1003 @@
+Best CDTFAFN Parameters (fixed, no Optuna)
+======================================================================
+EPOCHS=80
+BATCH_SIZE=32
+LEARNING_RATE=0.001
+SIEU=STFT(default)
+TFR=64x64x3
+STFT_NPERSEG=128
+STFT_NOVERLAP=96
+STFT_NFFT=256
+======================================================================
+
+CDTFAFN Model Architecture Summary:
+======================================================================
+Model: "CDTFAFN"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ input_vib_tfr (InputLayer)     [(None, 64, 64, 3)]  0           []                               
+                                                                                                  
+ input_aco_tfr (InputLayer)     [(None, 64, 64, 3)]  0           []                               
+                                                                                                  
+ v_dual_5x5_conv (Conv2D)       (None, 32, 32, 64)   4864        ['input_vib_tfr[0][0]']          
+                                                                                                  
+ a_dual_5x5_conv (Conv2D)       (None, 32, 32, 64)   4864        ['input_aco_tfr[0][0]']          
+                                                                                                  
+ v_dual_5x5_bn (BatchNormalizat  (None, 32, 32, 64)  256         ['v_dual_5x5_conv[0][0]']        
+ ion)                                                                                             
+                                                                                                  
+ a_dual_5x5_bn (BatchNormalizat  (None, 32, 32, 64)  256         ['a_dual_5x5_conv[0][0]']        
+ ion)                                                                                             
+                                                                                                  
+ v_dual_5x5_relu (Activation)   (None, 32, 32, 64)   0           ['v_dual_5x5_bn[0][0]']          
+                                                                                                  
+ a_dual_5x5_relu (Activation)   (None, 32, 32, 64)   0           ['a_dual_5x5_bn[0][0]']          
+                                                                                                  
+ v_dual_3x3 (Conv2D)            (None, 32, 32, 32)   18464       ['v_dual_5x5_relu[0][0]']        
+                                                                                                  
+ a_dual_3x3 (Conv2D)            (None, 32, 32, 32)   18464       ['a_dual_5x5_relu[0][0]']        
+                                                                                                  
+ coarse_add (Add)               (None, 32, 32, 32)   0           ['v_dual_3x3[0][0]',             
+                                                                  'a_dual_3x3[0][0]']             
+                                                                                                  
+ b1_blk1_conv_conv (Conv2D)     (None, 32, 32, 32)   25632       ['coarse_add[0][0]']             
+                                                                                                  
+ b2_blk1_conv_conv (Conv2D)     (None, 32, 32, 32)   9248        ['coarse_add[0][0]']             
+                                                                                                  
+ b1_blk1_conv_bn (BatchNormaliz  (None, 32, 32, 32)  128         ['b1_blk1_conv_conv[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ b2_blk1_conv_bn (BatchNormaliz  (None, 32, 32, 32)  128         ['b2_blk1_conv_conv[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ b1_blk1_conv_relu (Activation)  (None, 32, 32, 32)  0           ['b1_blk1_conv_bn[0][0]']        
+                                                                                                  
+ b2_blk1_conv_relu (Activation)  (None, 32, 32, 32)  0           ['b2_blk1_conv_bn[0][0]']        
+                                                                                                  
+ b1_blk1_tfa_cam_avg (GlobalAve  (None, 32)          0           ['b1_blk1_conv_relu[0][0]']      
+ ragePooling2D)                                                                                   
+                                                                                                  
+ b1_blk1_tfa_cam_max (GlobalMax  (None, 32)          0           ['b1_blk1_conv_relu[0][0]']      
+ Pooling2D)                                                                                       
+                                                                                                  
+ b2_blk1_tfa_cam_avg (GlobalAve  (None, 32)          0           ['b2_blk1_conv_relu[0][0]']      
+ ragePooling2D)                                                                                   
+                                                                                                  
+ b2_blk1_tfa_cam_max (GlobalMax  (None, 32)          0           ['b2_blk1_conv_relu[0][0]']      
+ Pooling2D)                                                                                       
+                                                                                                  
+ b1_blk1_tfa_cam_mlp1 (Dense)   (None, 4)            132         ['b1_blk1_tfa_cam_avg[0][0]',    
+                                                                  'b1_blk1_tfa_cam_max[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_cam_mlp1 (Dense)   (None, 4)            132         ['b2_blk1_tfa_cam_avg[0][0]',    
+                                                                  'b2_blk1_tfa_cam_max[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_cam_mlp2 (Dense)   (None, 32)           160         ['b1_blk1_tfa_cam_mlp1[0][0]',   
+                                                                  'b1_blk1_tfa_cam_mlp1[1][0]']   
+                                                                                                  
+ b2_blk1_tfa_cam_mlp2 (Dense)   (None, 32)           160         ['b2_blk1_tfa_cam_mlp1[0][0]',   
+                                                                  'b2_blk1_tfa_cam_mlp1[1][0]']   
+                                                                                                  
+ b1_blk1_tfa_cam_add (Add)      (None, 32)           0           ['b1_blk1_tfa_cam_mlp2[0][0]',   
+                                                                  'b1_blk1_tfa_cam_mlp2[1][0]']   
+                                                                                                  
+ b2_blk1_tfa_cam_add (Add)      (None, 32)           0           ['b2_blk1_tfa_cam_mlp2[0][0]',   
+                                                                  'b2_blk1_tfa_cam_mlp2[1][0]']   
+                                                                                                  
+ b1_blk1_tfa_cam_sigmoid (Activ  (None, 32)          0           ['b1_blk1_tfa_cam_add[0][0]']    
+ ation)                                                                                           
+                                                                                                  
+ b2_blk1_tfa_cam_sigmoid (Activ  (None, 32)          0           ['b2_blk1_tfa_cam_add[0][0]']    
+ ation)                                                                                           
+                                                                                                  
+ b1_blk1_tfa_cam_reshape (Lambd  (None, 1, 1, 32)    0           ['b1_blk1_tfa_cam_sigmoid[0][0]']
+ a)                                                                                               
+                                                                                                  
+ b2_blk1_tfa_cam_reshape (Lambd  (None, 1, 1, 32)    0           ['b2_blk1_tfa_cam_sigmoid[0][0]']
+ a)                                                                                               
+                                                                                                  
+ b1_blk1_tfa_cam_mul (Multiply)  (None, 32, 32, 32)  0           ['b1_blk1_conv_relu[0][0]',      
+                                                                  'b1_blk1_tfa_cam_reshape[0][0]']
+                                                                                                  
+ b2_blk1_tfa_cam_mul (Multiply)  (None, 32, 32, 32)  0           ['b2_blk1_conv_relu[0][0]',      
+                                                                  'b2_blk1_tfa_cam_reshape[0][0]']
+                                                                                                  
+ b1_blk1_tfa_fam_avg (Lambda)   (None, 1, 32, 1)     0           ['b1_blk1_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_fam_max (Lambda)   (None, 1, 32, 1)     0           ['b1_blk1_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_tam_avg (Lambda)   (None, 32, 1, 1)     0           ['b1_blk1_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_tam_max (Lambda)   (None, 32, 1, 1)     0           ['b1_blk1_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_fam_avg (Lambda)   (None, 1, 32, 1)     0           ['b2_blk1_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_fam_max (Lambda)   (None, 1, 32, 1)     0           ['b2_blk1_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_tam_avg (Lambda)   (None, 32, 1, 1)     0           ['b2_blk1_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_tam_max (Lambda)   (None, 32, 1, 1)     0           ['b2_blk1_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_fam_cat (Concatena  (None, 1, 32, 2)    0           ['b1_blk1_tfa_fam_avg[0][0]',    
+ te)                                                              'b1_blk1_tfa_fam_max[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_tam_cat (Concatena  (None, 32, 1, 2)    0           ['b1_blk1_tfa_tam_avg[0][0]',    
+ te)                                                              'b1_blk1_tfa_tam_max[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_fam_cat (Concatena  (None, 1, 32, 2)    0           ['b2_blk1_tfa_fam_avg[0][0]',    
+ te)                                                              'b2_blk1_tfa_fam_max[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_tam_cat (Concatena  (None, 32, 1, 2)    0           ['b2_blk1_tfa_tam_avg[0][0]',    
+ te)                                                              'b2_blk1_tfa_tam_max[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_fam_c1 (Conv2D)    (None, 1, 32, 8)     56          ['b1_blk1_tfa_fam_cat[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_tam_c1 (Conv2D)    (None, 32, 1, 8)     56          ['b1_blk1_tfa_tam_cat[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_fam_c1 (Conv2D)    (None, 1, 32, 8)     56          ['b2_blk1_tfa_fam_cat[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_tam_c1 (Conv2D)    (None, 32, 1, 8)     56          ['b2_blk1_tfa_tam_cat[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_fam_c2 (Conv2D)    (None, 1, 32, 8)     200         ['b1_blk1_tfa_fam_c1[0][0]']     
+                                                                                                  
+ b1_blk1_tfa_tam_c2 (Conv2D)    (None, 32, 1, 8)     200         ['b1_blk1_tfa_tam_c1[0][0]']     
+                                                                                                  
+ b2_blk1_tfa_fam_c2 (Conv2D)    (None, 1, 32, 8)     200         ['b2_blk1_tfa_fam_c1[0][0]']     
+                                                                                                  
+ b2_blk1_tfa_tam_c2 (Conv2D)    (None, 32, 1, 8)     200         ['b2_blk1_tfa_tam_c1[0][0]']     
+                                                                                                  
+ b1_blk1_tfa_fam_c3 (Conv2D)    (None, 1, 32, 1)     25          ['b1_blk1_tfa_fam_c2[0][0]']     
+                                                                                                  
+ b1_blk1_tfa_tam_c3 (Conv2D)    (None, 32, 1, 1)     25          ['b1_blk1_tfa_tam_c2[0][0]']     
+                                                                                                  
+ b2_blk1_tfa_fam_c3 (Conv2D)    (None, 1, 32, 1)     25          ['b2_blk1_tfa_fam_c2[0][0]']     
+                                                                                                  
+ b2_blk1_tfa_tam_c3 (Conv2D)    (None, 32, 1, 1)     25          ['b2_blk1_tfa_tam_c2[0][0]']     
+                                                                                                  
+ b1_blk1_tfa_fam_mul (Multiply)  (None, 32, 32, 32)  0           ['b1_blk1_tfa_cam_mul[0][0]',    
+                                                                  'b1_blk1_tfa_fam_c3[0][0]']     
+                                                                                                  
+ b1_blk1_tfa_tam_mul (Multiply)  (None, 32, 32, 32)  0           ['b1_blk1_tfa_cam_mul[0][0]',    
+                                                                  'b1_blk1_tfa_tam_c3[0][0]']     
+                                                                                                  
+ b2_blk1_tfa_fam_mul (Multiply)  (None, 32, 32, 32)  0           ['b2_blk1_tfa_cam_mul[0][0]',    
+                                                                  'b2_blk1_tfa_fam_c3[0][0]']     
+                                                                                                  
+ b2_blk1_tfa_tam_mul (Multiply)  (None, 32, 32, 32)  0           ['b2_blk1_tfa_cam_mul[0][0]',    
+                                                                  'b2_blk1_tfa_tam_c3[0][0]']     
+                                                                                                  
+ b1_blk1_tfa_aff_s1 (Add)       (None, 32, 32, 32)   0           ['b1_blk1_tfa_fam_mul[0][0]',    
+                                                                  'b1_blk1_tfa_tam_mul[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_aff_s1 (Add)       (None, 32, 32, 32)   0           ['b2_blk1_tfa_fam_mul[0][0]',    
+                                                                  'b2_blk1_tfa_tam_mul[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_aff_ms1_l1 (Conv2D  (None, 32, 32, 4)   132         ['b1_blk1_tfa_aff_s1[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b1_blk1_tfa_aff_ms1_gap (Globa  (None, 32)          0           ['b1_blk1_tfa_aff_s1[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b2_blk1_tfa_aff_ms1_l1 (Conv2D  (None, 32, 32, 4)   132         ['b2_blk1_tfa_aff_s1[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b2_blk1_tfa_aff_ms1_gap (Globa  (None, 32)          0           ['b2_blk1_tfa_aff_s1[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b1_blk1_tfa_aff_ms1_lbn1 (Batc  (None, 32, 32, 4)   16          ['b1_blk1_tfa_aff_ms1_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk1_tfa_aff_ms1_g1 (Dense)  (None, 4)           132         ['b1_blk1_tfa_aff_ms1_gap[0][0]']
+                                                                                                  
+ b2_blk1_tfa_aff_ms1_lbn1 (Batc  (None, 32, 32, 4)   16          ['b2_blk1_tfa_aff_ms1_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk1_tfa_aff_ms1_g1 (Dense)  (None, 4)           132         ['b2_blk1_tfa_aff_ms1_gap[0][0]']
+                                                                                                  
+ b1_blk1_tfa_aff_ms1_l2 (Conv2D  (None, 32, 32, 32)  160         ['b1_blk1_tfa_aff_ms1_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b1_blk1_tfa_aff_ms1_g2 (Dense)  (None, 32)          160         ['b1_blk1_tfa_aff_ms1_g1[0][0]'] 
+                                                                                                  
+ b2_blk1_tfa_aff_ms1_l2 (Conv2D  (None, 32, 32, 32)  160         ['b2_blk1_tfa_aff_ms1_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b2_blk1_tfa_aff_ms1_g2 (Dense)  (None, 32)          160         ['b2_blk1_tfa_aff_ms1_g1[0][0]'] 
+                                                                                                  
+ b1_blk1_tfa_aff_ms1_lbn2 (Batc  (None, 32, 32, 32)  128         ['b1_blk1_tfa_aff_ms1_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk1_tfa_aff_ms1_greshape (  (None, 1, 1, 32)    0           ['b1_blk1_tfa_aff_ms1_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b2_blk1_tfa_aff_ms1_lbn2 (Batc  (None, 32, 32, 32)  128         ['b2_blk1_tfa_aff_ms1_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk1_tfa_aff_ms1_greshape (  (None, 1, 1, 32)    0           ['b2_blk1_tfa_aff_ms1_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b1_blk1_tfa_aff_ms1_add (Add)  (None, 32, 32, 32)   0           ['b1_blk1_tfa_aff_ms1_lbn2[0][0]'
+                                                                 , 'b1_blk1_tfa_aff_ms1_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b2_blk1_tfa_aff_ms1_add (Add)  (None, 32, 32, 32)   0           ['b2_blk1_tfa_aff_ms1_lbn2[0][0]'
+                                                                 , 'b2_blk1_tfa_aff_ms1_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b1_blk1_tfa_aff_ms1_sigmoid (A  (None, 32, 32, 32)  0           ['b1_blk1_tfa_aff_ms1_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ b2_blk1_tfa_aff_ms1_sigmoid (A  (None, 32, 32, 32)  0           ['b2_blk1_tfa_aff_ms1_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ b1_blk1_tfa_aff_om1 (Lambda)   (None, 32, 32, 32)   0           ['b1_blk1_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b2_blk1_tfa_aff_om1 (Lambda)   (None, 32, 32, 32)   0           ['b2_blk1_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b1_blk1_tfa_aff_Ff1 (Multiply)  (None, 32, 32, 32)  0           ['b1_blk1_tfa_fam_mul[0][0]',    
+                                                                  'b1_blk1_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b1_blk1_tfa_aff_Ft1 (Multiply)  (None, 32, 32, 32)  0           ['b1_blk1_tfa_tam_mul[0][0]',    
+                                                                  'b1_blk1_tfa_aff_om1[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_aff_Ff1 (Multiply)  (None, 32, 32, 32)  0           ['b2_blk1_tfa_fam_mul[0][0]',    
+                                                                  'b2_blk1_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b2_blk1_tfa_aff_Ft1 (Multiply)  (None, 32, 32, 32)  0           ['b2_blk1_tfa_tam_mul[0][0]',    
+                                                                  'b2_blk1_tfa_aff_om1[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_aff_s2 (Add)       (None, 32, 32, 32)   0           ['b1_blk1_tfa_aff_Ff1[0][0]',    
+                                                                  'b1_blk1_tfa_aff_Ft1[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_aff_s2 (Add)       (None, 32, 32, 32)   0           ['b2_blk1_tfa_aff_Ff1[0][0]',    
+                                                                  'b2_blk1_tfa_aff_Ft1[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_aff_ms2_l1 (Conv2D  (None, 32, 32, 4)   132         ['b1_blk1_tfa_aff_s2[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b1_blk1_tfa_aff_ms2_gap (Globa  (None, 32)          0           ['b1_blk1_tfa_aff_s2[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b2_blk1_tfa_aff_ms2_l1 (Conv2D  (None, 32, 32, 4)   132         ['b2_blk1_tfa_aff_s2[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b2_blk1_tfa_aff_ms2_gap (Globa  (None, 32)          0           ['b2_blk1_tfa_aff_s2[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b1_blk1_tfa_aff_ms2_lbn1 (Batc  (None, 32, 32, 4)   16          ['b1_blk1_tfa_aff_ms2_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk1_tfa_aff_ms2_g1 (Dense)  (None, 4)           132         ['b1_blk1_tfa_aff_ms2_gap[0][0]']
+                                                                                                  
+ b2_blk1_tfa_aff_ms2_lbn1 (Batc  (None, 32, 32, 4)   16          ['b2_blk1_tfa_aff_ms2_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk1_tfa_aff_ms2_g1 (Dense)  (None, 4)           132         ['b2_blk1_tfa_aff_ms2_gap[0][0]']
+                                                                                                  
+ b1_blk1_tfa_aff_ms2_l2 (Conv2D  (None, 32, 32, 32)  160         ['b1_blk1_tfa_aff_ms2_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b1_blk1_tfa_aff_ms2_g2 (Dense)  (None, 32)          160         ['b1_blk1_tfa_aff_ms2_g1[0][0]'] 
+                                                                                                  
+ b2_blk1_tfa_aff_ms2_l2 (Conv2D  (None, 32, 32, 32)  160         ['b2_blk1_tfa_aff_ms2_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b2_blk1_tfa_aff_ms2_g2 (Dense)  (None, 32)          160         ['b2_blk1_tfa_aff_ms2_g1[0][0]'] 
+                                                                                                  
+ b1_blk1_tfa_aff_ms2_lbn2 (Batc  (None, 32, 32, 32)  128         ['b1_blk1_tfa_aff_ms2_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk1_tfa_aff_ms2_greshape (  (None, 1, 1, 32)    0           ['b1_blk1_tfa_aff_ms2_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b2_blk1_tfa_aff_ms2_lbn2 (Batc  (None, 32, 32, 32)  128         ['b2_blk1_tfa_aff_ms2_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk1_tfa_aff_ms2_greshape (  (None, 1, 1, 32)    0           ['b2_blk1_tfa_aff_ms2_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b1_blk1_tfa_aff_ms2_add (Add)  (None, 32, 32, 32)   0           ['b1_blk1_tfa_aff_ms2_lbn2[0][0]'
+                                                                 , 'b1_blk1_tfa_aff_ms2_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b2_blk1_tfa_aff_ms2_add (Add)  (None, 32, 32, 32)   0           ['b2_blk1_tfa_aff_ms2_lbn2[0][0]'
+                                                                 , 'b2_blk1_tfa_aff_ms2_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b1_blk1_tfa_aff_ms2_sigmoid (A  (None, 32, 32, 32)  0           ['b1_blk1_tfa_aff_ms2_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ b2_blk1_tfa_aff_ms2_sigmoid (A  (None, 32, 32, 32)  0           ['b2_blk1_tfa_aff_ms2_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ lambda (Lambda)                (None, 32, 32, 32)   0           ['b1_blk1_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ lambda_3 (Lambda)              (None, 32, 32, 32)   0           ['b2_blk1_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ multiply (Multiply)            (None, 32, 32, 32)   0           ['b1_blk1_tfa_aff_Ff1[0][0]',    
+                                                                  'b1_blk1_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ multiply_1 (Multiply)          (None, 32, 32, 32)   0           ['b1_blk1_tfa_aff_Ft1[0][0]',    
+                                                                  'lambda[0][0]']                 
+                                                                                                  
+ multiply_6 (Multiply)          (None, 32, 32, 32)   0           ['b2_blk1_tfa_aff_Ff1[0][0]',    
+                                                                  'b2_blk1_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ multiply_7 (Multiply)          (None, 32, 32, 32)   0           ['b2_blk1_tfa_aff_Ft1[0][0]',    
+                                                                  'lambda_3[0][0]']               
+                                                                                                  
+ b1_blk1_tfa_aff_out (Add)      (None, 32, 32, 32)   0           ['multiply[0][0]',               
+                                                                  'multiply_1[0][0]']             
+                                                                                                  
+ b2_blk1_tfa_aff_out (Add)      (None, 32, 32, 32)   0           ['multiply_6[0][0]',             
+                                                                  'multiply_7[0][0]']             
+                                                                                                  
+ b1_blk1_tfa_pw (Conv2D)        (None, 32, 32, 32)   1056        ['b1_blk1_tfa_aff_out[0][0]']    
+                                                                                                  
+ b2_blk1_tfa_pw (Conv2D)        (None, 32, 32, 32)   1056        ['b2_blk1_tfa_aff_out[0][0]']    
+                                                                                                  
+ b1_blk1_tfa_bn (BatchNormaliza  (None, 32, 32, 32)  128         ['b1_blk1_tfa_pw[0][0]']         
+ tion)                                                                                            
+                                                                                                  
+ b2_blk1_tfa_bn (BatchNormaliza  (None, 32, 32, 32)  128         ['b2_blk1_tfa_pw[0][0]']         
+ tion)                                                                                            
+                                                                                                  
+ b1_blk1_tfa_relu (Activation)  (None, 32, 32, 32)   0           ['b1_blk1_tfa_bn[0][0]']         
+                                                                                                  
+ b2_blk1_tfa_relu (Activation)  (None, 32, 32, 32)   0           ['b2_blk1_tfa_bn[0][0]']         
+                                                                                                  
+ b1_blk2_conv_conv (Conv2D)     (None, 32, 32, 16)   12816       ['b1_blk1_tfa_relu[0][0]']       
+                                                                                                  
+ b2_blk2_conv_conv (Conv2D)     (None, 32, 32, 16)   4624        ['b2_blk1_tfa_relu[0][0]']       
+                                                                                                  
+ b1_blk2_conv_bn (BatchNormaliz  (None, 32, 32, 16)  64          ['b1_blk2_conv_conv[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ b2_blk2_conv_bn (BatchNormaliz  (None, 32, 32, 16)  64          ['b2_blk2_conv_conv[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ b1_blk2_conv_relu (Activation)  (None, 32, 32, 16)  0           ['b1_blk2_conv_bn[0][0]']        
+                                                                                                  
+ b2_blk2_conv_relu (Activation)  (None, 32, 32, 16)  0           ['b2_blk2_conv_bn[0][0]']        
+                                                                                                  
+ b1_blk2_tfa_cam_avg (GlobalAve  (None, 16)          0           ['b1_blk2_conv_relu[0][0]']      
+ ragePooling2D)                                                                                   
+                                                                                                  
+ b1_blk2_tfa_cam_max (GlobalMax  (None, 16)          0           ['b1_blk2_conv_relu[0][0]']      
+ Pooling2D)                                                                                       
+                                                                                                  
+ b2_blk2_tfa_cam_avg (GlobalAve  (None, 16)          0           ['b2_blk2_conv_relu[0][0]']      
+ ragePooling2D)                                                                                   
+                                                                                                  
+ b2_blk2_tfa_cam_max (GlobalMax  (None, 16)          0           ['b2_blk2_conv_relu[0][0]']      
+ Pooling2D)                                                                                       
+                                                                                                  
+ b1_blk2_tfa_cam_mlp1 (Dense)   (None, 2)            34          ['b1_blk2_tfa_cam_avg[0][0]',    
+                                                                  'b1_blk2_tfa_cam_max[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_cam_mlp1 (Dense)   (None, 2)            34          ['b2_blk2_tfa_cam_avg[0][0]',    
+                                                                  'b2_blk2_tfa_cam_max[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_cam_mlp2 (Dense)   (None, 16)           48          ['b1_blk2_tfa_cam_mlp1[0][0]',   
+                                                                  'b1_blk2_tfa_cam_mlp1[1][0]']   
+                                                                                                  
+ b2_blk2_tfa_cam_mlp2 (Dense)   (None, 16)           48          ['b2_blk2_tfa_cam_mlp1[0][0]',   
+                                                                  'b2_blk2_tfa_cam_mlp1[1][0]']   
+                                                                                                  
+ b1_blk2_tfa_cam_add (Add)      (None, 16)           0           ['b1_blk2_tfa_cam_mlp2[0][0]',   
+                                                                  'b1_blk2_tfa_cam_mlp2[1][0]']   
+                                                                                                  
+ b2_blk2_tfa_cam_add (Add)      (None, 16)           0           ['b2_blk2_tfa_cam_mlp2[0][0]',   
+                                                                  'b2_blk2_tfa_cam_mlp2[1][0]']   
+                                                                                                  
+ b1_blk2_tfa_cam_sigmoid (Activ  (None, 16)          0           ['b1_blk2_tfa_cam_add[0][0]']    
+ ation)                                                                                           
+                                                                                                  
+ b2_blk2_tfa_cam_sigmoid (Activ  (None, 16)          0           ['b2_blk2_tfa_cam_add[0][0]']    
+ ation)                                                                                           
+                                                                                                  
+ b1_blk2_tfa_cam_reshape (Lambd  (None, 1, 1, 16)    0           ['b1_blk2_tfa_cam_sigmoid[0][0]']
+ a)                                                                                               
+                                                                                                  
+ b2_blk2_tfa_cam_reshape (Lambd  (None, 1, 1, 16)    0           ['b2_blk2_tfa_cam_sigmoid[0][0]']
+ a)                                                                                               
+                                                                                                  
+ b1_blk2_tfa_cam_mul (Multiply)  (None, 32, 32, 16)  0           ['b1_blk2_conv_relu[0][0]',      
+                                                                  'b1_blk2_tfa_cam_reshape[0][0]']
+                                                                                                  
+ b2_blk2_tfa_cam_mul (Multiply)  (None, 32, 32, 16)  0           ['b2_blk2_conv_relu[0][0]',      
+                                                                  'b2_blk2_tfa_cam_reshape[0][0]']
+                                                                                                  
+ b1_blk2_tfa_fam_avg (Lambda)   (None, 1, 32, 1)     0           ['b1_blk2_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_fam_max (Lambda)   (None, 1, 32, 1)     0           ['b1_blk2_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_tam_avg (Lambda)   (None, 32, 1, 1)     0           ['b1_blk2_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_tam_max (Lambda)   (None, 32, 1, 1)     0           ['b1_blk2_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_fam_avg (Lambda)   (None, 1, 32, 1)     0           ['b2_blk2_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_fam_max (Lambda)   (None, 1, 32, 1)     0           ['b2_blk2_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_tam_avg (Lambda)   (None, 32, 1, 1)     0           ['b2_blk2_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_tam_max (Lambda)   (None, 32, 1, 1)     0           ['b2_blk2_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_fam_cat (Concatena  (None, 1, 32, 2)    0           ['b1_blk2_tfa_fam_avg[0][0]',    
+ te)                                                              'b1_blk2_tfa_fam_max[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_tam_cat (Concatena  (None, 32, 1, 2)    0           ['b1_blk2_tfa_tam_avg[0][0]',    
+ te)                                                              'b1_blk2_tfa_tam_max[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_fam_cat (Concatena  (None, 1, 32, 2)    0           ['b2_blk2_tfa_fam_avg[0][0]',    
+ te)                                                              'b2_blk2_tfa_fam_max[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_tam_cat (Concatena  (None, 32, 1, 2)    0           ['b2_blk2_tfa_tam_avg[0][0]',    
+ te)                                                              'b2_blk2_tfa_tam_max[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_fam_c1 (Conv2D)    (None, 1, 32, 8)     56          ['b1_blk2_tfa_fam_cat[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_tam_c1 (Conv2D)    (None, 32, 1, 8)     56          ['b1_blk2_tfa_tam_cat[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_fam_c1 (Conv2D)    (None, 1, 32, 8)     56          ['b2_blk2_tfa_fam_cat[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_tam_c1 (Conv2D)    (None, 32, 1, 8)     56          ['b2_blk2_tfa_tam_cat[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_fam_c2 (Conv2D)    (None, 1, 32, 8)     200         ['b1_blk2_tfa_fam_c1[0][0]']     
+                                                                                                  
+ b1_blk2_tfa_tam_c2 (Conv2D)    (None, 32, 1, 8)     200         ['b1_blk2_tfa_tam_c1[0][0]']     
+                                                                                                  
+ b2_blk2_tfa_fam_c2 (Conv2D)    (None, 1, 32, 8)     200         ['b2_blk2_tfa_fam_c1[0][0]']     
+                                                                                                  
+ b2_blk2_tfa_tam_c2 (Conv2D)    (None, 32, 1, 8)     200         ['b2_blk2_tfa_tam_c1[0][0]']     
+                                                                                                  
+ b1_blk2_tfa_fam_c3 (Conv2D)    (None, 1, 32, 1)     25          ['b1_blk2_tfa_fam_c2[0][0]']     
+                                                                                                  
+ b1_blk2_tfa_tam_c3 (Conv2D)    (None, 32, 1, 1)     25          ['b1_blk2_tfa_tam_c2[0][0]']     
+                                                                                                  
+ b2_blk2_tfa_fam_c3 (Conv2D)    (None, 1, 32, 1)     25          ['b2_blk2_tfa_fam_c2[0][0]']     
+                                                                                                  
+ b2_blk2_tfa_tam_c3 (Conv2D)    (None, 32, 1, 1)     25          ['b2_blk2_tfa_tam_c2[0][0]']     
+                                                                                                  
+ b1_blk2_tfa_fam_mul (Multiply)  (None, 32, 32, 16)  0           ['b1_blk2_tfa_cam_mul[0][0]',    
+                                                                  'b1_blk2_tfa_fam_c3[0][0]']     
+                                                                                                  
+ b1_blk2_tfa_tam_mul (Multiply)  (None, 32, 32, 16)  0           ['b1_blk2_tfa_cam_mul[0][0]',    
+                                                                  'b1_blk2_tfa_tam_c3[0][0]']     
+                                                                                                  
+ b2_blk2_tfa_fam_mul (Multiply)  (None, 32, 32, 16)  0           ['b2_blk2_tfa_cam_mul[0][0]',    
+                                                                  'b2_blk2_tfa_fam_c3[0][0]']     
+                                                                                                  
+ b2_blk2_tfa_tam_mul (Multiply)  (None, 32, 32, 16)  0           ['b2_blk2_tfa_cam_mul[0][0]',    
+                                                                  'b2_blk2_tfa_tam_c3[0][0]']     
+                                                                                                  
+ b1_blk2_tfa_aff_s1 (Add)       (None, 32, 32, 16)   0           ['b1_blk2_tfa_fam_mul[0][0]',    
+                                                                  'b1_blk2_tfa_tam_mul[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_aff_s1 (Add)       (None, 32, 32, 16)   0           ['b2_blk2_tfa_fam_mul[0][0]',    
+                                                                  'b2_blk2_tfa_tam_mul[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_aff_ms1_l1 (Conv2D  (None, 32, 32, 2)   34          ['b1_blk2_tfa_aff_s1[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b1_blk2_tfa_aff_ms1_gap (Globa  (None, 16)          0           ['b1_blk2_tfa_aff_s1[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b2_blk2_tfa_aff_ms1_l1 (Conv2D  (None, 32, 32, 2)   34          ['b2_blk2_tfa_aff_s1[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b2_blk2_tfa_aff_ms1_gap (Globa  (None, 16)          0           ['b2_blk2_tfa_aff_s1[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b1_blk2_tfa_aff_ms1_lbn1 (Batc  (None, 32, 32, 2)   8           ['b1_blk2_tfa_aff_ms1_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk2_tfa_aff_ms1_g1 (Dense)  (None, 2)           34          ['b1_blk2_tfa_aff_ms1_gap[0][0]']
+                                                                                                  
+ b2_blk2_tfa_aff_ms1_lbn1 (Batc  (None, 32, 32, 2)   8           ['b2_blk2_tfa_aff_ms1_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk2_tfa_aff_ms1_g1 (Dense)  (None, 2)           34          ['b2_blk2_tfa_aff_ms1_gap[0][0]']
+                                                                                                  
+ b1_blk2_tfa_aff_ms1_l2 (Conv2D  (None, 32, 32, 16)  48          ['b1_blk2_tfa_aff_ms1_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b1_blk2_tfa_aff_ms1_g2 (Dense)  (None, 16)          48          ['b1_blk2_tfa_aff_ms1_g1[0][0]'] 
+                                                                                                  
+ b2_blk2_tfa_aff_ms1_l2 (Conv2D  (None, 32, 32, 16)  48          ['b2_blk2_tfa_aff_ms1_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b2_blk2_tfa_aff_ms1_g2 (Dense)  (None, 16)          48          ['b2_blk2_tfa_aff_ms1_g1[0][0]'] 
+                                                                                                  
+ b1_blk2_tfa_aff_ms1_lbn2 (Batc  (None, 32, 32, 16)  64          ['b1_blk2_tfa_aff_ms1_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk2_tfa_aff_ms1_greshape (  (None, 1, 1, 16)    0           ['b1_blk2_tfa_aff_ms1_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b2_blk2_tfa_aff_ms1_lbn2 (Batc  (None, 32, 32, 16)  64          ['b2_blk2_tfa_aff_ms1_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk2_tfa_aff_ms1_greshape (  (None, 1, 1, 16)    0           ['b2_blk2_tfa_aff_ms1_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b1_blk2_tfa_aff_ms1_add (Add)  (None, 32, 32, 16)   0           ['b1_blk2_tfa_aff_ms1_lbn2[0][0]'
+                                                                 , 'b1_blk2_tfa_aff_ms1_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b2_blk2_tfa_aff_ms1_add (Add)  (None, 32, 32, 16)   0           ['b2_blk2_tfa_aff_ms1_lbn2[0][0]'
+                                                                 , 'b2_blk2_tfa_aff_ms1_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b1_blk2_tfa_aff_ms1_sigmoid (A  (None, 32, 32, 16)  0           ['b1_blk2_tfa_aff_ms1_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ b2_blk2_tfa_aff_ms1_sigmoid (A  (None, 32, 32, 16)  0           ['b2_blk2_tfa_aff_ms1_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ b1_blk2_tfa_aff_om1 (Lambda)   (None, 32, 32, 16)   0           ['b1_blk2_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b2_blk2_tfa_aff_om1 (Lambda)   (None, 32, 32, 16)   0           ['b2_blk2_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b1_blk2_tfa_aff_Ff1 (Multiply)  (None, 32, 32, 16)  0           ['b1_blk2_tfa_fam_mul[0][0]',    
+                                                                  'b1_blk2_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b1_blk2_tfa_aff_Ft1 (Multiply)  (None, 32, 32, 16)  0           ['b1_blk2_tfa_tam_mul[0][0]',    
+                                                                  'b1_blk2_tfa_aff_om1[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_aff_Ff1 (Multiply)  (None, 32, 32, 16)  0           ['b2_blk2_tfa_fam_mul[0][0]',    
+                                                                  'b2_blk2_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b2_blk2_tfa_aff_Ft1 (Multiply)  (None, 32, 32, 16)  0           ['b2_blk2_tfa_tam_mul[0][0]',    
+                                                                  'b2_blk2_tfa_aff_om1[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_aff_s2 (Add)       (None, 32, 32, 16)   0           ['b1_blk2_tfa_aff_Ff1[0][0]',    
+                                                                  'b1_blk2_tfa_aff_Ft1[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_aff_s2 (Add)       (None, 32, 32, 16)   0           ['b2_blk2_tfa_aff_Ff1[0][0]',    
+                                                                  'b2_blk2_tfa_aff_Ft1[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_aff_ms2_l1 (Conv2D  (None, 32, 32, 2)   34          ['b1_blk2_tfa_aff_s2[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b1_blk2_tfa_aff_ms2_gap (Globa  (None, 16)          0           ['b1_blk2_tfa_aff_s2[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b2_blk2_tfa_aff_ms2_l1 (Conv2D  (None, 32, 32, 2)   34          ['b2_blk2_tfa_aff_s2[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b2_blk2_tfa_aff_ms2_gap (Globa  (None, 16)          0           ['b2_blk2_tfa_aff_s2[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b1_blk2_tfa_aff_ms2_lbn1 (Batc  (None, 32, 32, 2)   8           ['b1_blk2_tfa_aff_ms2_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk2_tfa_aff_ms2_g1 (Dense)  (None, 2)           34          ['b1_blk2_tfa_aff_ms2_gap[0][0]']
+                                                                                                  
+ b2_blk2_tfa_aff_ms2_lbn1 (Batc  (None, 32, 32, 2)   8           ['b2_blk2_tfa_aff_ms2_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk2_tfa_aff_ms2_g1 (Dense)  (None, 2)           34          ['b2_blk2_tfa_aff_ms2_gap[0][0]']
+                                                                                                  
+ b1_blk2_tfa_aff_ms2_l2 (Conv2D  (None, 32, 32, 16)  48          ['b1_blk2_tfa_aff_ms2_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b1_blk2_tfa_aff_ms2_g2 (Dense)  (None, 16)          48          ['b1_blk2_tfa_aff_ms2_g1[0][0]'] 
+                                                                                                  
+ b2_blk2_tfa_aff_ms2_l2 (Conv2D  (None, 32, 32, 16)  48          ['b2_blk2_tfa_aff_ms2_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b2_blk2_tfa_aff_ms2_g2 (Dense)  (None, 16)          48          ['b2_blk2_tfa_aff_ms2_g1[0][0]'] 
+                                                                                                  
+ b1_blk2_tfa_aff_ms2_lbn2 (Batc  (None, 32, 32, 16)  64          ['b1_blk2_tfa_aff_ms2_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk2_tfa_aff_ms2_greshape (  (None, 1, 1, 16)    0           ['b1_blk2_tfa_aff_ms2_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b2_blk2_tfa_aff_ms2_lbn2 (Batc  (None, 32, 32, 16)  64          ['b2_blk2_tfa_aff_ms2_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk2_tfa_aff_ms2_greshape (  (None, 1, 1, 16)    0           ['b2_blk2_tfa_aff_ms2_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b1_blk2_tfa_aff_ms2_add (Add)  (None, 32, 32, 16)   0           ['b1_blk2_tfa_aff_ms2_lbn2[0][0]'
+                                                                 , 'b1_blk2_tfa_aff_ms2_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b2_blk2_tfa_aff_ms2_add (Add)  (None, 32, 32, 16)   0           ['b2_blk2_tfa_aff_ms2_lbn2[0][0]'
+                                                                 , 'b2_blk2_tfa_aff_ms2_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b1_blk2_tfa_aff_ms2_sigmoid (A  (None, 32, 32, 16)  0           ['b1_blk2_tfa_aff_ms2_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ b2_blk2_tfa_aff_ms2_sigmoid (A  (None, 32, 32, 16)  0           ['b2_blk2_tfa_aff_ms2_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ lambda_1 (Lambda)              (None, 32, 32, 16)   0           ['b1_blk2_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ lambda_4 (Lambda)              (None, 32, 32, 16)   0           ['b2_blk2_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ multiply_2 (Multiply)          (None, 32, 32, 16)   0           ['b1_blk2_tfa_aff_Ff1[0][0]',    
+                                                                  'b1_blk2_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ multiply_3 (Multiply)          (None, 32, 32, 16)   0           ['b1_blk2_tfa_aff_Ft1[0][0]',    
+                                                                  'lambda_1[0][0]']               
+                                                                                                  
+ multiply_8 (Multiply)          (None, 32, 32, 16)   0           ['b2_blk2_tfa_aff_Ff1[0][0]',    
+                                                                  'b2_blk2_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ multiply_9 (Multiply)          (None, 32, 32, 16)   0           ['b2_blk2_tfa_aff_Ft1[0][0]',    
+                                                                  'lambda_4[0][0]']               
+                                                                                                  
+ b1_blk2_tfa_aff_out (Add)      (None, 32, 32, 16)   0           ['multiply_2[0][0]',             
+                                                                  'multiply_3[0][0]']             
+                                                                                                  
+ b2_blk2_tfa_aff_out (Add)      (None, 32, 32, 16)   0           ['multiply_8[0][0]',             
+                                                                  'multiply_9[0][0]']             
+                                                                                                  
+ b1_blk2_tfa_pw (Conv2D)        (None, 32, 32, 16)   272         ['b1_blk2_tfa_aff_out[0][0]']    
+                                                                                                  
+ b2_blk2_tfa_pw (Conv2D)        (None, 32, 32, 16)   272         ['b2_blk2_tfa_aff_out[0][0]']    
+                                                                                                  
+ b1_blk2_tfa_bn (BatchNormaliza  (None, 32, 32, 16)  64          ['b1_blk2_tfa_pw[0][0]']         
+ tion)                                                                                            
+                                                                                                  
+ b2_blk2_tfa_bn (BatchNormaliza  (None, 32, 32, 16)  64          ['b2_blk2_tfa_pw[0][0]']         
+ tion)                                                                                            
+                                                                                                  
+ b1_blk2_tfa_relu (Activation)  (None, 32, 32, 16)   0           ['b1_blk2_tfa_bn[0][0]']         
+                                                                                                  
+ b2_blk2_tfa_relu (Activation)  (None, 32, 32, 16)   0           ['b2_blk2_tfa_bn[0][0]']         
+                                                                                                  
+ b1_blk3_conv_conv (Conv2D)     (None, 32, 32, 8)    3208        ['b1_blk2_tfa_relu[0][0]']       
+                                                                                                  
+ b2_blk3_conv_conv (Conv2D)     (None, 32, 32, 8)    1160        ['b2_blk2_tfa_relu[0][0]']       
+                                                                                                  
+ b1_blk3_conv_bn (BatchNormaliz  (None, 32, 32, 8)   32          ['b1_blk3_conv_conv[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ b2_blk3_conv_bn (BatchNormaliz  (None, 32, 32, 8)   32          ['b2_blk3_conv_conv[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ b1_blk3_conv_relu (Activation)  (None, 32, 32, 8)   0           ['b1_blk3_conv_bn[0][0]']        
+                                                                                                  
+ b2_blk3_conv_relu (Activation)  (None, 32, 32, 8)   0           ['b2_blk3_conv_bn[0][0]']        
+                                                                                                  
+ b1_blk3_tfa_cam_avg (GlobalAve  (None, 8)           0           ['b1_blk3_conv_relu[0][0]']      
+ ragePooling2D)                                                                                   
+                                                                                                  
+ b1_blk3_tfa_cam_max (GlobalMax  (None, 8)           0           ['b1_blk3_conv_relu[0][0]']      
+ Pooling2D)                                                                                       
+                                                                                                  
+ b2_blk3_tfa_cam_avg (GlobalAve  (None, 8)           0           ['b2_blk3_conv_relu[0][0]']      
+ ragePooling2D)                                                                                   
+                                                                                                  
+ b2_blk3_tfa_cam_max (GlobalMax  (None, 8)           0           ['b2_blk3_conv_relu[0][0]']      
+ Pooling2D)                                                                                       
+                                                                                                  
+ b1_blk3_tfa_cam_mlp1 (Dense)   (None, 1)            9           ['b1_blk3_tfa_cam_avg[0][0]',    
+                                                                  'b1_blk3_tfa_cam_max[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_cam_mlp1 (Dense)   (None, 1)            9           ['b2_blk3_tfa_cam_avg[0][0]',    
+                                                                  'b2_blk3_tfa_cam_max[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_cam_mlp2 (Dense)   (None, 8)            16          ['b1_blk3_tfa_cam_mlp1[0][0]',   
+                                                                  'b1_blk3_tfa_cam_mlp1[1][0]']   
+                                                                                                  
+ b2_blk3_tfa_cam_mlp2 (Dense)   (None, 8)            16          ['b2_blk3_tfa_cam_mlp1[0][0]',   
+                                                                  'b2_blk3_tfa_cam_mlp1[1][0]']   
+                                                                                                  
+ b1_blk3_tfa_cam_add (Add)      (None, 8)            0           ['b1_blk3_tfa_cam_mlp2[0][0]',   
+                                                                  'b1_blk3_tfa_cam_mlp2[1][0]']   
+                                                                                                  
+ b2_blk3_tfa_cam_add (Add)      (None, 8)            0           ['b2_blk3_tfa_cam_mlp2[0][0]',   
+                                                                  'b2_blk3_tfa_cam_mlp2[1][0]']   
+                                                                                                  
+ b1_blk3_tfa_cam_sigmoid (Activ  (None, 8)           0           ['b1_blk3_tfa_cam_add[0][0]']    
+ ation)                                                                                           
+                                                                                                  
+ b2_blk3_tfa_cam_sigmoid (Activ  (None, 8)           0           ['b2_blk3_tfa_cam_add[0][0]']    
+ ation)                                                                                           
+                                                                                                  
+ b1_blk3_tfa_cam_reshape (Lambd  (None, 1, 1, 8)     0           ['b1_blk3_tfa_cam_sigmoid[0][0]']
+ a)                                                                                               
+                                                                                                  
+ b2_blk3_tfa_cam_reshape (Lambd  (None, 1, 1, 8)     0           ['b2_blk3_tfa_cam_sigmoid[0][0]']
+ a)                                                                                               
+                                                                                                  
+ b1_blk3_tfa_cam_mul (Multiply)  (None, 32, 32, 8)   0           ['b1_blk3_conv_relu[0][0]',      
+                                                                  'b1_blk3_tfa_cam_reshape[0][0]']
+                                                                                                  
+ b2_blk3_tfa_cam_mul (Multiply)  (None, 32, 32, 8)   0           ['b2_blk3_conv_relu[0][0]',      
+                                                                  'b2_blk3_tfa_cam_reshape[0][0]']
+                                                                                                  
+ b1_blk3_tfa_fam_avg (Lambda)   (None, 1, 32, 1)     0           ['b1_blk3_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_fam_max (Lambda)   (None, 1, 32, 1)     0           ['b1_blk3_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_tam_avg (Lambda)   (None, 32, 1, 1)     0           ['b1_blk3_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_tam_max (Lambda)   (None, 32, 1, 1)     0           ['b1_blk3_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_fam_avg (Lambda)   (None, 1, 32, 1)     0           ['b2_blk3_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_fam_max (Lambda)   (None, 1, 32, 1)     0           ['b2_blk3_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_tam_avg (Lambda)   (None, 32, 1, 1)     0           ['b2_blk3_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_tam_max (Lambda)   (None, 32, 1, 1)     0           ['b2_blk3_tfa_cam_mul[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_fam_cat (Concatena  (None, 1, 32, 2)    0           ['b1_blk3_tfa_fam_avg[0][0]',    
+ te)                                                              'b1_blk3_tfa_fam_max[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_tam_cat (Concatena  (None, 32, 1, 2)    0           ['b1_blk3_tfa_tam_avg[0][0]',    
+ te)                                                              'b1_blk3_tfa_tam_max[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_fam_cat (Concatena  (None, 1, 32, 2)    0           ['b2_blk3_tfa_fam_avg[0][0]',    
+ te)                                                              'b2_blk3_tfa_fam_max[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_tam_cat (Concatena  (None, 32, 1, 2)    0           ['b2_blk3_tfa_tam_avg[0][0]',    
+ te)                                                              'b2_blk3_tfa_tam_max[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_fam_c1 (Conv2D)    (None, 1, 32, 8)     56          ['b1_blk3_tfa_fam_cat[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_tam_c1 (Conv2D)    (None, 32, 1, 8)     56          ['b1_blk3_tfa_tam_cat[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_fam_c1 (Conv2D)    (None, 1, 32, 8)     56          ['b2_blk3_tfa_fam_cat[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_tam_c1 (Conv2D)    (None, 32, 1, 8)     56          ['b2_blk3_tfa_tam_cat[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_fam_c2 (Conv2D)    (None, 1, 32, 8)     200         ['b1_blk3_tfa_fam_c1[0][0]']     
+                                                                                                  
+ b1_blk3_tfa_tam_c2 (Conv2D)    (None, 32, 1, 8)     200         ['b1_blk3_tfa_tam_c1[0][0]']     
+                                                                                                  
+ b2_blk3_tfa_fam_c2 (Conv2D)    (None, 1, 32, 8)     200         ['b2_blk3_tfa_fam_c1[0][0]']     
+                                                                                                  
+ b2_blk3_tfa_tam_c2 (Conv2D)    (None, 32, 1, 8)     200         ['b2_blk3_tfa_tam_c1[0][0]']     
+                                                                                                  
+ b1_blk3_tfa_fam_c3 (Conv2D)    (None, 1, 32, 1)     25          ['b1_blk3_tfa_fam_c2[0][0]']     
+                                                                                                  
+ b1_blk3_tfa_tam_c3 (Conv2D)    (None, 32, 1, 1)     25          ['b1_blk3_tfa_tam_c2[0][0]']     
+                                                                                                  
+ b2_blk3_tfa_fam_c3 (Conv2D)    (None, 1, 32, 1)     25          ['b2_blk3_tfa_fam_c2[0][0]']     
+                                                                                                  
+ b2_blk3_tfa_tam_c3 (Conv2D)    (None, 32, 1, 1)     25          ['b2_blk3_tfa_tam_c2[0][0]']     
+                                                                                                  
+ b1_blk3_tfa_fam_mul (Multiply)  (None, 32, 32, 8)   0           ['b1_blk3_tfa_cam_mul[0][0]',    
+                                                                  'b1_blk3_tfa_fam_c3[0][0]']     
+                                                                                                  
+ b1_blk3_tfa_tam_mul (Multiply)  (None, 32, 32, 8)   0           ['b1_blk3_tfa_cam_mul[0][0]',    
+                                                                  'b1_blk3_tfa_tam_c3[0][0]']     
+                                                                                                  
+ b2_blk3_tfa_fam_mul (Multiply)  (None, 32, 32, 8)   0           ['b2_blk3_tfa_cam_mul[0][0]',    
+                                                                  'b2_blk3_tfa_fam_c3[0][0]']     
+                                                                                                  
+ b2_blk3_tfa_tam_mul (Multiply)  (None, 32, 32, 8)   0           ['b2_blk3_tfa_cam_mul[0][0]',    
+                                                                  'b2_blk3_tfa_tam_c3[0][0]']     
+                                                                                                  
+ b1_blk3_tfa_aff_s1 (Add)       (None, 32, 32, 8)    0           ['b1_blk3_tfa_fam_mul[0][0]',    
+                                                                  'b1_blk3_tfa_tam_mul[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_aff_s1 (Add)       (None, 32, 32, 8)    0           ['b2_blk3_tfa_fam_mul[0][0]',    
+                                                                  'b2_blk3_tfa_tam_mul[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_aff_ms1_l1 (Conv2D  (None, 32, 32, 1)   9           ['b1_blk3_tfa_aff_s1[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b1_blk3_tfa_aff_ms1_gap (Globa  (None, 8)           0           ['b1_blk3_tfa_aff_s1[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b2_blk3_tfa_aff_ms1_l1 (Conv2D  (None, 32, 32, 1)   9           ['b2_blk3_tfa_aff_s1[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b2_blk3_tfa_aff_ms1_gap (Globa  (None, 8)           0           ['b2_blk3_tfa_aff_s1[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b1_blk3_tfa_aff_ms1_lbn1 (Batc  (None, 32, 32, 1)   4           ['b1_blk3_tfa_aff_ms1_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk3_tfa_aff_ms1_g1 (Dense)  (None, 1)           9           ['b1_blk3_tfa_aff_ms1_gap[0][0]']
+                                                                                                  
+ b2_blk3_tfa_aff_ms1_lbn1 (Batc  (None, 32, 32, 1)   4           ['b2_blk3_tfa_aff_ms1_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk3_tfa_aff_ms1_g1 (Dense)  (None, 1)           9           ['b2_blk3_tfa_aff_ms1_gap[0][0]']
+                                                                                                  
+ b1_blk3_tfa_aff_ms1_l2 (Conv2D  (None, 32, 32, 8)   16          ['b1_blk3_tfa_aff_ms1_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b1_blk3_tfa_aff_ms1_g2 (Dense)  (None, 8)           16          ['b1_blk3_tfa_aff_ms1_g1[0][0]'] 
+                                                                                                  
+ b2_blk3_tfa_aff_ms1_l2 (Conv2D  (None, 32, 32, 8)   16          ['b2_blk3_tfa_aff_ms1_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b2_blk3_tfa_aff_ms1_g2 (Dense)  (None, 8)           16          ['b2_blk3_tfa_aff_ms1_g1[0][0]'] 
+                                                                                                  
+ b1_blk3_tfa_aff_ms1_lbn2 (Batc  (None, 32, 32, 8)   32          ['b1_blk3_tfa_aff_ms1_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk3_tfa_aff_ms1_greshape (  (None, 1, 1, 8)     0           ['b1_blk3_tfa_aff_ms1_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b2_blk3_tfa_aff_ms1_lbn2 (Batc  (None, 32, 32, 8)   32          ['b2_blk3_tfa_aff_ms1_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk3_tfa_aff_ms1_greshape (  (None, 1, 1, 8)     0           ['b2_blk3_tfa_aff_ms1_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b1_blk3_tfa_aff_ms1_add (Add)  (None, 32, 32, 8)    0           ['b1_blk3_tfa_aff_ms1_lbn2[0][0]'
+                                                                 , 'b1_blk3_tfa_aff_ms1_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b2_blk3_tfa_aff_ms1_add (Add)  (None, 32, 32, 8)    0           ['b2_blk3_tfa_aff_ms1_lbn2[0][0]'
+                                                                 , 'b2_blk3_tfa_aff_ms1_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b1_blk3_tfa_aff_ms1_sigmoid (A  (None, 32, 32, 8)   0           ['b1_blk3_tfa_aff_ms1_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ b2_blk3_tfa_aff_ms1_sigmoid (A  (None, 32, 32, 8)   0           ['b2_blk3_tfa_aff_ms1_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ b1_blk3_tfa_aff_om1 (Lambda)   (None, 32, 32, 8)    0           ['b1_blk3_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b2_blk3_tfa_aff_om1 (Lambda)   (None, 32, 32, 8)    0           ['b2_blk3_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b1_blk3_tfa_aff_Ff1 (Multiply)  (None, 32, 32, 8)   0           ['b1_blk3_tfa_fam_mul[0][0]',    
+                                                                  'b1_blk3_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b1_blk3_tfa_aff_Ft1 (Multiply)  (None, 32, 32, 8)   0           ['b1_blk3_tfa_tam_mul[0][0]',    
+                                                                  'b1_blk3_tfa_aff_om1[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_aff_Ff1 (Multiply)  (None, 32, 32, 8)   0           ['b2_blk3_tfa_fam_mul[0][0]',    
+                                                                  'b2_blk3_tfa_aff_ms1_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ b2_blk3_tfa_aff_Ft1 (Multiply)  (None, 32, 32, 8)   0           ['b2_blk3_tfa_tam_mul[0][0]',    
+                                                                  'b2_blk3_tfa_aff_om1[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_aff_s2 (Add)       (None, 32, 32, 8)    0           ['b1_blk3_tfa_aff_Ff1[0][0]',    
+                                                                  'b1_blk3_tfa_aff_Ft1[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_aff_s2 (Add)       (None, 32, 32, 8)    0           ['b2_blk3_tfa_aff_Ff1[0][0]',    
+                                                                  'b2_blk3_tfa_aff_Ft1[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_aff_ms2_l1 (Conv2D  (None, 32, 32, 1)   9           ['b1_blk3_tfa_aff_s2[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b1_blk3_tfa_aff_ms2_gap (Globa  (None, 8)           0           ['b1_blk3_tfa_aff_s2[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b2_blk3_tfa_aff_ms2_l1 (Conv2D  (None, 32, 32, 1)   9           ['b2_blk3_tfa_aff_s2[0][0]']     
+ )                                                                                                
+                                                                                                  
+ b2_blk3_tfa_aff_ms2_gap (Globa  (None, 8)           0           ['b2_blk3_tfa_aff_s2[0][0]']     
+ lAveragePooling2D)                                                                               
+                                                                                                  
+ b1_blk3_tfa_aff_ms2_lbn1 (Batc  (None, 32, 32, 1)   4           ['b1_blk3_tfa_aff_ms2_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk3_tfa_aff_ms2_g1 (Dense)  (None, 1)           9           ['b1_blk3_tfa_aff_ms2_gap[0][0]']
+                                                                                                  
+ b2_blk3_tfa_aff_ms2_lbn1 (Batc  (None, 32, 32, 1)   4           ['b2_blk3_tfa_aff_ms2_l1[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk3_tfa_aff_ms2_g1 (Dense)  (None, 1)           9           ['b2_blk3_tfa_aff_ms2_gap[0][0]']
+                                                                                                  
+ b1_blk3_tfa_aff_ms2_l2 (Conv2D  (None, 32, 32, 8)   16          ['b1_blk3_tfa_aff_ms2_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b1_blk3_tfa_aff_ms2_g2 (Dense)  (None, 8)           16          ['b1_blk3_tfa_aff_ms2_g1[0][0]'] 
+                                                                                                  
+ b2_blk3_tfa_aff_ms2_l2 (Conv2D  (None, 32, 32, 8)   16          ['b2_blk3_tfa_aff_ms2_lbn1[0][0]'
+ )                                                               ]                                
+                                                                                                  
+ b2_blk3_tfa_aff_ms2_g2 (Dense)  (None, 8)           16          ['b2_blk3_tfa_aff_ms2_g1[0][0]'] 
+                                                                                                  
+ b1_blk3_tfa_aff_ms2_lbn2 (Batc  (None, 32, 32, 8)   32          ['b1_blk3_tfa_aff_ms2_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b1_blk3_tfa_aff_ms2_greshape (  (None, 1, 1, 8)     0           ['b1_blk3_tfa_aff_ms2_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b2_blk3_tfa_aff_ms2_lbn2 (Batc  (None, 32, 32, 8)   32          ['b2_blk3_tfa_aff_ms2_l2[0][0]'] 
+ hNormalization)                                                                                  
+                                                                                                  
+ b2_blk3_tfa_aff_ms2_greshape (  (None, 1, 1, 8)     0           ['b2_blk3_tfa_aff_ms2_g2[0][0]'] 
+ Lambda)                                                                                          
+                                                                                                  
+ b1_blk3_tfa_aff_ms2_add (Add)  (None, 32, 32, 8)    0           ['b1_blk3_tfa_aff_ms2_lbn2[0][0]'
+                                                                 , 'b1_blk3_tfa_aff_ms2_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b2_blk3_tfa_aff_ms2_add (Add)  (None, 32, 32, 8)    0           ['b2_blk3_tfa_aff_ms2_lbn2[0][0]'
+                                                                 , 'b2_blk3_tfa_aff_ms2_greshape[0
+                                                                 ][0]']                           
+                                                                                                  
+ b1_blk3_tfa_aff_ms2_sigmoid (A  (None, 32, 32, 8)   0           ['b1_blk3_tfa_aff_ms2_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ b2_blk3_tfa_aff_ms2_sigmoid (A  (None, 32, 32, 8)   0           ['b2_blk3_tfa_aff_ms2_add[0][0]']
+ ctivation)                                                                                       
+                                                                                                  
+ lambda_2 (Lambda)              (None, 32, 32, 8)    0           ['b1_blk3_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ lambda_5 (Lambda)              (None, 32, 32, 8)    0           ['b2_blk3_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ multiply_4 (Multiply)          (None, 32, 32, 8)    0           ['b1_blk3_tfa_aff_Ff1[0][0]',    
+                                                                  'b1_blk3_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ multiply_5 (Multiply)          (None, 32, 32, 8)    0           ['b1_blk3_tfa_aff_Ft1[0][0]',    
+                                                                  'lambda_2[0][0]']               
+                                                                                                  
+ multiply_10 (Multiply)         (None, 32, 32, 8)    0           ['b2_blk3_tfa_aff_Ff1[0][0]',    
+                                                                  'b2_blk3_tfa_aff_ms2_sigmoid[0][
+                                                                 0]']                             
+                                                                                                  
+ multiply_11 (Multiply)         (None, 32, 32, 8)    0           ['b2_blk3_tfa_aff_Ft1[0][0]',    
+                                                                  'lambda_5[0][0]']               
+                                                                                                  
+ b1_blk3_tfa_aff_out (Add)      (None, 32, 32, 8)    0           ['multiply_4[0][0]',             
+                                                                  'multiply_5[0][0]']             
+                                                                                                  
+ b2_blk3_tfa_aff_out (Add)      (None, 32, 32, 8)    0           ['multiply_10[0][0]',            
+                                                                  'multiply_11[0][0]']            
+                                                                                                  
+ b1_blk3_tfa_pw (Conv2D)        (None, 32, 32, 8)    72          ['b1_blk3_tfa_aff_out[0][0]']    
+                                                                                                  
+ b2_blk3_tfa_pw (Conv2D)        (None, 32, 32, 8)    72          ['b2_blk3_tfa_aff_out[0][0]']    
+                                                                                                  
+ b1_blk3_tfa_bn (BatchNormaliza  (None, 32, 32, 8)   32          ['b1_blk3_tfa_pw[0][0]']         
+ tion)                                                                                            
+                                                                                                  
+ b2_blk3_tfa_bn (BatchNormaliza  (None, 32, 32, 8)   32          ['b2_blk3_tfa_pw[0][0]']         
+ tion)                                                                                            
+                                                                                                  
+ b1_blk3_tfa_relu (Activation)  (None, 32, 32, 8)    0           ['b1_blk3_tfa_bn[0][0]']         
+                                                                                                  
+ b2_blk3_tfa_relu (Activation)  (None, 32, 32, 8)    0           ['b2_blk3_tfa_bn[0][0]']         
+                                                                                                  
+ final_concat (Concatenate)     (None, 32, 32, 80)   0           ['v_dual_3x3[0][0]',             
+                                                                  'a_dual_3x3[0][0]',             
+                                                                  'b1_blk3_tfa_relu[0][0]',       
+                                                                  'b2_blk3_tfa_relu[0][0]']       
+                                                                                                  
+ flatten (Flatten)              (None, 81920)        0           ['final_concat[0][0]']           
+                                                                                                  
+ fc1 (Dense)                    (None, 128)          10485888    ['flatten[0][0]']                
+                                                                                                  
+ fc2 (Dense)                    (None, 7)            903         ['fc1[0][0]']                    
+                                                                                                  
+ softmax (Activation)           (None, 7)            0           ['fc2[0][0]']                    
+                                                                                                  
+==================================================================================================
+Total params: 10,602,713
+Trainable params: 10,601,505
+Non-trainable params: 1,208
+__________________________________________________________________________________________________

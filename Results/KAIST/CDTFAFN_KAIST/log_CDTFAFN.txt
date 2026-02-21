@@ -1,0 +1,528 @@
+========== CDTFAFN Load Shift | Vib(.mat)+Current(.tdms) ==========
+VIB_MAT_DIR_0NM: D:\渥太华数据\vibration\vibration
+VIB_MAT_DIR_2NM: D:\渥太华数据\vibration\vibration
+VIB_MAT_DIR_4NM: D:\渥太华数据\vibration\vibration
+CUR_TDMS_DIR   : D:\渥太华数据\current
+OUTPUT_DIR     : D:\机械故障诊断实验\KAIST\CDTFAFN_Comparison_KAIST
+Base noise: 0dB | Robust envs=['NoNoise', 0, -2, -4, -6, -8, -10]
+[FIX(A)] post-zscore(after noise)=False
+[SIEU] mode=mel sr=25600 fl=128 fs=64 fft=256 mel=64 3ch_deltas=True
+[TTA] ENABLE_TTA=False | TTA_K=3
+[EVAL] repeats per SNR=5 | tta per repeat=1
+[BASELINE TRAIN] lr=0.0004156294449523281 batch_size=16 epochs=80 opt=Adamax clipnorm=1.0
+[STEP3] epochs=70 noisy_ce_w=0.35 hard_ce_w=0.25 lambda_max=0.1 warmup=15 bias_p=3.0
+[TSNE] PCA_DIM=50 n_iter=750 perplexity=30.0 max_points=2000
+[LOG] Writing terminal output to: D:\机械故障诊断实验\KAIST\CDTFAFN_Comparison_KAIST\log.txt
+
+>>> Stage 2: Full experiment ...
+
+>>> CDTFAFN Model Architecture Summary:
+============================================================
+Model: "CDTFAFN"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ vib_input (InputLayer)         [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ cur_input (InputLayer)         [(None, 2048, 1)]    0           []                               
+                                                                                                  
+ SIEU (SIEULayer)               (None, 64, 64, 3)    8256        ['vib_input[0][0]',              
+                                                                  'cur_input[0][0]']              
+                                                                                                  
+ coarse_v_conv5 (Conv2D)        (None, 32, 32, 64)   4800        ['SIEU[0][0]']                   
+                                                                                                  
+ coarse_c_conv5 (Conv2D)        (None, 32, 32, 64)   4800        ['SIEU[1][0]']                   
+                                                                                                  
+ coarse_v_bn5 (BatchNormalizati  (None, 32, 32, 64)  256         ['coarse_v_conv5[0][0]']         
+ on)                                                                                              
+                                                                                                  
+ coarse_c_bn5 (BatchNormalizati  (None, 32, 32, 64)  256         ['coarse_c_conv5[0][0]']         
+ on)                                                                                              
+                                                                                                  
+ coarse_v_relu5 (Activation)    (None, 32, 32, 64)   0           ['coarse_v_bn5[0][0]']           
+                                                                                                  
+ coarse_c_relu5 (Activation)    (None, 32, 32, 64)   0           ['coarse_c_bn5[0][0]']           
+                                                                                                  
+ coarse_v_conv3 (Conv2D)        (None, 32, 32, 32)   18464       ['coarse_v_relu5[0][0]']         
+                                                                                                  
+ coarse_c_conv3 (Conv2D)        (None, 32, 32, 32)   18464       ['coarse_c_relu5[0][0]']         
+                                                                                                  
+ coarse_fuse_add (Add)          (None, 32, 32, 32)   0           ['coarse_v_conv3[0][0]',         
+                                                                  'coarse_c_conv3[0][0]']         
+                                                                                                  
+ fine_b1_k3_conv_1 (Conv2D)     (None, 32, 32, 32)   9216        ['coarse_fuse_add[0][0]']        
+                                                                                                  
+ fine_b2_k5_conv_1 (Conv2D)     (None, 32, 32, 32)   25600       ['coarse_fuse_add[0][0]']        
+                                                                                                  
+ fine_b1_k3_bn_1 (BatchNormaliz  (None, 32, 32, 32)  128         ['fine_b1_k3_conv_1[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ fine_b2_k5_bn_1 (BatchNormaliz  (None, 32, 32, 32)  128         ['fine_b2_k5_conv_1[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ fine_b1_k3_relu_1 (Activation)  (None, 32, 32, 32)  0           ['fine_b1_k3_bn_1[0][0]']        
+                                                                                                  
+ fine_b2_k5_relu_1 (Activation)  (None, 32, 32, 32)  0           ['fine_b2_k5_bn_1[0][0]']        
+                                                                                                  
+ fine_b1_k3_tfaffu_1 (TFAFFU)   (None, 32, 32, 32)   4422        ['fine_b1_k3_relu_1[0][0]']      
+                                                                                                  
+ fine_b2_k5_tfaffu_1 (TFAFFU)   (None, 32, 32, 32)   4422        ['fine_b2_k5_relu_1[0][0]']      
+                                                                                                  
+ fine_b1_k3_conv_2 (Conv2D)     (None, 32, 32, 16)   4608        ['fine_b1_k3_tfaffu_1[0][0]']    
+                                                                                                  
+ fine_b2_k5_conv_2 (Conv2D)     (None, 32, 32, 16)   12800       ['fine_b2_k5_tfaffu_1[0][0]']    
+                                                                                                  
+ fine_b1_k3_bn_2 (BatchNormaliz  (None, 32, 32, 16)  64          ['fine_b1_k3_conv_2[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ fine_b2_k5_bn_2 (BatchNormaliz  (None, 32, 32, 16)  64          ['fine_b2_k5_conv_2[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ fine_b1_k3_relu_2 (Activation)  (None, 32, 32, 16)  0           ['fine_b1_k3_bn_2[0][0]']        
+                                                                                                  
+ fine_b2_k5_relu_2 (Activation)  (None, 32, 32, 16)  0           ['fine_b2_k5_bn_2[0][0]']        
+                                                                                                  
+ fine_b1_k3_tfaffu_2 (TFAFFU)   (None, 32, 32, 16)   1330        ['fine_b1_k3_relu_2[0][0]']      
+                                                                                                  
+ fine_b2_k5_tfaffu_2 (TFAFFU)   (None, 32, 32, 16)   1330        ['fine_b2_k5_relu_2[0][0]']      
+                                                                                                  
+ fine_b1_k3_conv_3 (Conv2D)     (None, 32, 32, 8)    1152        ['fine_b1_k3_tfaffu_2[0][0]']    
+                                                                                                  
+ fine_b2_k5_conv_3 (Conv2D)     (None, 32, 32, 8)    3200        ['fine_b2_k5_tfaffu_2[0][0]']    
+                                                                                                  
+ fine_b1_k3_bn_3 (BatchNormaliz  (None, 32, 32, 8)   32          ['fine_b1_k3_conv_3[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ fine_b2_k5_bn_3 (BatchNormaliz  (None, 32, 32, 8)   32          ['fine_b2_k5_conv_3[0][0]']      
+ ation)                                                                                           
+                                                                                                  
+ fine_b1_k3_relu_3 (Activation)  (None, 32, 32, 8)   0           ['fine_b1_k3_bn_3[0][0]']        
+                                                                                                  
+ fine_b2_k5_relu_3 (Activation)  (None, 32, 32, 8)   0           ['fine_b2_k5_bn_3[0][0]']        
+                                                                                                  
+ fine_b1_k3_tfaffu_3 (TFAFFU)   (None, 32, 32, 8)    456         ['fine_b1_k3_relu_3[0][0]']      
+                                                                                                  
+ fine_b2_k5_tfaffu_3 (TFAFFU)   (None, 32, 32, 8)    456         ['fine_b2_k5_relu_3[0][0]']      
+                                                                                                  
+ final_fuse_concat (Concatenate  (None, 32, 32, 80)  0           ['coarse_v_conv3[0][0]',         
+ )                                                                'coarse_c_conv3[0][0]',         
+                                                                  'fine_b1_k3_tfaffu_3[0][0]',    
+                                                                  'fine_b2_k5_tfaffu_3[0][0]']    
+                                                                                                  
+ flatten (Flatten)              (None, 81920)        0           ['final_fuse_concat[0][0]']      
+                                                                                                  
+ fc1_128 (Dense)                (None, 128)          10485888    ['flatten[0][0]']                
+                                                                                                  
+ drop_fc1 (Dropout)             (None, 128)          0           ['fc1_128[0][0]']                
+                                                                                                  
+ softmax (Dense)                (None, 5)            645         ['drop_fc1[0][0]']               
+                                                                                                  
+==================================================================================================
+Total params: 10,611,269
+Trainable params: 10,601,189
+Non-trainable params: 10,080
+__________________________________________________________________________________________________
+============================================================
+
+
+======== Train(0Nm) N=5 (Run 1-10) ========
+  [N5-R1] Train=1m19.46s | 2Nm Acc=0.5465 F1=0.4344 | 4Nm Acc=0.5045 F1=0.3954
+  [N5-R2] Train=1m06.12s | 2Nm Acc=0.5385 F1=0.4547 | 4Nm Acc=0.5025 F1=0.4216
+  [N5-R3] Train=1m17.86s | 2Nm Acc=0.5635 F1=0.5657 | 4Nm Acc=0.4970 F1=0.4944
+  [N5-R4] Train=1m24.99s | 2Nm Acc=0.4770 F1=0.4036 | 4Nm Acc=0.4740 F1=0.4009
+  [N5-R5] Train=1m31.60s | 2Nm Acc=0.6610 F1=0.5796 | 4Nm Acc=0.6425 F1=0.5606
+  [N5-R6] Train=1m45.78s | 2Nm Acc=0.5610 F1=0.5212 | 4Nm Acc=0.5635 F1=0.5233
+  [N5-R7] Train=1m44.88s | 2Nm Acc=0.4000 F1=0.2800 | 4Nm Acc=0.3990 F1=0.2794
+  [N5-R8] Train=1m43.82s | 2Nm Acc=0.4665 F1=0.3770 | 4Nm Acc=0.4070 F1=0.2777
+  [N5-R9] Train=1m50.88s | 2Nm Acc=0.5285 F1=0.4212 | 4Nm Acc=0.5045 F1=0.3915
+  [N5-R10] Train=1m58.63s | 2Nm Acc=0.5065 F1=0.4258 | 4Nm Acc=0.5055 F1=0.4234
+  >>> Trimmed N=5: 2Nm Acc=0.5235±0.0344 F1=0.4505±0.0588 | 4Nm Acc=0.4948±0.0407 F1=0.4162±0.0686
+
+======== Train(0Nm) N=6 (Run 1-10) ========
+  [N6-R1] Train=1m53.09s | 2Nm Acc=0.6985 F1=0.6826 | 4Nm Acc=0.6600 F1=0.6387
+  [N6-R2] Train=1m59.52s | 2Nm Acc=0.4080 F1=0.3010 | 4Nm Acc=0.3355 F1=0.2377
+  [N6-R3] Train=1m53.55s | 2Nm Acc=0.4480 F1=0.3334 | 4Nm Acc=0.4455 F1=0.3282
+  [N6-R4] Train=1m48.97s | 2Nm Acc=0.4115 F1=0.2614 | 4Nm Acc=0.3300 F1=0.2120
+  [N6-R5] Train=1m55.10s | 2Nm Acc=0.6680 F1=0.6111 | 4Nm Acc=0.6215 F1=0.5661
+  [N6-R6] Train=1m52.00s | 2Nm Acc=0.6115 F1=0.5462 | 4Nm Acc=0.5670 F1=0.5081
+  [N6-R7] Train=1m57.44s | 2Nm Acc=0.4870 F1=0.3873 | 4Nm Acc=0.4580 F1=0.3574
+  [N6-R8] Train=1m59.44s | 2Nm Acc=0.5610 F1=0.4416 | 4Nm Acc=0.5695 F1=0.4492
+  [N6-R9] Train=1m57.51s | 2Nm Acc=0.6480 F1=0.5557 | 4Nm Acc=0.6290 F1=0.5342
+  [N6-R10] Train=1m57.37s | 2Nm Acc=0.6680 F1=0.6004 | 4Nm Acc=0.6475 F1=0.5818
+  >>> Trimmed N=6: 2Nm Acc=0.5629±0.0959 F1=0.4721±0.1145 | 4Nm Acc=0.5342±0.1030 F1=0.4453±0.1171
+
+======== Train(0Nm) N=7 (Run 1-10) ========
+  [N7-R1] Train=2m26.63s | 2Nm Acc=0.6425 F1=0.5645 | 4Nm Acc=0.6345 F1=0.5547
+  [N7-R2] Train=2m15.92s | 2Nm Acc=0.4660 F1=0.3840 | 4Nm Acc=0.4645 F1=0.3798
+  [N7-R3] Train=2m13.10s | 2Nm Acc=0.6585 F1=0.5757 | 4Nm Acc=0.6480 F1=0.5664
+  [N7-R4] Train=2m16.73s | 2Nm Acc=0.6090 F1=0.5460 | 4Nm Acc=0.5830 F1=0.5211
+  [N7-R5] Train=2m23.60s | 2Nm Acc=0.7040 F1=0.6425 | 4Nm Acc=0.6235 F1=0.5751
+  [N7-R6] Train=2m25.29s | 2Nm Acc=0.6655 F1=0.6328 | 4Nm Acc=0.6490 F1=0.6135
+  [N7-R7] Train=2m17.51s | 2Nm Acc=0.5575 F1=0.4858 | 4Nm Acc=0.4620 F1=0.4101
+  [N7-R8] Train=2m19.03s | 2Nm Acc=0.5505 F1=0.4373 | 4Nm Acc=0.5425 F1=0.4242
+  [N7-R9] Train=2m25.10s | 2Nm Acc=0.6940 F1=0.6891 | 4Nm Acc=0.6450 F1=0.6380
+  [N7-R10] Train=2m24.40s | 2Nm Acc=0.7675 F1=0.7303 | 4Nm Acc=0.7185 F1=0.6762
+  >>> Trimmed N=7: 2Nm Acc=0.6352±0.0543 F1=0.5717±0.0780 | 4Nm Acc=0.5988±0.0617 F1=0.5379±0.0773
+
+======== Train(0Nm) N=8 (Run 1-10) ========
+  [N8-R1] Train=2m24.66s | 2Nm Acc=0.6995 F1=0.6319 | 4Nm Acc=0.6175 F1=0.5670
+  [N8-R2] Train=2m26.40s | 2Nm Acc=0.3440 F1=0.2400 | 4Nm Acc=0.2150 F1=0.0956
+  [N8-R3] Train=2m16.02s | 2Nm Acc=0.6265 F1=0.5195 | 4Nm Acc=0.6120 F1=0.4934
+  [N8-R4] Train=2m24.14s | 2Nm Acc=0.5365 F1=0.4587 | 4Nm Acc=0.5330 F1=0.4504
+  [N8-R5] Train=2m28.31s | 2Nm Acc=0.7835 F1=0.7675 | 4Nm Acc=0.7520 F1=0.7352
+  [N8-R6] Train=2m19.53s | 2Nm Acc=0.4515 F1=0.3508 | 4Nm Acc=0.4545 F1=0.3515
+  [N8-R7] Train=2m18.95s | 2Nm Acc=0.8185 F1=0.8119 | 4Nm Acc=0.8005 F1=0.7951
+  [N8-R8] Train=2m23.38s | 2Nm Acc=0.7840 F1=0.7811 | 4Nm Acc=0.7815 F1=0.7770
+  [N8-R9] Train=2m18.16s | 2Nm Acc=0.8000 F1=0.7776 | 4Nm Acc=0.7345 F1=0.7205
+  [N8-R10] Train=2m20.83s | 2Nm Acc=0.5915 F1=0.4644 | 4Nm Acc=0.5845 F1=0.4573
+  >>> Trimmed N=8: 2Nm Acc=0.6591±0.1206 F1=0.5939±0.1581 | 4Nm Acc=0.6337±0.1069 F1=0.5690±0.1472
+
+======== Train(0Nm) N=9 (Run 1-10) ========
+  [N9-R1] Train=2m18.34s | 2Nm Acc=0.8700 F1=0.8664 | 4Nm Acc=0.8520 F1=0.8476
+  [N9-R2] Train=2m16.96s | 2Nm Acc=0.8365 F1=0.8350 | 4Nm Acc=0.8105 F1=0.8071
+  [N9-R3] Train=2m17.21s | 2Nm Acc=0.7925 F1=0.7700 | 4Nm Acc=0.7575 F1=0.7260
+  [N9-R4] Train=2m19.53s | 2Nm Acc=0.8635 F1=0.8546 | 4Nm Acc=0.8175 F1=0.8120
+  [N9-R5] Train=2m20.29s | 2Nm Acc=0.5985 F1=0.4742 | 4Nm Acc=0.5950 F1=0.4686
+  [N9-R6] Train=2m17.48s | 2Nm Acc=0.7585 F1=0.7016 | 4Nm Acc=0.6875 F1=0.6343
+  [N9-R7] Train=2m16.21s | 2Nm Acc=0.7145 F1=0.6560 | 4Nm Acc=0.6945 F1=0.6301
+  [N9-R8] Train=2m21.73s | 2Nm Acc=0.6775 F1=0.6313 | 4Nm Acc=0.6565 F1=0.5909
+  [N9-R9] Train=2m18.12s | 2Nm Acc=0.6070 F1=0.5250 | 4Nm Acc=0.5905 F1=0.5043
+  [N9-R10] Train=2m24.48s | 2Nm Acc=0.8600 F1=0.8488 | 4Nm Acc=0.8380 F1=0.8282
+  >>> Trimmed N=9: 2Nm Acc=0.7637±0.0865 F1=0.7278±0.1120 | 4Nm Acc=0.7321±0.0816 F1=0.6916±0.1118
+
+======== Train(0Nm) N=10 (Run 1-10) ========
+  [N10-R1] Train=2m52.41s | 2Nm Acc=0.8140 F1=0.7673 | 4Nm Acc=0.7925 F1=0.7449
+  [N10-R2] Train=2m44.50s | 2Nm Acc=0.8630 F1=0.8448 | 4Nm Acc=0.8380 F1=0.8214
+  [N10-R3] Train=2m46.52s | 2Nm Acc=0.8570 F1=0.8495 | 4Nm Acc=0.8390 F1=0.8302
+  [N10-R4] Train=2m47.92s | 2Nm Acc=0.7470 F1=0.7131 | 4Nm Acc=0.7140 F1=0.6723
+  [N10-R5] Train=2m47.42s | 2Nm Acc=0.6700 F1=0.5878 | 4Nm Acc=0.6460 F1=0.5533
+  [N10-R6] Train=2m46.52s | 2Nm Acc=0.9480 F1=0.9473 | 4Nm Acc=0.9040 F1=0.9025
+  [N10-R7] Train=2m49.06s | 2Nm Acc=0.6685 F1=0.5867 | 4Nm Acc=0.6345 F1=0.5408
+  [N10-R8] Train=2m45.21s | 2Nm Acc=0.9550 F1=0.9544 | 4Nm Acc=0.9535 F1=0.9529
+  [N10-R9] Train=2m39.29s | 2Nm Acc=0.8165 F1=0.8089 | 4Nm Acc=0.7775 F1=0.7643
+  [N10-R10] Train=2m49.99s | 2Nm Acc=0.8660 F1=0.8629 | 4Nm Acc=0.8385 F1=0.8381
+  >>> Trimmed N=10: 2Nm Acc=0.8227±0.0787 F1=0.7977±0.1023 | 4Nm Acc=0.7937±0.0763 F1=0.7659±0.1034
+
+======== Train(0Nm) N=11 (Run 1-10) ========
+  [N11-R1] Train=2m40.83s | 2Nm Acc=0.8690 F1=0.8621 | 4Nm Acc=0.8385 F1=0.8305
+  [N11-R2] Train=2m47.43s | 2Nm Acc=0.8760 F1=0.8669 | 4Nm Acc=0.8600 F1=0.8501
+  [N11-R3] Train=2m46.08s | 2Nm Acc=0.8135 F1=0.7649 | 4Nm Acc=0.8075 F1=0.7598
+  [N11-R4] Train=2m50.83s | 2Nm Acc=0.7790 F1=0.7615 | 4Nm Acc=0.7490 F1=0.7222
+  [N11-R5] Train=2m39.97s | 2Nm Acc=0.8630 F1=0.8648 | 4Nm Acc=0.8340 F1=0.8369
+  [N11-R6] Train=2m50.98s | 2Nm Acc=0.9010 F1=0.8994 | 4Nm Acc=0.9025 F1=0.9010
+  [N11-R7] Train=2m44.41s | 2Nm Acc=0.8875 F1=0.8767 | 4Nm Acc=0.8810 F1=0.8684
+  [N11-R8] Train=2m49.78s | 2Nm Acc=0.6205 F1=0.5870 | 4Nm Acc=0.4790 F1=0.4059
+  [N11-R9] Train=3m03.07s | 2Nm Acc=0.9530 F1=0.9533 | 4Nm Acc=0.9530 F1=0.9527
+  [N11-R10] Train=2m43.41s | 2Nm Acc=0.9545 F1=0.9543 | 4Nm Acc=0.9405 F1=0.9408
+  >>> Trimmed N=11: 2Nm Acc=0.8678±0.0496 F1=0.8562±0.0605 | 4Nm Acc=0.8516±0.0552 F1=0.8387±0.0663
+
+======== Train(0Nm) N=12 (Run 1-10) ========
+  [N12-R1] Train=2m49.43s | 2Nm Acc=0.9355 F1=0.9349 | 4Nm Acc=0.9360 F1=0.9354
+  [N12-R2] Train=2m48.20s | 2Nm Acc=0.7755 F1=0.7121 | 4Nm Acc=0.6775 F1=0.6300
+  [N12-R3] Train=2m52.81s | 2Nm Acc=0.7685 F1=0.7531 | 4Nm Acc=0.6925 F1=0.6427
+  [N12-R4] Train=2m50.23s | 2Nm Acc=0.9140 F1=0.9122 | 4Nm Acc=0.8885 F1=0.8866
+  [N12-R5] Train=2m46.35s | 2Nm Acc=0.9085 F1=0.9082 | 4Nm Acc=0.8890 F1=0.8890
+  [N12-R6] Train=2m53.39s | 2Nm Acc=0.8980 F1=0.8932 | 4Nm Acc=0.8195 F1=0.8092
+  [N12-R7] Train=2m48.94s | 2Nm Acc=0.7920 F1=0.7283 | 4Nm Acc=0.7725 F1=0.7065
+  [N12-R8] Train=2m46.76s | 2Nm Acc=0.6505 F1=0.5573 | 4Nm Acc=0.6125 F1=0.4937
+  [N12-R9] Train=2m42.95s | 2Nm Acc=0.9310 F1=0.9277 | 4Nm Acc=0.9205 F1=0.9159
+  [N12-R10] Train=3m00.47s | 2Nm Acc=0.9000 F1=0.8979 | 4Nm Acc=0.8535 F1=0.8536
+  >>> Trimmed N=12: 2Nm Acc=0.8609±0.0647 F1=0.8416±0.0867 | 4Nm Acc=0.8142±0.0860 F1=0.7917±0.1082
+
+======== Train(0Nm) N=13 (Run 1-10) ========
+[WARN][TAIL-1] Stage2|N=13|Run=1: n_samples=65, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=13|Run=1 n_samples=65, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N13-R1] Train=1m58.91s | 2Nm Acc=0.9845 F1=0.9845 | 4Nm Acc=0.9690 F1=0.9689
+[WARN][TAIL-1] Stage2|N=13|Run=2: n_samples=65, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=13|Run=2 n_samples=65, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N13-R2] Train=1m43.56s | 2Nm Acc=0.9490 F1=0.9489 | 4Nm Acc=0.8575 F1=0.8470
+[WARN][TAIL-1] Stage2|N=13|Run=3: n_samples=65, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=13|Run=3 n_samples=65, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N13-R3] Train=2m03.16s | 2Nm Acc=0.9740 F1=0.9740 | 4Nm Acc=0.9345 F1=0.9339
+[WARN][TAIL-1] Stage2|N=13|Run=4: n_samples=65, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=13|Run=4 n_samples=65, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N13-R4] Train=2m12.95s | 2Nm Acc=0.7530 F1=0.6792 | 4Nm Acc=0.6770 F1=0.5962
+[WARN][TAIL-1] Stage2|N=13|Run=5: n_samples=65, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=13|Run=5 n_samples=65, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+[N13-R5] Train=2m22.31s | 2Nm Acc=0.4530 F1=0.3826 | 4Nm Acc=0.4970 F1=0.4314
+[WARN][TAIL-1] Stage2|N=13|Run=6: n_samples=65, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=13|Run=6 n_samples=65, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N13-R6] Train=2m36.48s | 2Nm Acc=0.9470 F1=0.9467 | 4Nm Acc=0.9290 F1=0.9279
+[WARN][TAIL-1] Stage2|N=13|Run=7: n_samples=65, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=13|Run=7 n_samples=65, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N13-R7] Train=2m22.41s | 2Nm Acc=0.9210 F1=0.9221 | 4Nm Acc=0.9140 F1=0.9150
+[WARN][TAIL-1] Stage2|N=13|Run=8: n_samples=65, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=13|Run=8 n_samples=65, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N13-R8] Train=2m23.66s | 2Nm Acc=0.7985 F1=0.7405 | 4Nm Acc=0.7755 F1=0.7195
+[WARN][TAIL-1] Stage2|N=13|Run=9: n_samples=65, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=13|Run=9 n_samples=65, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N13-R9] Train=2m34.12s | 2Nm Acc=0.9485 F1=0.9478 | 4Nm Acc=0.9280 F1=0.9267
+[WARN][TAIL-1] Stage2|N=13|Run=10: n_samples=65, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=13|Run=10 n_samples=65, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N13-R10] Train=2m41.63s | 2Nm Acc=0.9880 F1=0.9880 | 4Nm Acc=0.9695 F1=0.9695
+  >>> Trimmed N=13: 2Nm Acc=0.9094±0.0800 F1=0.8929±0.1083 | 4Nm Acc=0.8731±0.0929 F1=0.8544±0.1218
+
+======== Train(0Nm) N=14 (Run 1-10) ========
+  [N14-R1] Train=3m19.38s | 2Nm Acc=0.9830 F1=0.9830 | 4Nm Acc=0.9585 F1=0.9582
+  [N14-R2] Train=3m16.03s | 2Nm Acc=0.8260 F1=0.7798 | 4Nm Acc=0.7935 F1=0.7202
+  [N14-R3] Train=3m19.09s | 2Nm Acc=0.9465 F1=0.9449 | 4Nm Acc=0.9220 F1=0.9189
+  [N14-R4] Train=3m14.66s | 2Nm Acc=0.8560 F1=0.8349 | 4Nm Acc=0.8445 F1=0.8184
+  [N14-R5] Train=3m14.32s | 2Nm Acc=0.8875 F1=0.8780 | 4Nm Acc=0.8700 F1=0.8562
+  [N14-R6] Train=3m28.78s | 2Nm Acc=0.8030 F1=0.7781 | 4Nm Acc=0.7500 F1=0.7169
+  [N14-R7] Train=3m37.40s | 2Nm Acc=0.8230 F1=0.7914 | 4Nm Acc=0.7120 F1=0.6853
+  [N14-R8] Train=3m24.16s | 2Nm Acc=0.7315 F1=0.6685 | 4Nm Acc=0.7225 F1=0.6600
+  [N14-R9] Train=3m30.84s | 2Nm Acc=0.9815 F1=0.9815 | 4Nm Acc=0.9620 F1=0.9619
+  [N14-R10] Train=3m18.79s | 2Nm Acc=0.9785 F1=0.9784 | 4Nm Acc=0.9570 F1=0.9577
+  >>> Trimmed N=14: 2Nm Acc=0.8878±0.0677 F1=0.8709±0.0820 | 4Nm Acc=0.8522±0.0853 F1=0.8290±0.1044
+
+======== Train(0Nm) N=15 (Run 1-10) ========
+  [N15-R1] Train=3m23.17s | 2Nm Acc=0.9180 F1=0.9169 | 4Nm Acc=0.8940 F1=0.8920
+  [N15-R2] Train=3m13.99s | 2Nm Acc=0.9985 F1=0.9985 | 4Nm Acc=0.9965 F1=0.9965
+  [N15-R3] Train=3m23.85s | 2Nm Acc=0.9270 F1=0.9257 | 4Nm Acc=0.8965 F1=0.8916
+  [N15-R4] Train=3m26.22s | 2Nm Acc=0.8020 F1=0.7877 | 4Nm Acc=0.7995 F1=0.7851
+  [N15-R5] Train=3m19.01s | 2Nm Acc=0.6365 F1=0.6039 | 4Nm Acc=0.6325 F1=0.6107
+  [N15-R6] Train=3m17.67s | 2Nm Acc=0.8970 F1=0.8896 | 4Nm Acc=0.9010 F1=0.8948
+  [N15-R7] Train=3m33.44s | 2Nm Acc=0.8375 F1=0.8072 | 4Nm Acc=0.8140 F1=0.7778
+  [N15-R8] Train=3m35.18s | 2Nm Acc=0.8020 F1=0.7399 | 4Nm Acc=0.8000 F1=0.7443
+  [N15-R9] Train=3m30.24s | 2Nm Acc=0.6415 F1=0.6182 | 4Nm Acc=0.5450 F1=0.4910
+  [N15-R10] Train=3m22.54s | 2Nm Acc=0.8620 F1=0.8428 | 4Nm Acc=0.8380 F1=0.8061
+  >>> Trimmed N=15: 2Nm Acc=0.8359±0.0863 F1=0.8160±0.0963 | 4Nm Acc=0.8219±0.0823 F1=0.8003±0.0905
+
+======== Train(0Nm) N=16 (Run 1-10) ========
+  [N16-R1] Train=3m31.97s | 2Nm Acc=0.9335 F1=0.9324 | 4Nm Acc=0.8985 F1=0.8963
+  [N16-R2] Train=3m25.81s | 2Nm Acc=0.9335 F1=0.9339 | 4Nm Acc=0.9050 F1=0.9055
+  [N16-R3] Train=3m24.54s | 2Nm Acc=0.8625 F1=0.8555 | 4Nm Acc=0.7860 F1=0.7695
+  [N16-R4] Train=3m29.21s | 2Nm Acc=0.8705 F1=0.8555 | 4Nm Acc=0.8595 F1=0.8430
+  [N16-R5] Train=3m32.32s | 2Nm Acc=0.5155 F1=0.4321 | 4Nm Acc=0.4910 F1=0.3935
+  [N16-R6] Train=3m23.37s | 2Nm Acc=0.9730 F1=0.9729 | 4Nm Acc=0.9715 F1=0.9715
+  [N16-R7] Train=3m25.36s | 2Nm Acc=0.9820 F1=0.9821 | 4Nm Acc=0.9555 F1=0.9546
+  [N16-R8] Train=3m23.75s | 2Nm Acc=0.7385 F1=0.7180 | 4Nm Acc=0.7095 F1=0.6849
+  [N16-R9] Train=3m34.57s | 2Nm Acc=0.9860 F1=0.9860 | 4Nm Acc=0.8955 F1=0.8912
+  [N16-R10] Train=3m44.84s | 2Nm Acc=0.7970 F1=0.7517 | 4Nm Acc=0.7740 F1=0.7252
+  >>> Trimmed N=16: 2Nm Acc=0.8863±0.0804 F1=0.8753±0.0925 | 4Nm Acc=0.8479±0.0777 F1=0.8338±0.0902
+
+======== Train(0Nm) N=17 (Run 1-10) ========
+  [N17-R1] Train=3m39.59s | 2Nm Acc=0.6145 F1=0.5051 | 4Nm Acc=0.6080 F1=0.4903
+  [N17-R2] Train=3m42.94s | 2Nm Acc=0.8800 F1=0.8720 | 4Nm Acc=0.8610 F1=0.8529
+  [N17-R3] Train=3m40.47s | 2Nm Acc=0.8570 F1=0.8363 | 4Nm Acc=0.8300 F1=0.7983
+  [N17-R4] Train=3m48.83s | 2Nm Acc=0.5860 F1=0.4919 | 4Nm Acc=0.5675 F1=0.4622
+  [N17-R5] Train=3m39.51s | 2Nm Acc=0.7845 F1=0.7218 | 4Nm Acc=0.7370 F1=0.6802
+  [N17-R6] Train=3m53.80s | 2Nm Acc=0.9995 F1=0.9995 | 4Nm Acc=0.9965 F1=0.9965
+  [N17-R7] Train=3m40.40s | 2Nm Acc=0.8715 F1=0.8567 | 4Nm Acc=0.8480 F1=0.8301
+  [N17-R8] Train=3m56.14s | 2Nm Acc=0.9940 F1=0.9940 | 4Nm Acc=0.9505 F1=0.9496
+  [N17-R9] Train=3m54.20s | 2Nm Acc=0.9595 F1=0.9592 | 4Nm Acc=0.9415 F1=0.9396
+  [N17-R10] Train=3m36.28s | 2Nm Acc=0.9930 F1=0.9930 | 4Nm Acc=0.9860 F1=0.9860
+  >>> Trimmed N=17: 2Nm Acc=0.8693±0.1180 F1=0.8423±0.1536 | 4Nm Acc=0.8452±0.1165 F1=0.8159±0.1535
+
+======== Train(0Nm) N=18 (Run 1-10) ========
+  [N18-R1] Train=3m47.47s | 2Nm Acc=0.9540 F1=0.9532 | 4Nm Acc=0.9625 F1=0.9620
+  [N18-R2] Train=3m45.02s | 2Nm Acc=0.9960 F1=0.9960 | 4Nm Acc=0.9945 F1=0.9945
+  [N18-R3] Train=3m40.20s | 2Nm Acc=0.9580 F1=0.9578 | 4Nm Acc=0.9510 F1=0.9508
+  [N18-R4] Train=3m51.94s | 2Nm Acc=0.9180 F1=0.9150 | 4Nm Acc=0.9090 F1=0.9076
+  [N18-R5] Train=4m01.25s | 2Nm Acc=0.7780 F1=0.7271 | 4Nm Acc=0.7540 F1=0.6988
+  [N18-R6] Train=3m44.27s | 2Nm Acc=0.7795 F1=0.7245 | 4Nm Acc=0.7220 F1=0.6678
+  [N18-R7] Train=3m47.71s | 2Nm Acc=0.7925 F1=0.7446 | 4Nm Acc=0.7785 F1=0.7337
+  [N18-R8] Train=3m54.81s | 2Nm Acc=0.8135 F1=0.8025 | 4Nm Acc=0.6670 F1=0.5962
+  [N18-R9] Train=3m56.85s | 2Nm Acc=0.9175 F1=0.9138 | 4Nm Acc=0.9160 F1=0.9125
+  [N18-R10] Train=3m37.70s | 2Nm Acc=0.2125 F1=0.0910 | 4Nm Acc=0.2100 F1=0.0863
+  >>> Trimmed N=18: 2Nm Acc=0.8639±0.0749 F1=0.8423±0.0964 | 4Nm Acc=0.8325±0.1075 F1=0.8037±0.1354
+
+======== Train(0Nm) N=19 (Run 1-10) ========
+  [N19-R1] Train=4m02.18s | 2Nm Acc=0.7095 F1=0.6623 | 4Nm Acc=0.6850 F1=0.6305
+  [N19-R2] Train=3m46.91s | 2Nm Acc=0.8465 F1=0.8233 | 4Nm Acc=0.8170 F1=0.7892
+  [N19-R3] Train=3m49.75s | 2Nm Acc=0.8200 F1=0.7770 | 4Nm Acc=0.8145 F1=0.7681
+  [N19-R4] Train=3m54.07s | 2Nm Acc=0.6835 F1=0.6535 | 4Nm Acc=0.6355 F1=0.6044
+  [N19-R5] Train=3m53.59s | 2Nm Acc=0.7570 F1=0.7194 | 4Nm Acc=0.6885 F1=0.6295
+  [N19-R6] Train=3m38.35s | 2Nm Acc=0.8775 F1=0.8668 | 4Nm Acc=0.8800 F1=0.8708
+  [N19-R7] Train=3m50.30s | 2Nm Acc=0.9080 F1=0.9011 | 4Nm Acc=0.8915 F1=0.8819
+  [N19-R8] Train=3m46.66s | 2Nm Acc=0.9645 F1=0.9645 | 4Nm Acc=0.8795 F1=0.8789
+  [N19-R9] Train=3m53.85s | 2Nm Acc=0.9125 F1=0.9106 | 4Nm Acc=0.9155 F1=0.9131
+  [N19-R10] Train=3m37.16s | 2Nm Acc=0.6115 F1=0.5237 | 4Nm Acc=0.6050 F1=0.5112
+  >>> Trimmed N=19: 2Nm Acc=0.8143±0.0828 F1=0.7892±0.0962 | 4Nm Acc=0.7864±0.0954 F1=0.7567±0.1119
+
+======== Train(0Nm) N=20 (Run 1-10) ========
+  [N20-R1] Train=4m17.82s | 2Nm Acc=0.9345 F1=0.9313 | 4Nm Acc=0.9185 F1=0.9128
+  [N20-R2] Train=4m11.31s | 2Nm Acc=0.9910 F1=0.9910 | 4Nm Acc=0.9820 F1=0.9821
+  [N20-R3] Train=4m39.49s | 2Nm Acc=0.9450 F1=0.9449 | 4Nm Acc=0.9290 F1=0.9290
+  [N20-R4] Train=4m50.18s | 2Nm Acc=0.9990 F1=0.9990 | 4Nm Acc=0.9900 F1=0.9900
+  [N20-R5] Train=20m21.97s | 2Nm Acc=0.8015 F1=0.7366 | 4Nm Acc=0.8005 F1=0.7350
+  [N20-R6] Train=10m54.34s | 2Nm Acc=0.9075 F1=0.9016 | 4Nm Acc=0.8970 F1=0.8901
+  [N20-R7] Train=9m30.02s | 2Nm Acc=0.9665 F1=0.9659 | 4Nm Acc=0.9545 F1=0.9540
+  [N20-R8] Train=16m50.00s | 2Nm Acc=0.8560 F1=0.8350 | 4Nm Acc=0.8540 F1=0.8342
+  [N20-R9] Train=23m26.20s | 2Nm Acc=0.8915 F1=0.8830 | 4Nm Acc=0.8805 F1=0.8697
+  [N20-R10] Train=8m02.81s | 2Nm Acc=0.9390 F1=0.9376 | 4Nm Acc=0.8715 F1=0.8738
+  >>> Trimmed N=20: 2Nm Acc=0.9289±0.0401 F1=0.9238±0.0461 | 4Nm Acc=0.9109±0.0407 F1=0.9057±0.0453
+
+======== Train(0Nm) N=21 (Run 1-10) ========
+  [N21-R1] Train=4m17.61s | 2Nm Acc=0.9985 F1=0.9985 | 4Nm Acc=0.9350 F1=0.9325
+  [N21-R2] Train=4m22.59s | 2Nm Acc=0.8440 F1=0.8290 | 4Nm Acc=0.8310 F1=0.8102
+  [N21-R3] Train=12m09.85s | 2Nm Acc=0.9750 F1=0.9750 | 4Nm Acc=0.9615 F1=0.9610
+  [N21-R4] Train=16m58.26s | 2Nm Acc=0.9820 F1=0.9820 | 4Nm Acc=0.9465 F1=0.9455
+  [N21-R5] Train=4m35.09s | 2Nm Acc=0.9955 F1=0.9955 | 4Nm Acc=0.9925 F1=0.9925
+  [N21-R6] Train=5m00.00s | 2Nm Acc=0.9385 F1=0.9374 | 4Nm Acc=0.9290 F1=0.9275
+  [N21-R7] Train=4m39.42s | 2Nm Acc=0.9550 F1=0.9544 | 4Nm Acc=0.9480 F1=0.9472
+  [N21-R8] Train=4m52.59s | 2Nm Acc=0.9190 F1=0.9158 | 4Nm Acc=0.9130 F1=0.9104
+  [N21-R9] Train=5m18.07s | 2Nm Acc=0.9220 F1=0.9213 | 4Nm Acc=0.8925 F1=0.8948
+  [N21-R10] Train=4m55.06s | 2Nm Acc=0.8135 F1=0.7641 | 4Nm Acc=0.7680 F1=0.7135
+  >>> Trimmed N=21: 2Nm Acc=0.9414±0.0451 F1=0.9388±0.0494 | 4Nm Acc=0.9196±0.0391 F1=0.9161±0.0446
+
+======== Train(0Nm) N=22 (Run 1-10) ========
+  [N22-R1] Train=5m11.34s | 2Nm Acc=0.9165 F1=0.9140 | 4Nm Acc=0.8880 F1=0.8837
+  [N22-R2] Train=4m51.06s | 2Nm Acc=0.9935 F1=0.9935 | 4Nm Acc=0.9885 F1=0.9885
+  [N22-R3] Train=5m04.42s | 2Nm Acc=0.6745 F1=0.6543 | 4Nm Acc=0.7145 F1=0.6938
+  [N22-R4] Train=4m41.73s | 2Nm Acc=0.8640 F1=0.8639 | 4Nm Acc=0.8170 F1=0.8126
+  [N22-R5] Train=4m28.40s | 2Nm Acc=0.9980 F1=0.9980 | 4Nm Acc=0.9925 F1=0.9925
+  [N22-R6] Train=4m48.14s | 2Nm Acc=0.8895 F1=0.8827 | 4Nm Acc=0.8825 F1=0.8763
+  [N22-R7] Train=5m08.41s | 2Nm Acc=0.8130 F1=0.7668 | 4Nm Acc=0.8125 F1=0.7660
+  [N22-R8] Train=4m57.10s | 2Nm Acc=0.7065 F1=0.6359 | 4Nm Acc=0.7270 F1=0.6587
+  [N22-R9] Train=4m44.01s | 2Nm Acc=0.8115 F1=0.7970 | 4Nm Acc=0.7910 F1=0.7715
+  [N22-R10] Train=4m50.56s | 2Nm Acc=0.8210 F1=0.7809 | 4Nm Acc=0.7815 F1=0.7374
+  >>> Trimmed N=22: 2Nm Acc=0.8519±0.0799 F1=0.8316±0.0975 | 4Nm Acc=0.8360±0.0758 F1=0.8162±0.0892
+
+======== Train(0Nm) N=23 (Run 1-10) ========
+  [N23-R1] Train=5m22.78s | 2Nm Acc=0.9920 F1=0.9920 | 4Nm Acc=0.9640 F1=0.9637
+  [N23-R2] Train=5m19.55s | 2Nm Acc=0.9370 F1=0.9350 | 4Nm Acc=0.9145 F1=0.9100
+  [N23-R3] Train=4m48.76s | 2Nm Acc=0.8350 F1=0.8027 | 4Nm Acc=0.8195 F1=0.7819
+  [N23-R4] Train=4m33.63s | 2Nm Acc=0.9920 F1=0.9920 | 4Nm Acc=0.9815 F1=0.9815
+  [N23-R5] Train=4m55.37s | 2Nm Acc=0.9910 F1=0.9910 | 4Nm Acc=0.9800 F1=0.9801
+  [N23-R6] Train=4m51.39s | 2Nm Acc=0.8740 F1=0.8630 | 4Nm Acc=0.7380 F1=0.7253
+  [N23-R7] Train=4m33.45s | 2Nm Acc=0.9275 F1=0.9250 | 4Nm Acc=0.9305 F1=0.9283
+  [N23-R8] Train=4m43.26s | 2Nm Acc=0.9920 F1=0.9920 | 4Nm Acc=0.9790 F1=0.9788
+  [N23-R9] Train=4m35.75s | 2Nm Acc=0.9295 F1=0.9280 | 4Nm Acc=0.9325 F1=0.9314
+  [N23-R10] Train=4m32.47s | 2Nm Acc=0.9875 F1=0.9874 | 4Nm Acc=0.9690 F1=0.9686
+  >>> Trimmed N=23: 2Nm Acc=0.9538±0.0409 F1=0.9517±0.0440 | 4Nm Acc=0.9361±0.0497 F1=0.9304±0.0611
+
+======== Train(0Nm) N=24 (Run 1-10) ========
+  [N24-R1] Train=5m21.48s | 2Nm Acc=0.8315 F1=0.7947 | 4Nm Acc=0.8155 F1=0.7637
+  [N24-R2] Train=4m58.00s | 2Nm Acc=0.9975 F1=0.9975 | 4Nm Acc=0.9880 F1=0.9880
+  [N24-R3] Train=4m51.05s | 2Nm Acc=0.6470 F1=0.5822 | 4Nm Acc=0.6045 F1=0.5108
+  [N24-R4] Train=4m57.03s | 2Nm Acc=0.8715 F1=0.8608 | 4Nm Acc=0.8315 F1=0.8250
+  [N24-R5] Train=4m54.73s | 2Nm Acc=0.9150 F1=0.9124 | 4Nm Acc=0.8900 F1=0.8859
+  [N24-R6] Train=4m56.12s | 2Nm Acc=0.8035 F1=0.7484 | 4Nm Acc=0.7880 F1=0.7386
+  [N24-R7] Train=4m52.42s | 2Nm Acc=0.8625 F1=0.8441 | 4Nm Acc=0.8755 F1=0.8626
+  [N24-R8] Train=4m35.36s | 2Nm Acc=0.9220 F1=0.9199 | 4Nm Acc=0.8940 F1=0.8917
+  [N24-R9] Train=4m56.75s | 2Nm Acc=0.9685 F1=0.9684 | 4Nm Acc=0.8995 F1=0.8929
+  [N24-R10] Train=4m41.95s | 2Nm Acc=0.8795 F1=0.8690 | 4Nm Acc=0.8315 F1=0.8234
+  >>> Trimmed N=24: 2Nm Acc=0.8818±0.0492 F1=0.8647±0.0661 | 4Nm Acc=0.8532±0.0392 F1=0.8355±0.0554
+
+======== Train(0Nm) N=25 (Run 1-10) ========
+  [N25-R1] Train=4m42.99s | 2Nm Acc=0.6000 F1=0.4787 | 4Nm Acc=0.6000 F1=0.4751
+  [N25-R2] Train=4m33.03s | 2Nm Acc=0.8955 F1=0.8936 | 4Nm Acc=0.8760 F1=0.8734
+  [N25-R3] Train=4m51.98s | 2Nm Acc=0.8965 F1=0.8903 | 4Nm Acc=0.8860 F1=0.8826
+  [N25-R4] Train=4m45.39s | 2Nm Acc=0.9070 F1=0.9020 | 4Nm Acc=0.9060 F1=0.9011
+  [N25-R5] Train=4m46.50s | 2Nm Acc=0.9970 F1=0.9970 | 4Nm Acc=0.9940 F1=0.9940
+  [N25-R6] Train=4m30.24s | 2Nm Acc=0.9865 F1=0.9865 | 4Nm Acc=0.9665 F1=0.9670
+  [N25-R7] Train=4m45.24s | 2Nm Acc=0.9960 F1=0.9960 | 4Nm Acc=0.9955 F1=0.9955
+  [N25-R8] Train=4m47.26s | 2Nm Acc=0.7145 F1=0.6720 | 4Nm Acc=0.6550 F1=0.5712
+  [N25-R9] Train=4m38.47s | 2Nm Acc=0.7650 F1=0.7313 | 4Nm Acc=0.7610 F1=0.7216
+  [N25-R10] Train=4m42.40s | 2Nm Acc=0.7370 F1=0.6782 | 4Nm Acc=0.6945 F1=0.6175
+  >>> Trimmed N=25: 2Nm Acc=0.8622±0.1028 F1=0.8437±0.1231 | 4Nm Acc=0.8424±0.1168 F1=0.8160±0.1490
+
+======== Train(0Nm) N=26 (Run 1-10) ========
+  [N26-R1] Train=5m16.31s | 2Nm Acc=0.7595 F1=0.7373 | 4Nm Acc=0.6935 F1=0.6270
+  [N26-R2] Train=5m08.73s | 2Nm Acc=0.8775 F1=0.8716 | 4Nm Acc=0.8655 F1=0.8579
+  [N26-R3] Train=5m27.12s | 2Nm Acc=0.8480 F1=0.8223 | 4Nm Acc=0.8445 F1=0.8195
+  [N26-R4] Train=5m16.04s | 2Nm Acc=0.8150 F1=0.7631 | 4Nm Acc=0.8090 F1=0.7506
+  [N26-R5] Train=5m02.30s | 2Nm Acc=0.9995 F1=0.9995 | 4Nm Acc=0.9980 F1=0.9980
+  [N26-R6] Train=5m04.64s | 2Nm Acc=0.8990 F1=0.8923 | 4Nm Acc=0.8960 F1=0.8922
+  [N26-R7] Train=5m15.65s | 2Nm Acc=0.8405 F1=0.8115 | 4Nm Acc=0.8365 F1=0.8116
+  [N26-R8] Train=5m20.93s | 2Nm Acc=0.8580 F1=0.8369 | 4Nm Acc=0.8505 F1=0.8267
+  [N26-R9] Train=5m06.66s | 2Nm Acc=0.8985 F1=0.8953 | 4Nm Acc=0.8650 F1=0.8568
+  [N26-R10] Train=5m02.39s | 2Nm Acc=0.8975 F1=0.8926 | 4Nm Acc=0.8235 F1=0.8107
+  >>> Trimmed N=26: 2Nm Acc=0.8667±0.0294 F1=0.8482±0.0448 | 4Nm Acc=0.8488±0.0254 F1=0.8282±0.0395
+
+======== Train(0Nm) N=27 (Run 1-10) ========
+  [N27-R1] Train=5m36.36s | 2Nm Acc=0.8370 F1=0.8093 | 4Nm Acc=0.8385 F1=0.8123
+  [N27-R2] Train=5m30.13s | 2Nm Acc=0.9970 F1=0.9970 | 4Nm Acc=0.9945 F1=0.9945
+  [N27-R3] Train=5m34.80s | 2Nm Acc=0.9545 F1=0.9540 | 4Nm Acc=0.9255 F1=0.9257
+  [N27-R4] Train=5m19.45s | 2Nm Acc=0.9540 F1=0.9534 | 4Nm Acc=0.9645 F1=0.9641
+  [N27-R5] Train=5m27.44s | 2Nm Acc=0.7265 F1=0.6584 | 4Nm Acc=0.7030 F1=0.6314
+  [N27-R6] Train=5m04.16s | 2Nm Acc=0.9940 F1=0.9940 | 4Nm Acc=0.9700 F1=0.9696
+  [N27-R7] Train=4m59.35s | 2Nm Acc=0.9895 F1=0.9895 | 4Nm Acc=0.9910 F1=0.9910
+  [N27-R8] Train=5m31.25s | 2Nm Acc=0.8655 F1=0.8496 | 4Nm Acc=0.8055 F1=0.7846
+  [N27-R9] Train=5m24.84s | 2Nm Acc=0.9520 F1=0.9515 | 4Nm Acc=0.9370 F1=0.9363
+  [N27-R10] Train=5m02.17s | 2Nm Acc=0.9790 F1=0.9790 | 4Nm Acc=0.9655 F1=0.9654
+  >>> Trimmed N=27: 2Nm Acc=0.9407±0.0543 F1=0.9350±0.0637 | 4Nm Acc=0.9247±0.0627 F1=0.9186±0.0722
+
+======== Train(0Nm) N=28 (Run 1-10) ========
+  [N28-R1] Train=5m16.79s | 2Nm Acc=0.9990 F1=0.9990 | 4Nm Acc=0.9985 F1=0.9985
+  [N28-R2] Train=5m22.47s | 2Nm Acc=0.9710 F1=0.9708 | 4Nm Acc=0.9660 F1=0.9658
+  [N28-R3] Train=5m10.84s | 2Nm Acc=0.8910 F1=0.8824 | 4Nm Acc=0.8880 F1=0.8799
+  [N28-R4] Train=5m14.58s | 2Nm Acc=0.9995 F1=0.9995 | 4Nm Acc=0.9805 F1=0.9802
+  [N28-R5] Train=5m30.58s | 2Nm Acc=1.0000 F1=1.0000 | 4Nm Acc=0.9985 F1=0.9985
+  [N28-R6] Train=5m32.18s | 2Nm Acc=0.9995 F1=0.9995 | 4Nm Acc=0.9985 F1=0.9985
+  [N28-R7] Train=5m03.90s | 2Nm Acc=0.8180 F1=0.7717 | 4Nm Acc=0.8180 F1=0.7722
+  [N28-R8] Train=4m59.90s | 2Nm Acc=0.8735 F1=0.8648 | 4Nm Acc=0.8445 F1=0.8295
+  [N28-R9] Train=5m12.02s | 2Nm Acc=1.0000 F1=1.0000 | 4Nm Acc=0.9950 F1=0.9950
+  [N28-R10] Train=5m12.73s | 2Nm Acc=0.9885 F1=0.9885 | 4Nm Acc=0.9805 F1=0.9805
+  >>> Trimmed N=28: 2Nm Acc=0.9653±0.0490 F1=0.9631±0.0527 | 4Nm Acc=0.9564±0.0542 F1=0.9535±0.0593
+
+======== Train(0Nm) N=29 (Run 1-10) ========
+[WARN][TAIL-1] Stage2|N=29|Run=1: n_samples=145, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=29|Run=1 n_samples=145, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N29-R1] Train=4m16.57s | 2Nm Acc=1.0000 F1=1.0000 | 4Nm Acc=0.9940 F1=0.9940
+[WARN][TAIL-1] Stage2|N=29|Run=2: n_samples=145, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=29|Run=2 n_samples=145, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N29-R2] Train=4m09.81s | 2Nm Acc=0.9980 F1=0.9980 | 4Nm Acc=0.9890 F1=0.9890
+[WARN][TAIL-1] Stage2|N=29|Run=3: n_samples=145, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=29|Run=3 n_samples=145, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N29-R3] Train=4m12.69s | 2Nm Acc=0.4560 F1=0.3801 | 4Nm Acc=0.4405 F1=0.3544
+[WARN][TAIL-1] Stage2|N=29|Run=4: n_samples=145, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=29|Run=4 n_samples=145, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N29-R4] Train=4m12.78s | 2Nm Acc=0.9100 F1=0.9082 | 4Nm Acc=0.8860 F1=0.8835
+[WARN][TAIL-1] Stage2|N=29|Run=5: n_samples=145, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=29|Run=5 n_samples=145, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N29-R5] Train=4m25.15s | 2Nm Acc=0.9855 F1=0.9855 | 4Nm Acc=0.9685 F1=0.9685
+[WARN][TAIL-1] Stage2|N=29|Run=6: n_samples=145, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=29|Run=6 n_samples=145, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N29-R6] Train=3m58.82s | 2Nm Acc=0.7985 F1=0.7365 | 4Nm Acc=0.7940 F1=0.7340
+[WARN][TAIL-1] Stage2|N=29|Run=7: n_samples=145, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=29|Run=7 n_samples=145, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N29-R7] Train=4m05.22s | 2Nm Acc=0.7520 F1=0.6879 | 4Nm Acc=0.7375 F1=0.6739
+[WARN][TAIL-1] Stage2|N=29|Run=8: n_samples=145, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=29|Run=8 n_samples=145, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N29-R8] Train=4m08.83s | 2Nm Acc=0.9980 F1=0.9980 | 4Nm Acc=0.9930 F1=0.9930
+[WARN][TAIL-1] Stage2|N=29|Run=9: n_samples=145, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=29|Run=9 n_samples=145, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N29-R9] Train=3m50.47s | 2Nm Acc=0.5890 F1=0.4952 | 4Nm Acc=0.5900 F1=0.5204
+[WARN][TAIL-1] Stage2|N=29|Run=10: n_samples=145, batch_size=16, remainder=1 -> may cause NaN with BN/custom norm. A safe batch size will be used.
+[SAFE-BS] Stage2|N=29|Run=10 n_samples=145, preferred_bs=16 -> use batch_size=15 (avoid remainder=1)
+  [N29-R10] Train=5m24.29s | 2Nm Acc=0.8990 F1=0.8919 | 4Nm Acc=0.9070 F1=0.9014
+  >>> Trimmed N=29: 2Nm Acc=0.8662±0.1353 F1=0.8377±0.1700 | 4Nm Acc=0.8581±0.1329 F1=0.8330±0.1614
+
+======== Train(0Nm) N=30 (Run 1-10) ========
+  [N30-R1] Train=5m46.23s | 2Nm Acc=0.9815 F1=0.9815 | 4Nm Acc=0.9750 F1=0.9750
+  [N30-R2] Train=5m29.46s | 2Nm Acc=0.9785 F1=0.9784 | 4Nm Acc=0.9730 F1=0.9730
+  [N30-R3] Train=5m51.22s | 2Nm Acc=0.9990 F1=0.9990 | 4Nm Acc=0.9985 F1=0.9985
+  [N30-R4] Train=5m41.53s | 2Nm Acc=0.7045 F1=0.6529 | 4Nm Acc=0.6985 F1=0.6445
+  [N30-R5] Train=5m51.59s | 2Nm Acc=0.8560 F1=0.8378 | 4Nm Acc=0.8505 F1=0.8313
+  [N30-R6] Train=5m38.03s | 2Nm Acc=0.9990 F1=0.9990 | 4Nm Acc=0.9795 F1=0.9793
+  [N30-R7] Train=5m49.25s | 2Nm Acc=0.9910 F1=0.9910 | 4Nm Acc=0.9870 F1=0.9869
+  [N30-R8] Train=6m09.81s | 2Nm Acc=0.8840 F1=0.8737 | 4Nm Acc=0.8730 F1=0.8592
+  [N30-R9] Train=6m36.25s | 2Nm Acc=0.9995 F1=0.9995 | 4Nm Acc=0.9880 F1=0.9880
+  [N30-R10] Train=6m35.31s | 2Nm Acc=0.9900 F1=0.9900 | 4Nm Acc=0.9545 F1=0.9552
+  >>> Trimmed N=30: 2Nm Acc=0.9599±0.0528 F1=0.9563±0.0591 | 4Nm Acc=0.9476±0.0508 F1=0.9435±0.0579
+[Time] Stage2(FullExp) = 19h20m48.09s
+
+>>> Stage 3: Noise robustness study (FAIR SameModel) ...
+[Step3-FAIR] NoiseStudy_model trained ONCE. time=6m53.91s
+[Step3-FAIR] SNR=NoNoise | 2Nm Acc=0.6555±0.0000 F1=0.6234±0.0000 | 4Nm Acc=0.5265±0.0000 F1=0.4633±0.0000 | tta=1
+[Step3-FAIR] SNR=0 | 2Nm Acc=0.9905±0.0018 F1=0.9905±0.0018 | 4Nm Acc=0.9850±0.0022 F1=0.9850±0.0022 | tta=1
+    [Sanity] empirical SNR≈0.02 dB (vib subset, after your current pipeline)
+[Step3-FAIR] SNR=-2 | 2Nm Acc=0.9883±0.0012 F1=0.9883±0.0012 | 4Nm Acc=0.9778±0.0026 F1=0.9777±0.0026 | tta=1
+    [Sanity] empirical SNR≈-1.98 dB (vib subset, after your current pipeline)
+[Step3-FAIR] SNR=-4 | 2Nm Acc=0.9275±0.0018 F1=0.9247±0.0021 | 4Nm Acc=0.9092±0.0022 F1=0.9044±0.0028 | tta=1
+    [Sanity] empirical SNR≈-3.98 dB (vib subset, after your current pipeline)
+[Step3-FAIR] SNR=-6 | 2Nm Acc=0.7746±0.0087 F1=0.7608±0.0095 | 4Nm Acc=0.7581±0.0045 F1=0.7423±0.0047 | tta=1
+    [Sanity] empirical SNR≈-5.98 dB (vib subset, after your current pipeline)
+[Step3-FAIR] SNR=-8 | 2Nm Acc=0.5872±0.0027 F1=0.5378±0.0044 | 4Nm Acc=0.5604±0.0054 F1=0.5118±0.0078 | tta=1
+    [Sanity] empirical SNR≈-7.98 dB (vib subset, after your current pipeline)
+[Step3-FAIR] SNR=-10 | 2Nm Acc=0.4377±0.0045 F1=0.3718±0.0045 | 4Nm Acc=0.4232±0.0016 F1=0.3561±0.0010 | tta=1
+    [Sanity] empirical SNR≈-9.98 dB (vib subset, after your current pipeline)
+[Step3-FAIR] Saved: D:\机械故障诊断实验\KAIST\CDTFAFN_Comparison_KAIST\NoiseStudy_LoadShift_FAIR_SameModel\Noise_Robustness_LoadShift_SameModel_FAIR.csv
+[Time] Stage3(NoiseStudy) = 12m07.47s
+[Time] TOTAL = 19h32m55.56s
+[Time] Saved: D:\机械故障诊断实验\KAIST\CDTFAFN_Comparison_KAIST\Time_Summary.txt
+
+ALL DONE. Outputs saved to: D:\机械故障诊断实验\KAIST\CDTFAFN_Comparison_KAIST
+[LOG] Saved: D:\机械故障诊断实验\KAIST\CDTFAFN_Comparison_KAIST\log.txt
