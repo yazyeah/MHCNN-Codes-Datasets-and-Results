@@ -153,7 +153,7 @@ Two synchronized modalities are used:
 - `Datasets/KAIST/`
 
 A common on-disk structure is:
-- `Datasets/KAIST/vibration/vibration/`  (contains `0Nm_*.mat`, `2Nm_*.mat`, `4Nm_*.mat`)
+- `Datasets/KAIST/vibration/`  (contains `0Nm_*.mat`, `2Nm_*.mat`, `4Nm_*.mat`)
 - `Datasets/KAIST/current/`             (contains `0Nm_*.tdms`, `2Nm_*.tdms`, `4Nm_*.tdms`)
 
 > The code itself does **NOT** force a fixed structure: you can place the data anywhere and simply point the script placeholders to your folders.
