@@ -125,7 +125,7 @@ The paper evaluates MHCNN on two public datasets. This repository focuses on rep
 
 ---
 
-### 2.1 Case 1 (Paper): UORED-VAFCLS (Vibration + Acoustic)
+### 2.1 Case 1: UORED-VAFCLS (Vibration + Acoustic)
 
 - Collected on a University of Ottawa bearing test rig (vibration + acoustic).
 - Sampling rate: **42 kHz**, duration: **10 s** per recording, speed: **1750 RPM**.
@@ -137,7 +137,7 @@ The paper evaluates MHCNN on two public datasets. This repository focuses on rep
 
 ---
 
-### 2.2 Case 2 (This repo): KAIST Load-Shift (Vibration `.mat` + Current `.tdms`)
+### 2.2 Case 2: KAIST Load-Shift (Vibration `.mat` + Current `.tdms`)
 
 This repository’s reproducibility scripts implement **Load-Shift generalization**:
 
@@ -207,7 +207,7 @@ This section is written as a **step-by-step checklist** for reproducing the **KA
 - (Strongly recommended) **NVIDIA GPU with ≥ 8 GB VRAM**
 - **Git** + *(Optional)* **Git LFS** (only if you store large files via LFS)
 - A terminal: **Anaconda Prompt** (recommended) or **PowerShell**
-- This repository cloned locally (including `Datasets/` if you keep datasets inside the repo)
+- This repository cloned locally (including `Datasets/`)
 
 ---
 
@@ -327,15 +327,15 @@ python -V
 
 ### 4) Install dependencies
 
-#### Option A: `requirements.txt` (recommended for GitHub)
+#### Option A: `requirements.txt`
 
-If your repo provides `requirements.txt`:
+Download the `requirements.txt`:
 ~~~bash
 pip install --upgrade pip
 pip install -r requirements.txt
 ~~~
 
-#### Option B: install via pip commands (explicit for beginners)
+#### Option B: install via pip commands
 
 ~~~bash
 pip install --upgrade pip
@@ -517,7 +517,7 @@ python -V
 
 ### 2) Install dependencies (same as KAIST)
 
-If `requirements.txt` exists:
+ Download the `requirements.txt`:
 
 ~~~bash
 pip install --upgrade pip
